@@ -9,12 +9,15 @@ function Board(props) {
   return (
     <Box className={classes.Board}>
       <h3 className={classes.Header}>{props.column.title}</h3>
-      <Droppable droppableId={props.column.id}>
-        {(provided,snapshot) => (
+      <Droppable droppableId={props.column.id}
+      // type={props.column.id==='column-3'?'done':'active'}
+      // isDropDisabled={props.isDropDisabled}
+      >
+        {(provided, snapshot) => (
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            className={`${classes.List} ${snapshot.isDraggingOver?classes.draggingOver:''}`}
+            className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
           >{props.tasks.map((task, index) => <Card key={task.id} task={task} index={index} />)}
             {provided.placeholder}
           </div>

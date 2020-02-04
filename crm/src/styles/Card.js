@@ -5,7 +5,12 @@ const useStyles = makeStyles(theme => ({
         marginBottom:8,
         padding:8,
         borderRadius:2,
-        display:'flex'
+        border:'2px solid grey',
+        display:'flex',
+        '&:focus':{
+            outline:'none',
+            borderColor:'blue',
+        }
     },
     dragging:{
         backgroundColor:theme.palette.secondary.light
@@ -16,6 +21,9 @@ const useStyles = makeStyles(theme => ({
         backgroundColor:theme.palette.primary.main,
         borderRadius:4,
         marginRight:8,
+    },
+    dragDisabled:{
+        backgroundColor:theme.palette.secondary.light
     }
 })
 )
