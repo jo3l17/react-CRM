@@ -15,7 +15,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Link from 'next/link'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -24,7 +25,6 @@ import useStyles from '../styles/Header';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import Tablero from '../pages/Tablero';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -86,40 +86,48 @@ function Header(props) {
   const Navigation = (
     <div>
       <Divider />
-      <List>
-        <ListItem button component={Link} to="/tablero">
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Tablero"} />
+      {/* <List>
+        <ListItem button component={Link} href="/tablero">
+          <a>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Tablero"} />
+          </a>
         </ListItem>
       </List>
       <List>
-        <ListItem button component={Link} to="/clientes">
-          <ListItemIcon>
-            <MailIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Clientes"} />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem button component={Link} to="/estadisticas">
-          <ListItemIcon>
-            <MailIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Estadisticas"} />
+        <ListItem button component={Link} href="/clientes">
+          <a>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Clientes"} />
+          </a>
         </ListItem>
       </List>
       <Divider />
       <List>
-        <ListItem button component={Link} to="/usuario">
-          <ListItemIcon>
-            <AccountCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Usuario"} />
+        <ListItem button component={Link} href="/estadisticas">
+          <a>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Estadisticas"} />
+          </a>
         </ListItem>
       </List>
+      <Divider />
+      <List>
+        <ListItem button component={Link} href="/usuario">
+          <a>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Usuario"} />
+          </a>
+        </ListItem>
+      </List> */}
     </div>
   );
   return (
@@ -158,24 +166,34 @@ function Header(props) {
           </Hidden>
           <Typography variant="h6" noWrap className={classes.title}>
             <Hidden xsDown implementation="css" className={classes.links}>
-              <Link to="/tablero" className={classes.link} variant="body2">
-                Tablero
-                </Link>
-              <Link to="/clientes" className={classes.link} color="primary">
-                Clientes
-                </Link>
-              <Link to="/estadisticas" className={classes.link} color="primary">
-                Estadisticas
-                </Link>
+              <Link href="/tablero">
+                <a className={classes.link}>
+                  Tablero
+                </a>
+              </Link>
+              <Link href="/clientes">
+                <a className={classes.link}>
+                  Clientes
+                </a>
+              </Link>
+              <Link href="/estadisticas">
+                <a className={classes.link}>
+                  Estadisticas
+                </a>
+              </Link>
             </Hidden>
           </Typography>
           <Hidden xsDown implementation="css">
             <IconButton
               color="inherit"
               edge="end"
-              component={Link} to="/usuario"
+              aria-label="user"
             >
-              <AccountCircleIcon />
+              <Link href="/usuario">
+              <a className={classes.link}>
+                <AccountCircleIcon />
+              </a>
+              </Link>
             </IconButton>
           </Hidden>
           <Hidden smUp implementation="css">
