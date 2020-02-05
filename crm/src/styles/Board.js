@@ -34,7 +34,12 @@ const useStyles = theme => ({
     },
     Header:{
         padding:8,
-        margin:0
+        margin:0,
+        textAlign:'center'
+    },
+    Total:{
+        textAlign:'center',
+        marginTop:0  
     },
     List:{
         padding:8,
@@ -52,7 +57,7 @@ const useStyles = theme => ({
         '&:hover':{
             backgroundColor: theme.palette.secondary.light,
         }
-    }
+    },
 })
 
 export default useStyles;

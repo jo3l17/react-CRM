@@ -53,6 +53,7 @@ class InnerList extends React.Component {
 class Board extends React.Component {
   render() {
     const { classes } = this.props
+    console.log(this.props);
     return (
       <Draggable draggableId={this.props.column.id} index={this.props.index}>
         {(provided) => (
@@ -62,6 +63,7 @@ class Board extends React.Component {
             <h3 className={classes.Header}
               {...provided.dragHandleProps}
             >{this.props.column.title}</h3>
+            <h5 className={classes.Total}>Cantidad Total: {this.props.tasks.length}</h5>
             <Droppable droppableId={this.props.column.id} type="task"
             // type={props.column.id==='column-3'?'done':'active'}
             // isDropDisabled={props.isDropDisabled}
@@ -78,7 +80,7 @@ class Board extends React.Component {
               )}
             </Droppable>
             <Button className={classes.addButton}>
-              <AddIcon/>
+              <AddIcon />
             </Button>
           </div>
         )}
