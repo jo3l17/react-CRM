@@ -86,49 +86,57 @@ function Header(props) {
   const Navigation = (
     <div>
       <Divider />
-      {/* <List>
-        <ListItem button component={Link} href="/tablero">
-          <a>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Tablero"} />
+      <List>
+        <Link href="/tablero">
+          <a className={classes.responsiveLink}>
+            <ListItem button >
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Tablero"} />
+            </ListItem>
           </a>
-        </ListItem>
+        </Link>
       </List>
       <List>
-        <ListItem button component={Link} href="/clientes">
-          <a>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Clientes"} />
+        <Link href="/clientes">
+          <a className={classes.responsiveLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Clientes"} />
+            </ListItem>
           </a>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem button component={Link} href="/estadisticas">
-          <a>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Estadisticas"} />
-          </a>
-        </ListItem>
+        </Link>
       </List>
       <Divider />
       <List>
-        <ListItem button component={Link} href="/usuario">
-          <a>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Usuario"} />
+        <Link href="/estadisticas">
+          <a className={classes.responsiveLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Estadisticas"} />
+            </ListItem>
           </a>
-        </ListItem>
-      </List> */}
-    </div>
+        </Link>
+      </List>
+      <Divider />
+      <List>
+        <Link href="/usuario">
+          <a className={classes.responsiveLink}>
+            <ListItem button>
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Usuario"} />
+            </ListItem>
+          </a>
+        </Link>
+      </List>
+    </div >
   );
   return (
     <div>
@@ -190,9 +198,9 @@ function Header(props) {
               aria-label="user"
             >
               <Link href="/usuario">
-              <a className={classes.link}>
-                <AccountCircleIcon />
-              </a>
+                <a className={classes.link}>
+                  <AccountCircleIcon />
+                </a>
               </Link>
             </IconButton>
           </Hidden>

@@ -58,14 +58,15 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(0, 1),
         ...theme.mixins.toolbar,
     },
-    toolbarMain:{
-        
+    toolbarMain: {
+
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
+        height: '90vh'
     },
-    links:{
+    links: {
         '& > * + *': {
             marginLeft: theme.spacing(2),
         },
@@ -79,9 +80,14 @@ const useStyles = makeStyles(theme => ({
     link: {
         color: '#fff',
         textDecoration: 'none',
-        '&:hover':{
+        '&:hover': {
             color: theme.palette.primary.light,
         }
+    },
+    responsiveLink: {
+        color: 'rgba(0, 0, 0, 0.6);',
+        textDecoration: 'none',
+        display: 'flex'
     }
 }));
 export default useStyles;

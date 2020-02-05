@@ -2,7 +2,7 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import useStyles from '../styles/Card';
 function Card(props) {
-  const isDragDisabled = props.task.id==='task-1';
+  const isDragDisabled = props.task.id==='asd';
   const classes = useStyles();
   return (
     <Draggable draggableId={props.task.id}
@@ -13,7 +13,8 @@ function Card(props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className={`${snapshot.isDragging?classes.dragging:''} ${classes.card} ${isDragDisabled?classes.dragDisabled:''}`}
+          className={`${snapshot.isDragging?classes.dragging:''} ${classes.card} ${isDragDisabled?classes.dragDisabled:''}`
+        }
         >
           {/* <div className={classes.handle} {...provided.dragHandleProps}>
           </div> */}

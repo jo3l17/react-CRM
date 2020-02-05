@@ -17,8 +17,7 @@ const theme = createMuiTheme({
         },
         secondary: {
             light: palette.secondary.A200,
-            main: palette.secondary.A400,
-            dark: palette.secondary.A700,
+            main: palette.secondary.A700,
         },
         error: {
             light: palette.error[300],
