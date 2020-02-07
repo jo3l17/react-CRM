@@ -72,6 +72,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     title: {
+        display:'flex',
         flexGrow: 1,
         '& > * + *': {
             marginLeft: theme.spacing(2),

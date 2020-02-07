@@ -6,12 +6,13 @@ const initialData = {
                 idCliente: 1,
                 titulo: 'Joel Valdez',
                 prioridad: 10,
-                diasSinContacto: 2,
+                tiempoSinContacto: '2 días sin contactar',
                 porcentajeCierre: 50,
-                interaciones: {
+                porcentajeColor:'#b1fc00',
+                interacciones: {
                     whatsapp: 2,
                     telefono: 5,
-                    mensaje: 3
+                    correo: 3
                 }
             },
         },
@@ -21,12 +22,13 @@ const initialData = {
                 idCliente: 2,
                 titulo: 'Lizeth Aguilar',
                 prioridad: 5,
-                diasSinContacto: 5,
+                tiempoSinContacto: '5 días sin contactar',
                 porcentajeCierre: 80,
-                interaciones: {
+                porcentajeColor:'#66fe00',
+                interacciones: {
                     whatsapp: 3,
                     telefono: 6,
-                    mensaje: 2
+                    correo: 2
                 }
             }
         },
@@ -36,12 +38,13 @@ const initialData = {
                 idCliente: 3,
                 titulo: 'Juan Perez',
                 prioridad: 6,
-                diasSinContacto: 1,
+                tiempoSinContacto: '10 horas sin contactar',
                 porcentajeCierre: 20,
-                interaciones: {
+                porcentajeColor:'#f3fa00',
+                interacciones: {
                     whatsapp: 8,
                     telefono: 2,
-                    mensaje: 1
+                    correo: 1
                 }
             }
         },
@@ -51,12 +54,13 @@ const initialData = {
                 idCliente: 4,
                 titulo: 'Julian Rodriguez',
                 prioridad: 1,
-                diasSinContacto: 7,
+                tiempoSinContacto: '10 días sin contactar',
                 porcentajeCierre: 75,
-                interaciones: {
+                porcentajeColor:'#edfb00',
+                interacciones: {
                     whatsapp: 7,
                     telefono: 1,
-                    mensaje: 10
+                    correo: 10
                 }
             }
         },
@@ -66,12 +70,13 @@ const initialData = {
                 idCliente: 5,
                 titulo: 'Jean Castelo',
                 prioridad: 2,
-                diasSinContacto: 10,
+                tiempoSinContacto: '20 horas sin contactar',
                 porcentajeCierre: 90,
+                porcentajeColor: '#42ff00',
                 interacciones: {
                     whatsapp: 15,
                     telefono: 3,
-                    mensaje: 0
+                    correo: 0
                 }
             }
         },
@@ -81,12 +86,13 @@ const initialData = {
                 idCliente: 6,
                 titulo: 'Christian Martinez',
                 prioridad: 10,
-                diasSinContacto: 9,
+                tiempoSinContacto: '5 días sin contactar',
                 porcentajeCierre: 10,
-                interaciones: {
+                porcentajeColor:'#f9f900',
+                interacciones: {
                     whatsapp: 1,
                     telefono: 1,
-                    mensaje: 1
+                    correo: 1
                 }
             }
         },
@@ -96,12 +102,13 @@ const initialData = {
                 idCliente: 7,
                 titulo: 'Rodrigo Almazan',
                 prioridad: 3,
-                diasSinContacto: 5,
+                tiempoSinContacto: '7 días sin contactar',
                 porcentajeCierre: 25,
-                interaciones: {
+                porcentajeColor:'#edfb00',
+                interacciones: {
                     whatsapp: 2,
                     telefono: 3,
-                    mensaje: 1
+                    correo: 1
                 }
             }
         },
@@ -111,12 +118,13 @@ const initialData = {
                 idCliente: 8,
                 titulo:'Juan Castillo',
                 prioridad:4,
-                diasSinContacto:8,
+                tiempoSinContacto:'3 días sin contactar',
                 porcentajeCierre:40,
+                porcentajeColor:'#c9fc00',
                 interacciones:{
                     whatsapp:1,
                     telefono:8,
-                    mensaje:8
+                    correo:8
                 }
             }
         },
@@ -126,12 +134,13 @@ const initialData = {
                     idCliente:9,
                     titulo:'Angel Muñoz',
                     prioridad:1,
-                    diasSinContacto:2,
+                    tiempoSinContacto:'20 horas sin contactar',
                     porcentajeCierre:50,
+                    porcentajeColor:'#b1fc00',
                     interacciones:{
                         whatsapp:5,
                         telefono:10,
-                        mensaje:8
+                        correo:8
                     }
                 }
             },
@@ -141,12 +150,13 @@ const initialData = {
                     idCliente:10,
                     titulo:'Jose Alvarez',
                     prioridad:6,
-                    diasSinContacto:3,
+                    tiempoSinContacto:'8 días sin contactar',
                     porcentajeCierre:80,
+                    porcentajeColor:'#66fe00',
                     interacciones:{
                         whatsapp:8,
                         telefono:3,
-                        mensaje:1
+                        correo:1
                     }
                 }
             },

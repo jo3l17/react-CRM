@@ -173,6 +173,7 @@ function Header(props) {
             </IconButton>
           </Hidden>
           <Typography variant="h6" noWrap className={classes.title}>
+            <div>CRM</div>
             <Hidden xsDown implementation="css" className={classes.links}>
               <Link href="/tablero">
                 <a className={classes.link}>

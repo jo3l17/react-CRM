@@ -53,7 +53,6 @@ class InnerList extends React.Component {
 class Board extends React.Component {
   render() {
     const { classes } = this.props
-    console.log(this.props);
     return (
       <Draggable draggableId={this.props.column.id} index={this.props.index}>
         {(provided) => (
