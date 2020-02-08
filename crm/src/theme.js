@@ -22,7 +22,8 @@ const theme = createMuiTheme({
         tertiary:{
             light:'#f5fcf8',
             main:'#e9f0ec',
-            dark:'#abb0ad'
+            dark:'#abb0ad',
+            darker:'#3b3b3b'
         },
         error: {
             light: palette.error[300],

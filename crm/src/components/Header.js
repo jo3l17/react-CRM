@@ -25,6 +25,10 @@ import useStyles from '../styles/Header';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
+import LockIcon from '@material-ui/icons/Lock';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -50,35 +54,35 @@ function Header(props) {
       <List>
         <ListItem button>
           <ListItemIcon>
-            <EditIcon />
+            <UndoIcon />
           </ListItemIcon>
-          <ListItemText primary={"Editar"} />
+          <ListItemText primary={"Deshacer"} />
         </ListItem>
       </List>
       <List>
         <ListItem button>
           <ListItemIcon>
-            <AddCircleIcon />
+            <RedoIcon />
           </ListItemIcon>
-          <ListItemText primary={"Agregar"} />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem button>
-          <ListItemIcon>
-            <MailIcon />
-          </ListItemIcon>
-          <ListItemText primary={"ejemplo"} />
+          <ListItemText primary={"Rehacer"} />
         </ListItem>
       </List>
       <Divider />
       <List>
         <ListItem button>
           <ListItemIcon>
-            <MailIcon />
+            <CloudUploadIcon />
           </ListItemIcon>
-          <ListItemText primary={"ejemplo"} />
+          <ListItemText primary={"Importar"} />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <LockIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Bloquear"} />
         </ListItem>
       </List>
     </div>
@@ -169,7 +173,7 @@ function Header(props) {
                 [classes.hide]: open,
               })}
             >
-              <BuildIcon />
+              <ChevronRightIcon />
             </IconButton>
           </Hidden>
           <Typography variant="h6" noWrap className={classes.title}>

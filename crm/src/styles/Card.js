@@ -5,17 +5,18 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.tertiary.light,
         marginBottom: 8,
         // padding:8,
-        borderRadius: 2,
-        border: '2px solid',
-        borderColor: theme.palette.tertiary.main,
+        borderRadius: 4,
+        // border: '1px solid',
+        // borderColor: 'black',
         // display: 'flex',
         '&:focus': {
             outline: 'none',
             borderColor: 'black',
-        }
+        },
+        boxShadow: `5px 5px 5px ${theme.palette.tertiary.dark}`
     },
     dragging: {
-        backgroundColor: theme.palette.tertiary.main,
+        backgroundColor: theme.palette.tertiary.light,
         height: 'auto !important'
     },
     handle: {
@@ -29,12 +30,15 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.secondary.light
     },
     title: {
-        fontSize: '1.2em'
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     cardInfo: {
-        textAlign: 'left',
-        marginLeft: 5,
-        width:'100%'
+        padding: 5,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
     },
     leftList: {
         padding: 0
@@ -44,8 +48,16 @@ const useStyles = makeStyles(theme => ({
         borderRightColor: theme.palette.tertiary.main,
         borderRight: '2px solid',
     },
+    leftListItemIcon: {
+        minWidth: 0
+    },
     leftListIcon: {
         minWidth: 0
+    },
+    leftListButton: {
+        minWidth: 0,
+        paddingLeft: 8,
+        paddingRight: 8,
     },
     divider: {
         height: 2,
@@ -57,8 +69,8 @@ const useStyles = makeStyles(theme => ({
         width: '100%'
     },
     interacciones: {
-        borderTop: '2px solid',
-        borderColor: theme.palette.tertiary.main,
+        // borderTop: '2px solid',
+        // borderColor: theme.palette.tertiary.main,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around'
@@ -67,21 +79,50 @@ const useStyles = makeStyles(theme => ({
         width: '33.3%',
         textAlign: 'center'
     },
+    interaccionesButton: {
+        width: '100%',
+        padding: '5px 5px !important',
+    },
     porcentajeWrapper: {
-        position:'relative',
-        width:'100%',
+        position: 'relative',
+        width: '100%',
     },
-    porcentaje:{
-        position:'absolute',
-        top:'5px',
-        right:'5px'
+    porcentaje: {
+        position: 'absolute',
+        top: -2,
+        right: 1
     },
-    porcentajeCierre:{
-        position:'absolute',
-        top:'6px',
-        right:'10px',
-        zIndex:2,
-        fontWeight:'bold'
+    porcentajeCierre: {
+        position: 'absolute',
+        top: 0,
+        right: 5,
+        zIndex: 2,
+        fontWeight: 'bold'
+    },
+    linkUsuario: {
+        textDecoration: 'none',
+        color: theme.palette.primary.main,
+        fontSize: '1em',
+        fontWeight: 'bold'
+    },
+    prioridad: {
+        borderRadius: '50%',
+        fontWeight: 'bold',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 24,
+        height: 24
+    },
+    darkButton: {
+        backgroundColor: theme.palette.tertiary.light,
+        borderColor: theme.palette.tertiary.darker,
+        color: theme.palette.tertiary.darker,
+        '&:hover': {
+            // backgroundColor: theme.palette.tertiary.darker,
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
+        },
     }
 })
 )

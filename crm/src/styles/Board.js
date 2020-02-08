@@ -29,6 +29,7 @@ const useStyles = theme => ({
         width: 250,
         display: 'flex',
         flexDirection: 'column',
+        marginLeft: 5,
         backgroundColor: theme.palette.tertiary.main,
         // padding:8
     },
@@ -39,7 +40,8 @@ const useStyles = theme => ({
     },
     Total: {
         textAlign: 'center',
-        marginTop: 0
+        marginTop: 0,
+        marginBottom: 3
     },
     List: {
         padding: 8,
@@ -55,20 +57,20 @@ const useStyles = theme => ({
             '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
         },
         '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'rgba(0,0,0,.9)',
+            backgroundColor: 'rgba(0,0,0,.4)',
             outline: '1px solid slategrey'
         },
-        scrollbarColor:'black transparent',
-        scrollbarWidth:'thin'
+        scrollbarColor: 'black transparent',
+        scrollbarWidth: 'thin'
     },
     draggingOver: {
         backgroundColor: theme.palette.tertiary.dark
     },
     addButton: {
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.dark,
         color: 'white',
         '&:hover': {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
         }
     },
 })

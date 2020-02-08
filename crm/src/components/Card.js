@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import useStyles from '../styles/Card';
 import { List, ListItem, ListItemIcon, Divider, Grid, Button, CircularProgress } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Link from 'next/link'
 import DeleteIcon from '@material-ui/icons/Delete';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -28,30 +28,38 @@ function Card(props) {
           </div> */}
           <div className={classes.container}>
             <List className={classes.leftList}>
-              <ListItem button className={classes.leftListItem}>
-                <ListItemIcon className={classes.leftListIcon}>
-                  <AccountCircleIcon />
+              <ListItem className={classes.leftListItem}>
+                <ListItemIcon className={classes.leftListItemIcon}>
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                    <EditIcon className={classes.leftListIcon} />
+                  </Button>
                 </ListItemIcon>
               </ListItem>
-              <Divider className={classes.divider} />
-              <ListItem button className={classes.leftListItem}>
-                <ListItemIcon className={classes.leftListIcon}>
-                  <EditIcon />
-                </ListItemIcon>
-              </ListItem>
-              <Divider className={classes.divider} />
-              <ListItem button className={classes.leftListItem}>
-                <ListItemIcon className={classes.leftListIcon}>
-                  <DeleteIcon />
+              <ListItem className={classes.leftListItem}>
+                <ListItemIcon className={classes.leftListItemIcon}>
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                    <DeleteIcon className={classes.leftListIcon} />
+                  </Button>
                 </ListItemIcon>
               </ListItem>
             </List>
             <div className={classes.cardInfo}>
               <div className={classes.title}>
-                {props.task.content.titulo}
+                <Link href="/usuario/[props.task.content.idCliente]" as={`/usuario/${props.task.content.idCliente}`}>
+                  <a className={classes.linkUsuario}>
+                    {props.task.content.titulo}
+                  </a>
+                </Link>
+                <div>
+                  <div className={classes.prioridad} style={{ backgroundColor: props.task.content.prioridadColor, color: props.task.content.prioridadColorText }}>
+                    <div>
+                      {props.task.content.prioridad}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className={classes.porcentajeWrapper}>
-                <div>
+                <div style={{ color: ((props.task.content.tiempoSinContactoNumber <= 2) ? 'green' : (props.task.content.tiempoSinContactoNumber <= 6 ? 'orange' : 'red')) }}>
                   {props.task.content.tiempoSinContacto}
                 </div>
                 <div className={classes.porcentajeCierre}>{props.task.content.porcentajeCierre}</div>
@@ -61,17 +69,17 @@ function Card(props) {
           </div>
           <div className={classes.interacciones}>
             <div className={classes.interaccionesButtons}>
-              <Button>
+              <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.task.content.interacciones.telefono} &nbsp;<PhoneIcon />
               </Button>
             </div>
             <div className={classes.interaccionesButtons}>
-              <Button>
+              <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.task.content.interacciones.whatsapp} &nbsp;<WhatsAppIcon />
               </Button>
             </div>
             <div className={classes.interaccionesButtons}>
-              <Button>
+              <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.task.content.interacciones.correo} &nbsp;<MailOutlineIcon />
               </Button>
             </div>
