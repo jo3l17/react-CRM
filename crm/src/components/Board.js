@@ -2,9 +2,10 @@ import React from 'react'
 import Box from '@material-ui/core/Box';
 import Card from './Card';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import useStyles from '../styles/Board'
+import useStyles from '../styles/Board';
 import { withStyles, Button } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@material-ui/icons/Add';
+import SortIcon from '@material-ui/icons/Sort';
 
 // function Board(props) {
 //   const classes = useStyles()
@@ -41,16 +42,25 @@ import AddIcon from '@material-ui/icons/Add'
 
 class InnerList extends React.Component {
   shouldComponentUpdate(nextProps) {
-    if (nextProps.tasks == this.props.tasks) {
+    if (nextProps.sortedCard != null) {
+      return true;
+    } else if (nextProps.tasks == this.props.tasks) {
       return false;
     }
     return true;
+  }
+  constructor(props) {
+    super(props)
   }
   render() {
     return this.props.tasks.map((task, index) => (<Card key={task.id} task={task} index={index} />))
   }
 }
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { sortedCards: false }
+  }
   render() {
     const { classes } = this.props
     return (
@@ -62,7 +72,12 @@ class Board extends React.Component {
             <h3 className={classes.Header}
               {...provided.dragHandleProps}
             >{this.props.column.title}</h3>
-            <h5 className={classes.Total}>Cantidad Total: {this.props.tasks.length}</h5>
+            <div className={classes.containerRelative}>
+              <h5 className={classes.Total}>Cantidad Total: {this.props.tasks.length}</h5>
+              <Button className={classes.sortButton} onClick={() => {this.props.sortCards(this.props.column.id)}}>
+                <SortIcon />
+              </Button>
+            </div>
             <Droppable droppableId={this.props.column.id} type="task"
             // type={props.column.id==='column-3'?'done':'active'}
             // isDropDisabled={props.isDropDisabled}
@@ -73,7 +88,7 @@ class Board extends React.Component {
                   ref={provided.innerRef}
                   className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
                 >
-                  <InnerList tasks={this.props.tasks} />
+                  <InnerList tasks={this.props.tasks} sortedCard={this.state.sortedCards} />
                   {provided.placeholder}
                 </div>
               )}

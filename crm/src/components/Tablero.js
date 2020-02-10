@@ -5,133 +5,17 @@ import Card from './Card'
 import initialData from '../data';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
-
-// const Tablero = () => {
-//   const classes = useStyles()
-//   const [state, setData] = useState(initialData)
-//   // const [homeIndex,setHomeIndex] = useState()
-//   const onDragStart = start => {
-//     // const homeIndex = state.columnOrder.indexOf(start.source.droppableId);
-//     // setHomeIndex(homeIndex);
-//     // document.body.style.color = "orange"
-//   }
-//   const onDragUpdate = update => {
-//     const { destination } = update;
-//     const opacity = destination ? destination.index / Object.keys(state.tasks).length : 0
-//     // document.body.style.backgroundColor = `rgba(153,141,217,${opacity})`
-//   }
-//   const onDragEnd = result => {
-//     // setHomeIndex(null)
-//     // document.body.style.color = "inherit"
-//     // document.body.style.backgroundColor = `inherit`
-//     const { destination, source, draggableId, type } = result;
-//     if (!destination) {
-//       return
-//     }
-//     if (destination.droppableId === source.droppableId &&
-//       destination.index === source.index) {
-//       return
-//     }
-//     if (type === 'column') {
-//       const newColumnOrder = Array.from(state.columnOrder);
-//       newColumnOrder.splice(source.index, 1);
-//       newColumnOrder.splice(destination.index, 0, draggableId);
-//       const newState = {
-//         ...state,
-//         columnOrder: newColumnOrder,
-//       }
-//       setData(newState);
-//       return;
-//     }
-//     // const column = state.columns[source.droppableId];
-//     const start = state.columns[source.droppableId];
-//     const finish = state.columns[destination.droppableId];
-//     if (start === finish) {
-//       const newTaskIds = Array.from(start.taskIds);
-//       newTaskIds.splice(source.index, 1);
-//       newTaskIds.splice(destination.index, 0, draggableId);
-//       const newColumn = {
-//         ...start,
-//         taskIds: newTaskIds
-//       };
-//       const newState = {
-//         ...state,
-//         columns: {
-//           ...state.columns,
-//           [newColumn.id]: newColumn
-//         },
-//       };
-//       setData(newState);
-//       return
-//     }
-//     // Moving from one list to another
-//     const startTasksIds = Array.from(start.taskIds);
-//     startTasksIds.splice(source.index, 1);
-//     const newStart = {
-//       ...start,
-//       taskIds: startTasksIds,
-//     };
-//     const finishTasksIds = Array.from(finish.taskIds);
-//     finishTasksIds.splice(destination.index, 0, draggableId);
-//     const newFinish = {
-//       ...finish,
-//       taskIds: finishTasksIds,
-//     };
-//     const newState = {
-//       ...state,
-//       columns: {
-//         ...state.columns,
-//         [newStart.id]: newStart,
-//         [newFinish.id]: newFinish
-//       }
-//     };
-//     setData(newState)
-//   }
-//   return (
-//     <DragDropContext onDragEnd={onDragEnd}
-//       onDragStart={onDragStart}
-//       onDragUpdate={onDragUpdate}>
-//       <Droppable
-//         droppableId="all-columns"
-//         direction="horizontal"
-//         type="column">
-//         {provided => (
-//           <div
-//             {...provided.droppableProps}
-//             ref={provided.innerRef}
-//             className={classes.container}>
-//             {state.columnOrder.map((columnId, index) => {
-//               const column = state.columns[columnId];
-//               const tasks = column.taskIds.map(taskId => state.tasks[taskId]);
-//               // const isDropDisabled = index<homeIndex
-//               return <Board
-//                 key={column.id}
-//                 column={column}
-//                 tasks={tasks}
-//                 index={index}
-//               // isDropDisabled={isDropDisabled}
-//               />
-//             })}
-//             {provided.placeholder}
-//           </div>
-//         )}
-//       </Droppable>
-//     </DragDropContext>
-//   )
-// }
-
-// export default Tablero
-
 import { withStyles } from '@material-ui/core';
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index } = this.props;
+    const { column, taskMap, index, sortCards } = this.props;
     const tasks = column.taskIds.map(taskId => taskMap[taskId]);
     return <Board
       column={column}
       tasks={tasks}
       index={index}
+      sortCards={sortCards}
     // isDropDisabled={isDropDisabled}
     />
   }
@@ -147,6 +31,26 @@ class Tablero extends React.Component {
     const { destination } = update;
     const opacity = destination ? destination.index / Object.keys(this.state.tasks).length : 0
     // document.body.style.backgroundColor = `rgba(153,141,217,${opacity})`
+  }
+  sortCards = columnId => {
+    const column = this.state.columns[columnId]
+    const taskMap = this.state.tasks
+    const taskOrdered = column.taskIds.map(taskId => taskMap[taskId])
+    taskOrdered.sort((a, b) => (a.content.prioridad - b.content.prioridad))
+    const newTaskIds = taskOrdered.map((task) => task.id)
+    const newColumn = {
+      ...column,
+      taskIds: newTaskIds
+    };
+    const newState = {
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        [newColumn.id]: newColumn
+      },
+    };
+    this.setState(newState);
+    return
   }
   onDragEnd = result => {
     // setHomeIndex(null)
@@ -174,6 +78,7 @@ class Tablero extends React.Component {
     // const column = this.state.columns[source.droppableId];
     const start = this.state.columns[source.droppableId];
     const finish = this.state.columns[destination.droppableId];
+    console.log(start)
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -232,13 +137,14 @@ class Tablero extends React.Component {
               className={classes.container}>
               {this.state.columnOrder.map((columnId, index) => {
                 const column = this.state.columns[columnId];
-                const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
+                // const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
                 // const isDropDisabled = index<homeIndex
                 return (<InnerList
                   key={column.id}
                   column={column}
                   taskMap={this.state.tasks}
                   index={index}
+                  sortCards={this.sortCards}
                 />);
               })}
               {provided.placeholder}

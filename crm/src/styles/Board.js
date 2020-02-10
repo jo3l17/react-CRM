@@ -73,6 +73,17 @@ const useStyles = theme => ({
             backgroundColor: theme.palette.primary.main,
         }
     },
+    sortButton: {
+        position: 'absolute',
+        right: 5,
+        top: -10
+    },
+    containerRelative: {
+        textAlign: 'center',
+        // marginTop: 0,
+        // marginBottom: 3,
+        position: 'relative'
+    }
 })
 
 export default useStyles;

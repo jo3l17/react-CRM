@@ -29,6 +29,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
 import LockIcon from '@material-ui/icons/Lock';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { SwipeableDrawer } from '@material-ui/core';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -246,11 +247,12 @@ function Header(props) {
         </Drawer>
       </Hidden>
       <Hidden smUp implementation="css" >
-        <Drawer
+        <SwipeableDrawer
           container={container}
           variant="temporary"
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
           open={mobileOpen}
+          onOpen={handleDrawerMobileToggle}
           onClose={handleDrawerMobileToggle}
           classes={{
             paper: classes.drawerPaper,
@@ -260,11 +262,11 @@ function Header(props) {
           }}
         >
           {Tools}
-        </Drawer>
+        </SwipeableDrawer>
       </Hidden>
-      <Drawer open={menuOpen} anchor="top" onClose={MenuDrawerToggle}>
+      <SwipeableDrawer open={menuOpen} anchor="top" onOpen={MenuDrawerToggle} onClose={MenuDrawerToggle}>
         {Navigation}
-      </Drawer>
+      </SwipeableDrawer>
     </div>
   )
 }

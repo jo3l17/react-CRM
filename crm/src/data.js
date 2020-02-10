@@ -197,8 +197,8 @@ const initialData = {
             title: 'Prospectos',
             taskIds: [
                 'task-1',
-                'task-2',
                 'task-3',
+                'task-2',
                 'task-4'
             ]
         },
@@ -206,24 +206,24 @@ const initialData = {
             id: 'column-2',
             title: 'Contactados',
             taskIds: [
+                'task-8',
                 'task-7',
-                'task-8'
             ]
         },
         'column-3': {
             id: 'column-3',
             title: 'Negociacion iniciada',
             taskIds: [
-                'task-5',
                 'task-6',
+                'task-5',
             ]
         },
         'column-4': {
             id: 'column-4',
             title: 'Pendientes de cierre',
             taskIds: [
-                'task-9',
                 'task-10',
+                'task-9',
             ]
         },
         'column-5': {
