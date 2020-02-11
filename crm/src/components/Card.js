@@ -8,10 +8,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import EditCard from './EditCard';
 function Card(props) {
   const isDragDisabled = props.task.id === 'asd';
   const classes = useStyles();
   const preventDefault = event => event.preventDefault();
+
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+  const handleClose = result => {
+    if (result.message === 'OK') {
+      console.log(result.content)
+    }
+    setOpenDialog(false);
+  };
   return (
     <Draggable draggableId={props.task.id}
       index={props.index}
@@ -26,18 +38,19 @@ function Card(props) {
         >
           {/* <div className={classes.handle} {...provided.dragHandleProps}>
           </div> */}
+          <EditCard open={openDialog} handleClose={handleClose} data={props.task} modalId={props.task.id} />
           <div className={classes.container}>
             <List className={classes.leftList}>
               <ListItem className={classes.leftListItem}>
                 <ListItemIcon className={classes.leftListItemIcon}>
-                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`} onClick={handleClickOpen}>
                     <EditIcon className={classes.leftListIcon} />
                   </Button>
                 </ListItemIcon>
               </ListItem>
               <ListItem className={classes.leftListItem}>
                 <ListItemIcon className={classes.leftListItemIcon}>
-                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.deleteButton}`}>
                     <DeleteIcon className={classes.leftListIcon} />
                   </Button>
                 </ListItemIcon>

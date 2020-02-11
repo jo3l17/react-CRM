@@ -123,6 +123,16 @@ const useStyles = makeStyles(theme => ({
             borderColor: theme.palette.primary.main,
             color: theme.palette.primary.main,
         },
+    },
+    deleteButton:{
+        backgroundColor: theme.palette.tertiary.light,
+        borderColor: theme.palette.tertiary.darker,
+        color: theme.palette.tertiary.darker,
+        '&:hover': {
+            // backgroundColor: theme.palette.tertiary.darker,
+            borderColor: theme.palette.error.main,
+            color: theme.palette.error.main,
+        },
     }
 })
 )
