@@ -6,6 +6,7 @@ import useStyles from '../styles/Board';
 import { withStyles, Button, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SortIcon from '@material-ui/icons/Sort';
+import AddCard from './AddCard';
 
 // function Board(props) {
 //   const classes = useStyles()
@@ -53,14 +54,22 @@ class InnerList extends React.Component {
     super(props)
   }
   render() {
-    return this.props.tasks.map((task, index) => (<Card key={task.id} task={task} index={index} />))
+    return this.props.tasks.map((task, index) => (<Card renderChange={this.props.renderChange} key={task.id} task={task} index={index} />))
   }
 }
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { sortedCards: false }
+    this.state = { sortedCards: false, dialogOpen: false }
   }
+  handleClickOpen = () => {
+    this.setState({ dialogOpen: true })
+  };
+  handleClose = result => {
+    if (result.message == 'OK')
+      this.props.addCard(result.content)
+    this.setState({ dialogOpen: false })
+  };
   render() {
     const { classes } = this.props
     return (
@@ -69,6 +78,7 @@ class Board extends React.Component {
           <div className={classes.Board}
             {...provided.draggableProps}
             ref={provided.innerRef}>
+            <AddCard open={this.state.dialogOpen} handleClose={this.handleClose} modalId={this.props.column.id} />
             <h3 className={classes.Header}
               {...provided.dragHandleProps}
             >{this.props.column.title}</h3>
@@ -90,12 +100,12 @@ class Board extends React.Component {
                   ref={provided.innerRef}
                   className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
                 >
-                  <InnerList tasks={this.props.tasks} sortedCard={this.state.sortedCards} />
+                  <InnerList tasks={this.props.tasks} renderChange={this.props.renderChange} sortedCard={this.state.sortedCards} />
                   {provided.placeholder}
                 </div>
               )}
             </Droppable>
-            <Button className={classes.addButton}>
+            <Button className={classes.addButton} onClick={this.handleClickOpen}>
               <AddIcon />
             </Button>
           </div>

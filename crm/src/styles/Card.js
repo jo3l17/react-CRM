@@ -55,9 +55,9 @@ const useStyles = makeStyles(theme => ({
         minWidth: 0
     },
     leftListButton: {
-        minWidth: 0,
-        paddingLeft: 8,
-        paddingRight: 8,
+        minWidth: '0 !important',
+        paddingLeft: '8px !important',
+        paddingRight: '8px !important',
     },
     divider: {
         height: 2,
@@ -115,23 +115,23 @@ const useStyles = makeStyles(theme => ({
         height: 24
     },
     darkButton: {
-        backgroundColor: theme.palette.tertiary.light,
-        borderColor: theme.palette.tertiary.darker,
-        color: theme.palette.tertiary.darker,
+        backgroundColor: `${theme.palette.tertiary.light} !important`,
+        borderColor: `${theme.palette.tertiary.darker} !important`,
+        color: `${theme.palette.tertiary.darker} !important`,
         '&:hover': {
             // backgroundColor: theme.palette.tertiary.darker,
-            borderColor: theme.palette.primary.main,
-            color: theme.palette.primary.main,
+            borderColor: `${theme.palette.primary.main} !important`,
+            color: `${theme.palette.primary.main} !important`,
         },
     },
-    deleteButton:{
-        backgroundColor: theme.palette.tertiary.light,
-        borderColor: theme.palette.tertiary.darker,
-        color: theme.palette.tertiary.darker,
+    deleteButton: {
+        backgroundColor: `${theme.palette.tertiary.light} !important`,
+        borderColor: `${theme.palette.tertiary.darker} !important`,
+        color: `${theme.palette.tertiary.darker} !important`,
         '&:hover': {
             // backgroundColor: theme.palette.tertiary.darker,
-            borderColor: theme.palette.error.main,
-            color: theme.palette.error.main,
+            borderColor: `${theme.palette.error.main} !important`,
+            color: `${theme.palette.error.main} !important`,
         },
     }
 })

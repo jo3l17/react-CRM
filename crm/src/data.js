@@ -10,6 +10,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '2 días sin contactar',
                 tiempoSinContactoNumber: 2,
+                fechaContacto:'2020-01-08T00:00:00',
                 porcentajeCierre: 50,
                 porcentajeColor: '#b1fc00',
                 interacciones: {
@@ -29,6 +30,7 @@ const initialData = {
                 prioridadColorText: 'black',
                 tiempoSinContacto: '5 días sin contactar',
                 tiempoSinContactoNumber: 5,
+                fechaContacto:'2020-01-10T00:00:00',
                 porcentajeCierre: 80,
                 porcentajeColor: '#66fe00',
                 interacciones: {
@@ -48,6 +50,7 @@ const initialData = {
                 prioridadColorText: 'black',
                 tiempoSinContacto: '10 horas sin contactar',
                 tiempoSinContactoNumber: 0.416,
+                fechaContacto:'2020-01-15T00:00:00',
                 porcentajeCierre: 20,
                 porcentajeColor: '#f3fa00',
                 interacciones: {
@@ -67,6 +70,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '10 días sin contactar',
                 tiempoSinContactoNumber: 10,
+                fechaContacto:'2020-01-01T00:00:00',
                 porcentajeCierre: 75,
                 porcentajeColor: '#edfb00',
                 interacciones: {
@@ -86,6 +90,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '20 horas sin contactar',
                 tiempoSinContactoNumber: 0.83,
+                fechaContacto:'2020-02-10T00:00:00',
                 porcentajeCierre: 90,
                 porcentajeColor: '#42ff00',
                 interacciones: {
@@ -105,6 +110,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '5 días sin contactar',
                 tiempoSinContactoNumber: 5,
+                fechaContacto:'2020-02-06T00:00:00',
                 porcentajeCierre: 10,
                 porcentajeColor: '#f9f900',
                 interacciones: {
@@ -124,6 +130,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '7 días sin contactar',
                 tiempoSinContactoNumber: 7,
+                fechaContacto:'2020-01-08T00:00:00',
                 porcentajeCierre: 25,
                 porcentajeColor: '#edfb00',
                 interacciones: {
@@ -143,6 +150,7 @@ const initialData = {
                 prioridadColorText: 'black',
                 tiempoSinContacto: '3 días sin contactar',
                 tiempoSinContactoNumber: 3,
+                fechaContacto:'2020-02-08T00:00:00',
                 porcentajeCierre: 40,
                 porcentajeColor: '#c9fc00',
                 interacciones: {
@@ -162,6 +170,7 @@ const initialData = {
                 prioridadColorText: 'white',
                 tiempoSinContacto: '20 horas sin contactar',
                 tiempoSinContactoNumber: 0.83,
+                fechaContacto:'2020-02-10T00:00:00',
                 porcentajeCierre: 50,
                 porcentajeColor: '#b1fc00',
                 interacciones: {
@@ -180,7 +189,8 @@ const initialData = {
                 prioridadColor: 'yellow',
                 prioridadColorText: 'black',
                 tiempoSinContacto: '8 días sin contactar',
-                tiempoSinContactoNumber: 8,
+                tiempoSinContactoNumber: null,
+                fechaContacto:null,
                 porcentajeCierre: 80,
                 porcentajeColor: '#66fe00',
                 interacciones: {

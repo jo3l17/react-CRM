@@ -10,6 +10,18 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import EditCard from './EditCard';
 function Card(props) {
+  function tiempoSinContacto() {
+    if (props.task.content.tiempoSinContactoNumber) {
+      return (
+        <div style={{ color: ((props.task.content.tiempoSinContactoNumber <= 2) ? 'green' : (props.task.content.tiempoSinContactoNumber <= 6 ? 'orange' : 'red')) }}>
+          {props.task.content.tiempoSinContacto}
+        </div>
+      )
+    } else {
+      return <div style={{height:20}}></div>
+    }
+  }
+  // const {renderChange} = props.renderChange
   const isDragDisabled = props.task.id === 'asd';
   const classes = useStyles();
   const preventDefault = event => event.preventDefault();
@@ -20,7 +32,7 @@ function Card(props) {
   };
   const handleClose = result => {
     if (result.message === 'OK') {
-      console.log(result.content)
+      props.renderChange(result.content)
     }
     setOpenDialog(false);
   };
@@ -72,9 +84,7 @@ function Card(props) {
                 </div>
               </div>
               <div className={classes.porcentajeWrapper}>
-                <div style={{ color: ((props.task.content.tiempoSinContactoNumber <= 2) ? 'green' : (props.task.content.tiempoSinContactoNumber <= 6 ? 'orange' : 'red')) }}>
-                  {props.task.content.tiempoSinContacto}
-                </div>
+                {tiempoSinContacto()}
                 <div className={classes.porcentajeCierre}>{props.task.content.porcentajeCierre}</div>
                 <CircularProgress variant="static" value={props.task.content.porcentajeCierre} style={{ color: props.task.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
               </div>

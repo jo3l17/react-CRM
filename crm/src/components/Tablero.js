@@ -9,13 +9,15 @@ import { withStyles } from '@material-ui/core';
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index, sortCards } = this.props;
+    const { column, taskMap, index, sortCards, renderChange, addCard } = this.props;
     const tasks = column.taskIds.map(taskId => taskMap[taskId]);
     return <Board
       column={column}
       tasks={tasks}
       index={index}
       sortCards={sortCards}
+      renderChange={renderChange}
+      addCard={addCard}
     // isDropDisabled={isDropDisabled}
     />
   }
@@ -120,6 +122,61 @@ class Tablero extends React.Component {
     };
     this.setState(newState);
   }
+  addCard = result => {
+    const column = this.state.columns[result.id]
+    const tasks = this.state.tasks
+    const lastTaskId = tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]].id
+    const newId = parseInt(lastTaskId.split('-')[1]) + 1
+    const newCard = {
+      id: `task-${newId}`,
+      content: {
+        idCliente: newId,
+        titulo: result.content.nombre,
+        prioridad: result.content.prioridad,
+        prioridadColor: 'yellow',
+        prioridadColorText: 'black',
+        tiempoSinContacto: '8 días sin contactar',
+        tiempoSinContactoNumber: null,
+        fechaContacto: result.content.fechaContacto,
+        porcentajeCierre: result.content.porcentajeCierre,
+        porcentajeColor: '#66fe00',
+        interacciones: {
+          whatsapp: 0,
+          telefono: 0,
+          correo: 0
+        }
+      }
+    }
+    const newTaskIds = column.taskIds
+    newTaskIds.push(newCard.id)
+    const newTasks = {
+      ...this.state.tasks,
+      [newCard.id]: newCard
+    }
+    const newColumn = {
+      ...column,
+      taskIds: newTaskIds
+    };
+    const newState = {
+      tasks: newTasks,
+      columns: {
+        ...this.state.columns,
+        [result.id]: newColumn
+      },
+    }
+    this.setState(newState)
+  }
+  renderChange = result => {
+    const newTask = result
+    const newState = {
+      ...this.state,
+      tasks: {
+        ...this.state.tasks,
+        [result.id]: newTask
+      },
+    };
+    this.setState(newState);
+  }
   render() {
     const { classes } = this.props
     return (
@@ -145,6 +202,8 @@ class Tablero extends React.Component {
                   taskMap={this.state.tasks}
                   index={index}
                   sortCards={this.sortCards}
+                  renderChange={this.renderChange}
+                  addCard={this.addCard}
                 />);
               })}
               {provided.placeholder}
