@@ -44,8 +44,11 @@ const useStyles = theme => ({
     radioGroup: {
         flexDirection: 'row !important',
     },
-    gridRadio:{
-        textAlign:'center',
+    radioButton: {
+        color: theme.palette.primary.main,
+    },
+    gridRadio: {
+        textAlign: 'center',
     }
 });
 export default useStyles

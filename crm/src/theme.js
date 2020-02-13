@@ -6,7 +6,7 @@ const palette = {
     primary: blue,
     secondary: green,
     error: red,
-    tertiary:'#e9f0ec'
+    tertiary: '#e9f0ec'
 }
 
 const theme = createMuiTheme({
@@ -19,21 +19,21 @@ const theme = createMuiTheme({
         secondary: {
             main: palette.secondary.A700,
         },
-        tertiary:{
-            light:'#f5fcf8',
-            main:'#e9f0ec',
-            dark:'#abb0ad',
-            darker:'#3b3b3b'
+        tertiary: {
+            light: '#f5fcf8',
+            main: '#e9f0ec',
+            dark: '#abb0ad',
+            darker: '#3b3b3b'
         },
         error: {
             light: palette.error[300],
             main: palette.error[500],
             dark: palette.error[700],
         },
-        text:{
+        text: {
 
         },
-        
+
         contrastThreshold: 3,
     }
 })

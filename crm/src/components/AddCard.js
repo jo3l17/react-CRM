@@ -1,7 +1,7 @@
 import React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
-import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, InputLabel, FormControl, Select, MenuItem, RadioGroup, FormControlLabel, Radio, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, InputLabel, FormControl, Select, MenuItem, RadioGroup, FormControlLabel, Radio, DialogTitle, DialogContent, DialogActions, InputAdornment } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/AddCard';
@@ -9,10 +9,122 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
 function AddCard(props) {
-
+    const [validate, setValidate] = React.useState(false)
+    const lengthValidation = (value, min) => {
+        if (value == '' || !value) {
+            return 'el campo no puede quedar vacio'
+        }
+        if (value.length < min) {
+            return `ingrese al menos ${min} caracteres`
+        } else {
+            return ''
+        }
+    }
+    const emailValidation = value => {
+        const emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        if (lengthValidation(value, 1) == '' && emailValid) {
+            return ''
+        }
+        else if (!emailValid) {
+            return 'ingrese un email valido'
+        } else {
+            return lengthValidation(value, 1)
+        }
+    }
+    const minMaxValidation = (value, min, max) => {
+        if ((parseInt(value)) < min || (parseInt(value)) > max) {
+            return 'numero invalido'
+        } else {
+            return ''
+        }
+    }
+    const validateForm = (formulario) => {
+        const validation = {
+            nombres: '',
+            apellidos: '',
+            ruc: '',
+            empresa: '',
+            correo: '',
+            telefono: '',
+            prioridad: '',
+            porcentajeCierre: '',
+            fechaContacto: '',
+        }
+        let formValidationTemp = {}
+        if (formulario.tipo == "persona") {
+            formValidationTemp = {
+                ...FormValidation,
+                empresa: '',
+                ruc: '',
+                nombres: lengthValidation(formulario.nombres, 3),
+                apellidos: lengthValidation(formulario.apellidos, 3),
+                correo: emailValidation(formulario.correo),
+                telefono: lengthValidation(formulario.telefono, 9),
+                prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
+                porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
+                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+            }
+            setFormValidation(
+                {
+                    ...FormValidation,
+                    empresa: '',
+                    ruc: '',
+                    nombres: lengthValidation(formulario.nombres, 3),
+                    apellidos: lengthValidation(formulario.apellidos, 3),
+                    correo: emailValidation(formulario.correo),
+                    telefono: lengthValidation(formulario.telefono, 9),
+                    prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
+                    porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
+                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                }
+            )
+        } else {
+            formValidationTemp = {
+                ...FormValidation,
+                nombres: '',
+                apellidos: '',
+                empresa: lengthValidation(formulario.empresa, 3),
+                ruc: '',
+                correo: emailValidation(formulario.correo),
+                telefono: lengthValidation(formulario.telefono, 9),
+                prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
+                porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
+                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+            }
+            setFormValidation(
+                {
+                    ...FormValidation,
+                    nombres: '',
+                    apellidos: '',
+                    empresa: lengthValidation(formulario.empresa, 3),
+                    ruc: '',
+                    correo: emailValidation(formulario.correo),
+                    telefono: lengthValidation(formulario.telefono, 9),
+                    prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
+                    porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
+                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                }
+            )
+        }
+        if (JSON.stringify(validation) != JSON.stringify(formValidationTemp)) {
+            return false
+        } else {
+            return true
+        }
+    }
     const submit = result => {
+        setValidate(true)
         result.preventDefault()
-        props.handleClose({ message: 'OK', content: { id: props.modalId, content: Form } })
+        if (validateForm(Form)) {
+            let sendedForm = {
+                ...Form,
+                prioridad: parseInt(Form.prioridad),
+                porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
+            }
+            props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
+        } else {
+            return false
+        }
     }
     const formatDate = (date) => {
         var d = new Date(date),
@@ -25,7 +137,19 @@ function AddCard(props) {
             day = '0' + day;
         return [year, month, day].join('-') + 'T00:00:00';
     }
-
+    const [FormValidation, setFormValidation] = React.useState(
+        {
+            nombres: '',
+            apellidos: '',
+            ruc: '',
+            empresa: '',
+            correo: '',
+            telefono: '',
+            prioridad: '',
+            porcentajeCierre: '',
+            fechaContacto: '',
+        }
+    )
     const [Form, setForm] = React.useState(
         {
             tipo: 'persona',
@@ -43,6 +167,22 @@ function AddCard(props) {
             comentario: ''
         }
     );
+    const handleForm = (value, key) => {
+        if (key == "fechaContacto") {
+            value = (value != '' && value != null) ? formatDate(value) : ''
+        }
+        const tempForm = {
+            ...Form,
+            [key]: value
+        }
+        setForm({
+            ...Form,
+            [key]: value
+        })
+        if (validate) {
+            validateForm(tempForm)
+        }
+    }
     const { classes } = props;
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -63,14 +203,14 @@ function AddCard(props) {
                 ) : null}
             </DialogTitle>
             <DialogContent dividers>
-                <form onSubmit={submit} autocomplete='off'>
+                <form onSubmit={submit} autoComplete='off'>
                     <div className={classes.form}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} className={classes.gridRadio}>
                                 <FormControl>
                                     <RadioGroup className={classes.radioGroup} aria-label="tipo" name="tipo" value={Form.tipo} onChange={(event) => setForm({ ...Form, tipo: event.target.value })} >
-                                        <FormControlLabel value={"persona"} control={<Radio />} label="Persona" />
-                                        <FormControlLabel value={"empresa"} control={<Radio />} label="Empresa" />
+                                        <FormControlLabel value={"persona"} control={<Radio color="default" className={classes.radioButton} />} label="Persona" />
+                                        <FormControlLabel value={"empresa"} control={<Radio color="default" className={classes.radioButton} />} label="Empresa" />
                                     </RadioGroup>
                                 </FormControl>
                             </Grid>
@@ -84,8 +224,10 @@ function AddCard(props) {
                                                 style={{ margin: 5 }}
                                                 fullWidth
                                                 value={Form.nombres}
-                                                onChange={(event) => { setForm({ ...Form, nombres: event.target.value }) }}
+                                                onChange={(event) => { handleForm(event.target.value, 'nombres') }}
                                                 margin="normal"
+                                                error={validate && FormValidation.nombres != ''}
+                                                helperText={FormValidation.nombres}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -94,14 +236,19 @@ function AddCard(props) {
                                                 label="Apellidos"
                                                 style={{ margin: 5 }}
                                                 fullWidth
-                                                onChange={(event) => setForm({ ...Form, apellidos: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'apellidos') }}
                                                 margin="normal"
+                                                error={validate && FormValidation.apellidos != ''}
+                                                helperText={FormValidation.apellidos}
                                             />
                                         </Grid>
                                         <Grid item sm={4} xs={6}>
                                             <FormControl fullWidth style={{ margin: 5 }}>
                                                 <InputLabel>Genero</InputLabel>
-                                                <Select value={Form.sexo} onChange={(event) => { setForm({ ...Form, sexo: event.target.value }) }}>
+                                                <Select
+                                                    value={Form.sexo}
+                                                    onChange={(event) => { handleForm(event.target.value, 'sexo') }}
+                                                >
                                                     <MenuItem value="">Ninguno</MenuItem>
                                                     <MenuItem value={"H"}>Hombre</MenuItem>
                                                     <MenuItem value={"M"}>Mujer</MenuItem>
@@ -115,10 +262,12 @@ function AddCard(props) {
                                                 label="Telefono"
                                                 style={{ margin: 5 }}
                                                 defaultValue={Form.telefono}
-                                                onChange={(event) => setForm({ ...Form, telefono: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'telefono') }}
                                                 type="number"
                                                 fullWidth
                                                 margin="normal"
+                                                error={validate && FormValidation.telefono != ''}
+                                                helperText={FormValidation.telefono}
                                             />
                                         </Grid>
                                         <Grid item sm={4} xs={12}>
@@ -127,10 +276,12 @@ function AddCard(props) {
                                                 label="Correo"
                                                 style={{ margin: 5 }}
                                                 defaultValue={Form.correo}
-                                                onChange={(event) => setForm({ ...Form, correo: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'correo') }}
                                                 type="email"
                                                 fullWidth
                                                 margin="normal"
+                                                error={validate && FormValidation.correo != ''}
+                                                helperText={FormValidation.correo}
                                             />
                                         </Grid>
                                     </Grid>) : (<Grid container spacing={2}>
@@ -142,8 +293,10 @@ function AddCard(props) {
                                                 fullWidth
                                                 type="text"
                                                 value={Form.empresa}
-                                                onChange={(event) => setForm({ ...Form, empresa: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'empresa') }}
                                                 margin="normal"
+                                                error={validate && FormValidation.empresa != ''}
+                                                helperText={FormValidation.empresa}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -153,9 +306,11 @@ function AddCard(props) {
                                                 style={{ margin: 5 }}
                                                 fullWidth
                                                 type="number"
-                                                value={Form.ruc}
-                                                onChange={(event) => setForm({ ...Form, ruc: event.target.value })}
+                                                defaultValue={Form.ruc}
+                                                onChange={(event) => { handleForm(event.target.value, 'ruc') }}
                                                 margin="normal"
+                                                error={validate && FormValidation.ruc != ''}
+                                                helperText={FormValidation.ruc}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -164,10 +319,12 @@ function AddCard(props) {
                                                 label="Telefono"
                                                 style={{ margin: 5 }}
                                                 defaultValue={Form.telefono}
-                                                onChange={(event) => setForm({ ...Form, telefono: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'telefono') }}
                                                 type="number"
                                                 fullWidth
                                                 margin="normal"
+                                                error={validate && FormValidation.telefono != ''}
+                                                helperText={FormValidation.telefono}
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -176,10 +333,12 @@ function AddCard(props) {
                                                 label="Correo"
                                                 style={{ margin: 5 }}
                                                 defaultValue={Form.correo}
-                                                onChange={(event) => setForm({ ...Form, correo: event.target.value })}
+                                                onChange={(event) => { handleForm(event.target.value, 'correo') }}
                                                 type="email"
                                                 fullWidth
                                                 margin="normal"
+                                                error={validate && FormValidation.correo != ''}
+                                                helperText={FormValidation.correo}
                                             />
                                         </Grid>
                                     </Grid>)}
@@ -190,10 +349,12 @@ function AddCard(props) {
                                     label="Prioridad"
                                     style={{ margin: 5 }}
                                     defaultValue={Form.prioridad}
-                                    onChange={(event) => setForm({ ...Form, prioridad: parseInt(event.target.value) })}
+                                    onChange={(event) => { handleForm(event.target.value, 'prioridad') }}
                                     type="number"
                                     fullWidth
                                     margin="normal"
+                                    error={validate && FormValidation.prioridad != ''}
+                                    helperText={FormValidation.prioridad}
                                 />
                             </Grid>
                             <Grid item sm={4} xs={6}>
@@ -202,10 +363,15 @@ function AddCard(props) {
                                     label="Porcentaje de cierre"
                                     style={{ margin: 5 }}
                                     defaultValue={Form.porcentajeCierre}
-                                    onChange={(event) => setForm({ ...Form, porcentajeCierre: parseInt(event.target.value) })}
+                                    onChange={(event) => { handleForm(event.target.value, 'porcentajeCierre') }}
                                     type="number"
                                     fullWidth
                                     margin="normal"
+                                    error={validate && FormValidation.porcentajeCierre != ''}
+                                    helperText={FormValidation.porcentajeCierre}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">%</InputAdornment>
+                                    }}
                                 />
                             </Grid>
                             <Grid item sm={4} xs={12}>
@@ -219,10 +385,12 @@ function AddCard(props) {
                                             id={"date-picker-inline" + props.modalId}
                                             label="Fecha de contacto"
                                             value={Form.fechaContacto}
-                                            onChange={(event) => setForm({ ...Form, fechaContacto: formatDate(event) })}
+                                            onChange={(event) => { handleForm(event, 'fechaContacto') }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
+                                            error={validate && FormValidation.fechaContacto != ''}
+                                            helperText={FormValidation.fechaContacto}
                                         />
                                     </Hidden>
                                     <Hidden mdUp>
@@ -232,10 +400,12 @@ function AddCard(props) {
                                             label="Fecha de contacto"
                                             format="dd/MM/yyyy"
                                             value={Form.fechaContacto}
-                                            onChange={(event) => setForm({ ...Form, fechaContacto: formatDate(event) })}
+                                            onChange={(event) => { handleForm(event, 'fechaContacto') }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
+                                            error={validate && FormValidation.fechaContacto != ''}
+                                            helperText={FormValidation.fechaContacto}
                                         />
                                     </Hidden>
                                 </MuiPickersUtilsProvider>

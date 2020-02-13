@@ -131,7 +131,7 @@ class Tablero extends React.Component {
       id: `task-${newId}`,
       content: {
         idCliente: newId,
-        titulo: result.content.nombre,
+        titulo: result.content.nombres + ' ' + result.content.apellidos,
         prioridad: result.content.prioridad,
         prioridadColor: 'yellow',
         prioridadColorText: 'black',
