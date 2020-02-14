@@ -7,37 +7,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/AddCard';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import { lengthValidation, minMaxValidation, emailValidation } from '../utilities/validator'
+import { formatDate } from '../utilities/formaters'
 
 function AddCard(props) {
     const [validate, setValidate] = React.useState(false)
-    const lengthValidation = (value, min) => {
-        if (value == '' || !value) {
-            return 'el campo no puede quedar vacio'
-        }
-        if (value.length < min) {
-            return `ingrese al menos ${min} caracteres`
-        } else {
-            return ''
-        }
-    }
-    const emailValidation = value => {
-        const emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        if (lengthValidation(value, 1) == '' && emailValid) {
-            return ''
-        }
-        else if (!emailValid) {
-            return 'ingrese un email valido'
-        } else {
-            return lengthValidation(value, 1)
-        }
-    }
-    const minMaxValidation = (value, min, max) => {
-        if ((parseInt(value)) < min || (parseInt(value)) > max) {
-            return 'numero invalido'
-        } else {
-            return ''
-        }
-    }
     const validateForm = (formulario) => {
         const validation = {
             nombres: '',
@@ -62,7 +36,8 @@ function AddCard(props) {
                 telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                fechaContacto: '',
             }
             setFormValidation(
                 {
@@ -75,7 +50,8 @@ function AddCard(props) {
                     telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                    // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                    fechaContacto: '',
                 }
             )
         } else {
@@ -89,7 +65,8 @@ function AddCard(props) {
                 telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                fechaContacto: '',
             }
             setFormValidation(
                 {
@@ -102,7 +79,8 @@ function AddCard(props) {
                     telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                    // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
+                    fechaContacto: '',
                 }
             )
         }
@@ -118,6 +96,7 @@ function AddCard(props) {
         if (validateForm(Form)) {
             let sendedForm = {
                 ...Form,
+                titulo: Form.tipo == 'persona' ? Form.nombres + ' ' + Form.apellidos : Form.empresa + ' ' + Form.ruc,
                 prioridad: parseInt(Form.prioridad),
                 porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
             }
@@ -126,17 +105,7 @@ function AddCard(props) {
             return false
         }
     }
-    const formatDate = (date) => {
-        var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-        if (month.length < 2)
-            month = '0' + month;
-        if (day.length < 2)
-            day = '0' + day;
-        return [year, month, day].join('-') + 'T00:00:00';
-    }
+
     const [FormValidation, setFormValidation] = React.useState(
         {
             nombres: '',
@@ -153,15 +122,16 @@ function AddCard(props) {
     const [Form, setForm] = React.useState(
         {
             tipo: 'persona',
+            titulo: '',
             nombres: '',
             apellidos: '',
             ruc: '',
             empresa: '',
-            sexo: '',
+            genero: '',
             telefono: '',
             correo: '',
-            porcentajeCierre: null,
-            prioridad: null,
+            porcentajeCierre: '',
+            prioridad: '',
             fechaContacto: null,
             direccion: '',
             comentario: ''
@@ -246,8 +216,8 @@ function AddCard(props) {
                                             <FormControl fullWidth style={{ margin: 5 }}>
                                                 <InputLabel>Genero</InputLabel>
                                                 <Select
-                                                    value={Form.sexo}
-                                                    onChange={(event) => { handleForm(event.target.value, 'sexo') }}
+                                                    value={Form.genero}
+                                                    onChange={(event) => { handleForm(event.target.value, 'genero') }}
                                                 >
                                                     <MenuItem value="">Ninguno</MenuItem>
                                                     <MenuItem value={"H"}>Hombre</MenuItem>

@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Card from './Card';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import useStyles from '../styles/Board';
-import { withStyles, Button, Tooltip } from '@material-ui/core';
+import { withStyles, Button, Tooltip, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SortIcon from '@material-ui/icons/Sort';
 import AddCard from './AddCard';
@@ -85,9 +85,9 @@ class Board extends React.Component {
             <div className={classes.containerRelative}>
               <h5 className={classes.Total}>Cantidad Total: {this.props.tasks.length}</h5>
               <Tooltip title="ordenar" placement="top" arrow>
-                <Button className={classes.sortButton} onClick={() => { this.props.sortCards(this.props.column.id) }}>
+                <IconButton className={classes.sortButton} onClick={() => { this.props.sortCards(this.props.column.id) }}>
                   <SortIcon />
-                </Button>
+                </IconButton>
               </Tooltip>
             </div>
             <Droppable droppableId={this.props.column.id} type="task"

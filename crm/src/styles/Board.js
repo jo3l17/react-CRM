@@ -76,7 +76,7 @@ const useStyles = theme => ({
     sortButton: {
         position: 'absolute',
         right: 5,
-        top: -10
+        top: -18
     },
     containerRelative: {
         textAlign: 'center',

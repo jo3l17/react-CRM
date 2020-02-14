@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Board from './Board'
+import axios from 'axios';
 import Card from './Card'
 // import '../App.css'
 import initialData from '../data';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
 import { withStyles } from '@material-ui/core';
+import { BackUrl } from '../utilities/const';
 
 class InnerList extends React.PureComponent {
   render() {
@@ -131,7 +133,13 @@ class Tablero extends React.Component {
       id: `task-${newId}`,
       content: {
         idCliente: newId,
-        titulo: result.content.nombres + ' ' + result.content.apellidos,
+        tipo: result.content.tipo,
+        titulo: result.content.titulo,
+        nombres: result.content.nombres,
+        empresa: result.content.empresa,
+        genero: result.content.genero,
+        ruc: result.content.ruc,
+        apellidos: result.content.apellidos,
         prioridad: result.content.prioridad,
         prioridadColor: 'yellow',
         prioridadColorText: 'black',
@@ -178,6 +186,11 @@ class Tablero extends React.Component {
     this.setState(newState);
   }
   render() {
+    axios.get(BackUrl + 'http://server.mercadobodegas.cl/api/instalaciones/traertodos').then(res => {
+      console.log(res)
+    }).catch(error => {
+      console.log(error)
+    });
     const { classes } = this.props
     return (
       <DragDropContext onDragEnd={this.onDragEnd}

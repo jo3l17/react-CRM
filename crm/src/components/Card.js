@@ -9,6 +9,7 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import EditCard from './EditCard';
+import GavelIcon from '@material-ui/icons/Gavel';
 function Card(props) {
   function tiempoSinContacto() {
     if (props.task.content.tiempoSinContactoNumber) {
@@ -62,8 +63,8 @@ function Card(props) {
               </ListItem>
               <ListItem className={classes.leftListItem}>
                 <ListItemIcon className={classes.leftListItemIcon}>
-                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.deleteButton}`}>
-                    <DeleteIcon className={classes.leftListIcon} />
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                    <GavelIcon className={classes.leftListIcon} />
                   </Button>
                 </ListItemIcon>
               </ListItem>
