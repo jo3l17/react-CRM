@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, InputLabel, FormControl, Select, MenuItem, RadioGroup, FormControlLabel, Radio, DialogTitle, DialogContent, DialogActions, InputAdornment } from '@material-ui/core';
@@ -9,6 +10,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { lengthValidation, minMaxValidation, emailValidation } from '../utilities/validator'
 import { formatDate } from '../utilities/formaters'
+import { BackUrl } from '../utilities/const';
 
 function AddCard(props) {
     const [validate, setValidate] = React.useState(false)
@@ -100,12 +102,31 @@ function AddCard(props) {
                 prioridad: parseInt(Form.prioridad),
                 porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
             }
+            // let formDataBase = {
+            //     prospecto: {
+            //         probabilidad_cierre: 0.154,
+            //         prioridad: 5,
+            //         id_estado_embudo_venta: 1,
+            //         hora_fecha_contacto: sendedForm.fechaContacto,
+            //     },
+            //     cliente: {
+            //         nombres: "Andres Alejandro",
+            //         apellidos: "Juarez Jimenez",
+            //         genero: "H",
+            //         direccion: "Urb Manzana Roja, Calle Tobaco 13",
+            //         web: 'www.gestion.pe',
+            //         comentario: 'Creo que hay chance alta que se cierre'
+            //     },
+            // }
+            // axios.post(BackUrl + 'prospectos/crear').then(res => {
+            //     console.log(res);
+            //     console.log(res.data)
+            // })
             props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
         } else {
             return false
         }
     }
-
     const [FormValidation, setFormValidation] = React.useState(
         {
             nombres: '',

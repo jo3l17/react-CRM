@@ -11,7 +11,7 @@ import { BackUrl } from '../utilities/const';
 
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index, sortCards, renderChange, addCard } = this.props;
+    const { column, taskMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
     const tasks = column.taskIds.map(taskId => taskMap[taskId]);
     return <Board
       column={column}
@@ -20,6 +20,7 @@ class InnerList extends React.PureComponent {
       sortCards={sortCards}
       renderChange={renderChange}
       addCard={addCard}
+      deleteCard={deleteCard}
     // isDropDisabled={isDropDisabled}
     />
   }
@@ -82,7 +83,6 @@ class Tablero extends React.Component {
     // const column = this.state.columns[source.droppableId];
     const start = this.state.columns[source.droppableId];
     const finish = this.state.columns[destination.droppableId];
-    console.log(start)
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -185,12 +185,32 @@ class Tablero extends React.Component {
     };
     this.setState(newState);
   }
+  deleteCard = result => {
+    const newTasks = this.state.tasks
+    delete newTasks[result.taskId];
+    const column = this.state.columns[result.columnId]
+    const newTasksIds = column.taskIds
+    const index = newTasksIds.indexOf(result.taskId)
+    newTasksIds.splice(index, 1);
+    const newColumn = {
+      ...column,
+      taskIds: newTasksIds
+    }
+    const newState = {
+      tasks: newTasks,
+      columns: {
+        ...this.state.columns,
+        [result.columnId]: newColumn
+      }
+    }
+    this.setState(newState)
+  }
   render() {
-    axios.get(BackUrl + 'http://server.mercadobodegas.cl/api/instalaciones/traertodos').then(res => {
-      console.log(res)
-    }).catch(error => {
-      console.log(error)
-    });
+    // axios.get(BackUrl + 'prospectos/obtener').then(res => {
+    //   console.log(res)
+    // }).catch(error => {
+    //   console.log(error)
+    // });
     const { classes } = this.props
     return (
       <DragDropContext onDragEnd={this.onDragEnd}
@@ -217,6 +237,7 @@ class Tablero extends React.Component {
                   sortCards={this.sortCards}
                   renderChange={this.renderChange}
                   addCard={this.addCard}
+                  deleteCard={this.deleteCard}
                 />);
               })}
               {provided.placeholder}

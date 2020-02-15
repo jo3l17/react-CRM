@@ -10,6 +10,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import EditCard from './EditCard';
 import GavelIcon from '@material-ui/icons/Gavel';
+import DeleteCloseCard from './DeleteCloseCard';
 function Card(props) {
   function tiempoSinContacto() {
     if (props.task.content.tiempoSinContactoNumber) {
@@ -19,7 +20,7 @@ function Card(props) {
         </div>
       )
     } else {
-      return <div style={{height:20}}></div>
+      return <div style={{ height: 20 }}></div>
     }
   }
   // const {renderChange} = props.renderChange
@@ -37,6 +38,16 @@ function Card(props) {
     }
     setOpenDialog(false);
   };
+  const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
+  const handleClickOpenDelete = () => {
+    setOpenDialogDelete(true);
+  };
+  const handleCloseDelete = result => {
+    if (result = 'deleted') {
+      props.deleteCard(props.task.id)
+    }
+    setOpenDialogDelete(false);
+  };
   return (
     <Draggable draggableId={props.task.id}
       index={props.index}
@@ -52,6 +63,7 @@ function Card(props) {
           {/* <div className={classes.handle} {...provided.dragHandleProps}>
           </div> */}
           <EditCard open={openDialog} handleClose={handleClose} data={props.task} modalId={props.task.id} />
+          <DeleteCloseCard open={openDialogDelete} handleClose={handleCloseDelete} data={props.task} modalId={props.task.id} />
           <div className={classes.container}>
             <List className={classes.leftList}>
               <ListItem className={classes.leftListItem}>
@@ -63,7 +75,7 @@ function Card(props) {
               </ListItem>
               <ListItem className={classes.leftListItem}>
                 <ListItemIcon className={classes.leftListItemIcon}>
-                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`}>
+                  <Button variant="outlined" className={`${classes.leftListButton} ${classes.darkButton}`} onClick={handleClickOpenDelete}>
                     <GavelIcon className={classes.leftListIcon} />
                   </Button>
                 </ListItemIcon>

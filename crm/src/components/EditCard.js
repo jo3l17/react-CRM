@@ -164,9 +164,9 @@ function EditCard(props) {
             maxWidth={'sm'}
             fullScreen={fullScreen}
             onClose={props.handleClose}
-            aria-labelledby={"dialog-" + props.modalId}
+            aria-labelledby={"edit-dialog-" + props.modalId}
             open={props.open}>
-            <DialogTitle id={"dialog-" + props.modalId} onClose={props.handleClose}>
+            <DialogTitle id={"edit-dialog-" + props.modalId} onClose={props.handleClose}>
                 Editar Prospecto
             </DialogTitle>
             <DialogContent dividers>

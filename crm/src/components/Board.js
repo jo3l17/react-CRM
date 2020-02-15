@@ -54,7 +54,7 @@ class InnerList extends React.Component {
     super(props)
   }
   render() {
-    return this.props.tasks.map((task, index) => (<Card renderChange={this.props.renderChange} key={task.id} task={task} index={index} />))
+    return this.props.tasks.map((task, index) => (<Card deleteCard={this.props.deleteCard} renderChange={this.props.renderChange} key={task.id} task={task} index={index} />))
   }
 }
 class Board extends React.Component {
@@ -70,6 +70,9 @@ class Board extends React.Component {
       this.props.addCard(result.content)
     this.setState({ dialogOpen: false })
   };
+  handleDelete = result => {
+    this.props.deleteCard({ columnId: this.props.column.id, taskId: result })
+  }
   render() {
     const { classes } = this.props
     return (
@@ -100,7 +103,7 @@ class Board extends React.Component {
                   ref={provided.innerRef}
                   className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
                 >
-                  <InnerList tasks={this.props.tasks} renderChange={this.props.renderChange} sortedCard={this.state.sortedCards} />
+                  <InnerList tasks={this.props.tasks} deleteCard={this.handleDelete} renderChange={this.props.renderChange} sortedCard={this.state.sortedCards} />
                   {provided.placeholder}
                 </div>
               )}
