@@ -296,14 +296,9 @@ const initialData = {
                 'task-9',
             ]
         },
-        'column-5': {
-            id: 'column-5',
-            title: 'Ejemplo',
-            taskIds: []
-        },
     },
     columnOrder: ['column-1', 'column-2',
-        'column-3', 'column-4', 'column-5'
+        'column-3', 'column-4'
     ]
 };
 export default initialData;

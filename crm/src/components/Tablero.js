@@ -6,9 +6,9 @@ import Card from './Card'
 import initialData from '../data';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
-import { withStyles } from '@material-ui/core';
+import { withStyles, Button } from '@material-ui/core';
 import { BackUrl } from '../utilities/const';
-
+import AddIcon from '@material-ui/icons/Add'
 class InnerList extends React.PureComponent {
   render() {
     const { column, taskMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
@@ -127,7 +127,7 @@ class Tablero extends React.Component {
   addCard = result => {
     const column = this.state.columns[result.id]
     const tasks = this.state.tasks
-    const lastTaskId = tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]].id
+    const lastTaskId = tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]] ? tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]].id : 'task-1'
     const newId = parseInt(lastTaskId.split('-')[1]) + 1
     const newCard = {
       id: `task-${newId}`,
@@ -205,12 +205,14 @@ class Tablero extends React.Component {
     }
     this.setState(newState)
   }
+  componentDidMount() {
+    axios.get(BackUrl + 'tableros/obtener/1').then(res => {
+      this.setState(res.data.content);
+    }).catch(error => {
+      console.log(error)
+    });
+  }
   render() {
-    // axios.get(BackUrl + 'prospectos/obtener').then(res => {
-    //   console.log(res)
-    // }).catch(error => {
-    //   console.log(error)
-    // });
     const { classes } = this.props
     return (
       <DragDropContext onDragEnd={this.onDragEnd}
@@ -241,6 +243,9 @@ class Tablero extends React.Component {
                 />);
               })}
               {provided.placeholder}
+              {/* <Button className={classes.addButton}>
+                <AddIcon />
+              </Button> */}
             </div>
           )}
         </Droppable>

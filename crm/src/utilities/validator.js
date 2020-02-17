@@ -13,10 +13,10 @@ export const emailValidation = value => {
     if (lengthValidation(value, 1) == '' && emailValid) {
         return ''
     }
-    else if (!emailValid) {
-        return 'ingrese un email valido'
-    } else {
+    else if (value=='') {
         return lengthValidation(value, 1)
+    } else {
+        return 'ingrese un email valido'
     }
 }
 export const minMaxValidation = (value, min, max) => {

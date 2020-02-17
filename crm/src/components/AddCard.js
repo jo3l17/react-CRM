@@ -93,6 +93,7 @@ function AddCard(props) {
         }
     }
     const submit = result => {
+
         setValidate(true)
         result.preventDefault()
         if (validateForm(Form)) {
@@ -100,28 +101,39 @@ function AddCard(props) {
                 ...Form,
                 titulo: Form.tipo == 'persona' ? Form.nombres + ' ' + Form.apellidos : Form.empresa + ' ' + Form.ruc,
                 prioridad: parseInt(Form.prioridad),
-                porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
+                porcentajeCierre: (Form.porcentajeCierre == '') ? 0 : parseInt(Form.porcentajeCierre)
             }
-            // let formDataBase = {
-            //     prospecto: {
-            //         probabilidad_cierre: 0.154,
-            //         prioridad: 5,
-            //         id_estado_embudo_venta: 1,
-            //         hora_fecha_contacto: sendedForm.fechaContacto,
-            //     },
-            //     cliente: {
-            //         nombres: "Andres Alejandro",
-            //         apellidos: "Juarez Jimenez",
-            //         genero: "H",
-            //         direccion: "Urb Manzana Roja, Calle Tobaco 13",
-            //         web: 'www.gestion.pe',
-            //         comentario: 'Creo que hay chance alta que se cierre'
-            //     },
-            // }
-            // axios.post(BackUrl + 'prospectos/crear').then(res => {
-            //     console.log(res);
-            //     console.log(res.data)
-            // })
+            let formDataBase = {
+                prospecto: {
+                    porcentaje_cierre: sendedForm.porcentajeCierre,
+                    prioridad: sendedForm.prioridad,
+                    id_estado_embudo_venta: parseInt(props.modalId.split('-')[1]),
+                    hora_fecha_contacto: sendedForm.fechaContacto,
+                },
+                cliente: {
+                    empresa: sendedForm.empresa,
+                    ruc: sendedForm.ruc,
+                    nombres: sendedForm.nombres,
+                    apellidos: sendedForm.apellidos,
+                    genero: sendedForm.genero,
+                    direccion: sendedForm.direccion,
+                    comentario: sendedForm.comentario
+                },
+            }
+            if (Form.tipo == 'persona') {
+                delete formDataBase.cliente.empresa
+                delete formDataBase.cliente.ruc
+            } else {
+                delete formDataBase.cliente.nombres
+                delete formDataBase.cliente.apellidos
+                delete formDataBase.cliente.genero
+            }
+            axios.post(BackUrl + 'prospectos/agregar', formDataBase).then(res => {
+                console.log(res);
+                console.log(res.data)
+            }).catch(error => {
+                console.log(error)
+            })
             props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
         } else {
             return false
@@ -252,7 +264,7 @@ function AddCard(props) {
                                                 id={"Telefono" + props.modalId}
                                                 label="Telefono"
                                                 style={{ margin: 5 }}
-                                                defaultValue={Form.telefono}
+                                                value={Form.telefono}
                                                 onChange={(event) => { handleForm(event.target.value, 'telefono') }}
                                                 type="number"
                                                 fullWidth
@@ -266,7 +278,7 @@ function AddCard(props) {
                                                 id={"Correo" + props.modalId}
                                                 label="Correo"
                                                 style={{ margin: 5 }}
-                                                defaultValue={Form.correo}
+                                                value={Form.correo}
                                                 onChange={(event) => { handleForm(event.target.value, 'correo') }}
                                                 type="email"
                                                 fullWidth
@@ -309,7 +321,7 @@ function AddCard(props) {
                                                 id={"Telefono" + props.modalId}
                                                 label="Telefono"
                                                 style={{ margin: 5 }}
-                                                defaultValue={Form.telefono}
+                                                value={Form.telefono}
                                                 onChange={(event) => { handleForm(event.target.value, 'telefono') }}
                                                 type="number"
                                                 fullWidth
@@ -323,7 +335,7 @@ function AddCard(props) {
                                                 id={"Correo" + props.modalId}
                                                 label="Correo"
                                                 style={{ margin: 5 }}
-                                                defaultValue={Form.correo}
+                                                value={Form.correo}
                                                 onChange={(event) => { handleForm(event.target.value, 'correo') }}
                                                 type="email"
                                                 fullWidth
@@ -339,7 +351,7 @@ function AddCard(props) {
                                     id={"prioridad" + props.modalId}
                                     label="Prioridad"
                                     style={{ margin: 5 }}
-                                    defaultValue={Form.prioridad}
+                                    value={Form.prioridad}
                                     onChange={(event) => { handleForm(event.target.value, 'prioridad') }}
                                     type="number"
                                     fullWidth
@@ -353,7 +365,7 @@ function AddCard(props) {
                                     id={"porcentajeCierre" + props.modalId}
                                     label="Porcentaje de cierre"
                                     style={{ margin: 5 }}
-                                    defaultValue={Form.porcentajeCierre}
+                                    value={Form.porcentajeCierre}
                                     onChange={(event) => { handleForm(event.target.value, 'porcentajeCierre') }}
                                     type="number"
                                     fullWidth
