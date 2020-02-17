@@ -8,7 +8,6 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
 import { withStyles, Button } from '@material-ui/core';
 import { BackUrl } from '../utilities/const';
-import AddIcon from '@material-ui/icons/Add'
 class InnerList extends React.PureComponent {
   render() {
     const { column, taskMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
@@ -214,43 +213,49 @@ class Tablero extends React.Component {
   }
   render() {
     const { classes } = this.props
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}
-        onDragStart={this.onDragStart}
-        onDragUpdate={this.onDragUpdate}>
-        <Droppable
-          droppableId="all-columns"
-          direction="horizontal"
-          type="column">
-          {provided => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className={classes.container}>
-              {this.state.columnOrder.map((columnId, index) => {
-                const column = this.state.columns[columnId];
-                // const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
-                // const isDropDisabled = index<homeIndex
-                return (<InnerList
-                  key={column.id}
-                  column={column}
-                  taskMap={this.state.tasks}
-                  index={index}
-                  sortCards={this.sortCards}
-                  renderChange={this.renderChange}
-                  addCard={this.addCard}
-                  deleteCard={this.deleteCard}
-                />);
-              })}
-              {provided.placeholder}
-              {/* <Button className={classes.addButton}>
-                <AddIcon />
-              </Button> */}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    )
+    console.log(JSON.stringify(this.state))
+    if (JSON.stringify(this.state) == '{}') {
+      return (<div>Preloader</div>)
+    } else {
+      console.log(this.state)
+      return (
+        <DragDropContext onDragEnd={this.onDragEnd}
+          onDragStart={this.onDragStart}
+          onDragUpdate={this.onDragUpdate}>
+          <Droppable
+            droppableId="all-columns"
+            direction="horizontal"
+            type="column">
+            {provided => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={classes.container}>
+                {this.state.columnOrder.map((columnId, index) => {
+                  const column = this.state.columns[columnId];
+                  // const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
+                  // const isDropDisabled = index<homeIndex
+                  return (<InnerList
+                    key={column.id}
+                    column={column}
+                    taskMap={this.state.tasks}
+                    index={index}
+                    sortCards={this.sortCards}
+                    renderChange={this.renderChange}
+                    addCard={this.addCard}
+                    deleteCard={this.deleteCard}
+                  />);
+                })}
+                {provided.placeholder}
+                {/* <Button className={classes.addButton}>
+                      <AddIcon />
+                    </Button> */}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )
+    }
   }
 }
 
