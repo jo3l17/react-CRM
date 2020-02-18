@@ -6,7 +6,7 @@ import Card from './Card'
 import initialData from '../data';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
-import { withStyles, Button } from '@material-ui/core';
+import { withStyles, Button, LinearProgress } from '@material-ui/core';
 import { BackUrl } from '../utilities/const';
 class InnerList extends React.PureComponent {
   render() {
@@ -102,6 +102,8 @@ class Tablero extends React.Component {
     }
     // Moving from one list to another
     const startTasksIds = Array.from(start.taskIds);
+    const idCard = parseInt(startTasksIds[source.index].split('-')[1])
+    const idColumn = parseInt(finish.id.split('-')[1])
     startTasksIds.splice(source.index, 1);
     const newStart = {
       ...start,
@@ -121,6 +123,16 @@ class Tablero extends React.Component {
         [newFinish.id]: newFinish
       }
     };
+    let newOrder = {
+      id: idCard,
+      idColumna: idColumn
+    }
+    console.log(newOrder);
+    axios.post(BackUrl + 'prospectos/cambiar_estado', newOrder).then(res => {
+      console.log(res)
+    }).catch(error => {
+      console.log(error)
+    })
     this.setState(newState);
   }
   addCard = result => {
@@ -213,11 +225,9 @@ class Tablero extends React.Component {
   }
   render() {
     const { classes } = this.props
-    console.log(JSON.stringify(this.state))
     if (JSON.stringify(this.state) == '{}') {
-      return (<div>Preloader</div>)
+      return (<LinearProgress variant="query" />)
     } else {
-      console.log(this.state)
       return (
         <DragDropContext onDragEnd={this.onDragEnd}
           onDragStart={this.onDragStart}

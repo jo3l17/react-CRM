@@ -2,9 +2,20 @@ import React from 'react'
 import { Dialog, DialogTitle, Typography, IconButton, DialogContent, Grid, Button, DialogActions } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/DeleteCloseCard'
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
 function DeleteCloseCard(props) {
-    const deleteTask = result => {
-        props.handleClose('deleted')
+    const taskState = estado => {
+        const id = parseInt(props.modalId.split('-')[1])
+        let objEliminar = { id, estado }
+        axios.post(BackUrl + 'prospectos/cierre', objEliminar).then(res => {
+            console.log(res)
+            if (res.data.message == 'OK') {
+                props.handleClose('deleted')
+            }
+        }).catch(error => {
+            console.log(error)
+        })
     }
     const classes = useStyles()
     return (
@@ -31,10 +42,10 @@ function DeleteCloseCard(props) {
                             ¿Desea marcar este prospecto como:
                         </Typography>
                         <div className={classes.buttonContainer} >
-                            <Button variant="outlined" className={classes.proccessButton}>
+                            <Button variant="outlined" className={classes.proccessButton} onClick={() => taskState('ganado')}>
                                 Ganado
                             </Button>
-                            <Button variant="outlined" className={classes.lostButton}>
+                            <Button variant="outlined" className={classes.lostButton} onClick={() => taskState('perdido')}>
                                 Perdido
                             </Button>
                         </div>
@@ -43,7 +54,7 @@ function DeleteCloseCard(props) {
                         <Typography className={classes.opcion}>
                             ...o desea eliminarlo?
                         </Typography>
-                        <Button variant="outlined" className={classes.deleteButton} onClick={deleteTask}>
+                        <Button variant="outlined" className={classes.deleteButton} onClick={() => taskState('eliminado')}>
                             Eliminar
                         </Button>
                     </Grid>

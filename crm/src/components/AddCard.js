@@ -13,6 +13,7 @@ import { formatDate } from '../utilities/formaters'
 import { BackUrl } from '../utilities/const';
 
 function AddCard(props) {
+    const today = new Date();
     const [validate, setValidate] = React.useState(false)
     const validateForm = (formulario) => {
         const validation = {
@@ -38,8 +39,7 @@ function AddCard(props) {
                 telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
-                fechaContacto: '',
+                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
             }
             setFormValidation(
                 {
@@ -52,8 +52,7 @@ function AddCard(props) {
                     telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
-                    fechaContacto: '',
+                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
                 }
             )
         } else {
@@ -67,8 +66,7 @@ function AddCard(props) {
                 telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
-                fechaContacto: '',
+                fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
             }
             setFormValidation(
                 {
@@ -81,8 +79,7 @@ function AddCard(props) {
                     telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    // fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : lengthValidation(formulario.fechaContacto, 0),
-                    fechaContacto: '',
+                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
                 }
             )
         }
@@ -93,7 +90,6 @@ function AddCard(props) {
         }
     }
     const submit = result => {
-
         setValidate(true)
         result.preventDefault()
         if (validateForm(Form)) {
@@ -128,13 +124,35 @@ function AddCard(props) {
                 delete formDataBase.cliente.apellidos
                 delete formDataBase.cliente.genero
             }
+            console.log(Form)
             axios.post(BackUrl + 'prospectos/agregar', formDataBase).then(res => {
                 console.log(res);
                 console.log(res.data)
+                if (res.data.prospecto.message == 'OK' && res.data.cliente.message == 'OK') {
+                    setValidate(false)
+                    props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
+                }
+                setForm(
+                    {
+                        tipo: 'persona',
+                        titulo: '',
+                        nombres: '',
+                        apellidos: '',
+                        ruc: '',
+                        empresa: '',
+                        genero: '',
+                        telefono: '',
+                        correo: '',
+                        porcentajeCierre: '',
+                        prioridad: '',
+                        fechaContacto: null,
+                        direccion: '',
+                        comentario: ''
+                    }
+                )
             }).catch(error => {
                 console.log(error)
             })
-            props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
         } else {
             return false
         }
@@ -392,6 +410,7 @@ function AddCard(props) {
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
+                                            maxDate={today}
                                             error={validate && FormValidation.fechaContacto != ''}
                                             helperText={FormValidation.fechaContacto}
                                         />
@@ -407,6 +426,7 @@ function AddCard(props) {
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
+                                            maxDate={today}
                                             error={validate && FormValidation.fechaContacto != ''}
                                             helperText={FormValidation.fechaContacto}
                                         />
