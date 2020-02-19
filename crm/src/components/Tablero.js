@@ -10,11 +10,11 @@ import { withStyles, Button, LinearProgress } from '@material-ui/core';
 import { BackUrl } from '../utilities/const';
 class InnerList extends React.PureComponent {
   render() {
-    const { column, taskMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
-    const tasks = column.taskIds.map(taskId => taskMap[taskId]);
+    const { column, cardMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
+    const cards = column.cardIds.map(cardId => cardMap[cardId]);
     return <Board
       column={column}
-      tasks={tasks}
+      cards={cards}
       index={index}
       sortCards={sortCards}
       renderChange={renderChange}
@@ -33,18 +33,18 @@ class Tablero extends React.Component {
   }
   onDragUpdate = update => {
     const { destination } = update;
-    const opacity = destination ? destination.index / Object.keys(this.state.tasks).length : 0
+    const opacity = destination ? destination.index / Object.keys(this.state.cards).length : 0
     // document.body.style.backgroundColor = `rgba(153,141,217,${opacity})`
   }
   sortCards = columnId => {
     const column = this.state.columns[columnId]
-    const taskMap = this.state.tasks
-    const taskOrdered = column.taskIds.map(taskId => taskMap[taskId])
-    taskOrdered.sort((a, b) => (a.content.prioridad - b.content.prioridad))
-    const newTaskIds = taskOrdered.map((task) => task.id)
+    const cardMap = this.state.cards
+    const cardOrdered = column.cardIds.map(cardId => cardMap[cardId])
+    cardOrdered.sort((a, b) => (a.content.prioridad - b.content.prioridad))
+    const newcardIds = cardOrdered.map((card) => card.id)
     const newColumn = {
       ...column,
-      taskIds: newTaskIds
+      cardIds: newCardIds
     };
     const newState = {
       ...this.state,
@@ -83,12 +83,12 @@ class Tablero extends React.Component {
     const start = this.state.columns[source.droppableId];
     const finish = this.state.columns[destination.droppableId];
     if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
+      const newCardIds = Array.from(start.cardIds);
+      newCardIds.splice(source.index, 1);
+      newCardIds.splice(destination.index, 0, draggableId);
       const newColumn = {
         ...start,
-        taskIds: newTaskIds
+        cardIds: newCardIds
       };
       const newState = {
         ...this.state,
@@ -101,19 +101,19 @@ class Tablero extends React.Component {
       return
     }
     // Moving from one list to another
-    const startTasksIds = Array.from(start.taskIds);
-    const idCard = parseInt(startTasksIds[source.index].split('-')[1])
+    const startCardsIds = Array.from(start.cardIds);
+    const idCard = parseInt(startCardsIds[source.index].split('-')[1])
     const idColumn = parseInt(finish.id.split('-')[1])
-    startTasksIds.splice(source.index, 1);
+    startCardsIds.splice(source.index, 1);
     const newStart = {
       ...start,
-      taskIds: startTasksIds,
+      cardIds: startCardsIds,
     };
-    const finishTasksIds = Array.from(finish.taskIds);
-    finishTasksIds.splice(destination.index, 0, draggableId);
+    const finishCardsIds = Array.from(finish.cardIds);
+    finishCardsIds.splice(destination.index, 0, draggableId);
     const newFinish = {
       ...finish,
-      taskIds: finishTasksIds,
+      cardIds: finishCardsIds,
     };
     const newState = {
       ...this.state,
@@ -136,48 +136,49 @@ class Tablero extends React.Component {
     this.setState(newState);
   }
   addCard = result => {
+    console.log(result);
     const column = this.state.columns[result.id]
-    const tasks = this.state.tasks
-    const lastTaskId = tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]] ? tasks[Object.keys(tasks)[Object.keys(tasks).length - 1]].id : 'task-1'
-    const newId = parseInt(lastTaskId.split('-')[1]) + 1
-    const newCard = {
-      id: `task-${newId}`,
-      content: {
-        idCliente: newId,
-        tipo: result.content.tipo,
-        titulo: result.content.titulo,
-        nombres: result.content.nombres,
-        empresa: result.content.empresa,
-        genero: result.content.genero,
-        ruc: result.content.ruc,
-        apellidos: result.content.apellidos,
-        prioridad: result.content.prioridad,
-        prioridadColor: 'yellow',
-        prioridadColorText: 'black',
-        tiempoSinContacto: '8 días sin contactar',
-        tiempoSinContactoNumber: null,
-        fechaContacto: result.content.fechaContacto,
-        porcentajeCierre: result.content.porcentajeCierre,
-        porcentajeColor: '#66fe00',
-        interacciones: {
-          whatsapp: 0,
-          telefono: 0,
-          correo: 0
-        }
-      }
-    }
-    const newTaskIds = column.taskIds
-    newTaskIds.push(newCard.id)
-    const newTasks = {
-      ...this.state.tasks,
+    // const cards = this.state.cards
+    // const lastCardId = cards[Object.keys(cards)[Object.keys(cards).length - 1]] ? cards[Object.keys(cards)[Object.keys(cards).length - 1]].id : 'card-1'
+    // const newId = parseInt(lastCardId.split('-')[1]) + 1
+    const newCard = result.content
+    //   id: `card-${newId}`,
+    //   content: {
+    //     idCliente: newId,
+    //     tipo: result.content.tipo,
+    //     titulo: result.content.titulo,
+    //     nombres: result.content.nombres,
+    //     empresa: result.content.empresa,
+    //     genero: result.content.genero,
+    //     ruc: result.content.ruc,
+    //     apellidos: result.content.apellidos,
+    //     prioridad: result.content.prioridad,
+    //     prioridadColor: result.content.prioridadColor,
+    //     prioridadColorText: result.content.prioridadColor,
+    //     tiempoSinContacto: result.content.tiempoSinContacto,
+    //     tiempoSinContactoNumber: result.content.tiempoSinContactoNumber,
+    //     fechaContacto: result.content.fechaContacto,
+    //     porcentajeCierre: result.content.porcentajeCierre,
+    //     porcentajeColor: result.content.porcentajeColor,
+    //     interacciones: {
+    //       whatsapp: 0,
+    //       telefono: 0,
+    //       correo: 0
+    //     }
+    //   }
+    // }
+    const newCardIds = column.cardIds
+    newCardIds.push(newCard.id)
+    const newCards = {
+      ...this.state.cards,
       [newCard.id]: newCard
     }
     const newColumn = {
       ...column,
-      taskIds: newTaskIds
+      cardIds: newCardIds
     };
     const newState = {
-      tasks: newTasks,
+      cards: newCards,
       columns: {
         ...this.state.columns,
         [result.id]: newColumn
@@ -186,29 +187,29 @@ class Tablero extends React.Component {
     this.setState(newState)
   }
   renderChange = result => {
-    const newTask = result
+    const newCard = result
     const newState = {
       ...this.state,
-      tasks: {
-        ...this.state.tasks,
-        [result.id]: newTask
+      cards: {
+        ...this.state.cards,
+        [result.id]: newCard
       },
     };
     this.setState(newState);
   }
   deleteCard = result => {
-    const newTasks = this.state.tasks
-    delete newTasks[result.taskId];
+    const newCards = this.state.cards
+    delete newCards[result.cardId];
     const column = this.state.columns[result.columnId]
-    const newTasksIds = column.taskIds
-    const index = newTasksIds.indexOf(result.taskId)
-    newTasksIds.splice(index, 1);
+    const newCardsIds = column.cardIds
+    const index = newCardsIds.indexOf(result.cardId)
+    newCardsIds.splice(index, 1);
     const newColumn = {
       ...column,
-      taskIds: newTasksIds
+      cardIds: newCardsIds
     }
     const newState = {
-      tasks: newTasks,
+      Cards: newCards,
       columns: {
         ...this.state.columns,
         [result.columnId]: newColumn
@@ -243,12 +244,12 @@ class Tablero extends React.Component {
                 className={classes.container}>
                 {this.state.columnOrder.map((columnId, index) => {
                   const column = this.state.columns[columnId];
-                  // const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
+                  // const cards = column.cardIds.map(cardId => this.state.cards[cardId]);
                   // const isDropDisabled = index<homeIndex
                   return (<InnerList
                     key={column.id}
                     column={column}
-                    taskMap={this.state.tasks}
+                    cardMap={this.state.cards}
                     index={index}
                     sortCards={this.sortCards}
                     renderChange={this.renderChange}

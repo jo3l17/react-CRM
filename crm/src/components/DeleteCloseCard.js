@@ -5,7 +5,7 @@ import useStyles from '../styles/DeleteCloseCard'
 import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 function DeleteCloseCard(props) {
-    const taskState = estado => {
+    const cardState = estado => {
         const id = parseInt(props.modalId.split('-')[1])
         let objEliminar = { id, estado }
         axios.post(BackUrl + 'prospectos/cierre', objEliminar).then(res => {
@@ -42,10 +42,10 @@ function DeleteCloseCard(props) {
                             ¿Desea marcar este prospecto como:
                         </Typography>
                         <div className={classes.buttonContainer} >
-                            <Button variant="outlined" className={classes.proccessButton} onClick={() => taskState('ganado')}>
+                            <Button variant="outlined" className={classes.proccessButton} onClick={() => cardState('ganado')}>
                                 Ganado
                             </Button>
-                            <Button variant="outlined" className={classes.lostButton} onClick={() => taskState('perdido')}>
+                            <Button variant="outlined" className={classes.lostButton} onClick={() => cardState('perdido')}>
                                 Perdido
                             </Button>
                         </div>
@@ -54,7 +54,7 @@ function DeleteCloseCard(props) {
                         <Typography className={classes.opcion}>
                             ...o desea eliminarlo?
                         </Typography>
-                        <Button variant="outlined" className={classes.deleteButton} onClick={() => taskState('eliminado')}>
+                        <Button variant="outlined" className={classes.deleteButton} onClick={() => cardState('eliminado')}>
                             Eliminar
                         </Button>
                     </Grid>

@@ -125,12 +125,11 @@ function AddCard(props) {
                 delete formDataBase.cliente.genero
             }
             console.log(Form)
-            axios.post(BackUrl + 'prospectos/agregar', formDataBase).then(res => {
+            axios.post(BackUrl + 'tableros/prospectos/agregar', formDataBase).then(res => {
                 console.log(res);
-                console.log(res.data)
                 if (res.data.prospecto.message == 'OK' && res.data.cliente.message == 'OK') {
                     setValidate(false)
-                    props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
+                    props.handleClose({ message: 'OK', content: { id: props.modalId, content: res.data.content } })
                 }
                 setForm(
                     {

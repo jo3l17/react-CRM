@@ -19,7 +19,7 @@ import AddCard from './AddCard';
 //           <h3 className={classes.Header}
 //           {...provided.dragHandleProps}
 //           >{props.column.title}</h3>
-//           <Droppable droppableId={props.column.id} type="task"
+//           <Droppable droppableId={props.column.id} type="card"
 //           // type={props.column.id==='column-3'?'done':'active'}
 //           // isDropDisabled={props.isDropDisabled}
 //           >
@@ -28,7 +28,7 @@ import AddCard from './AddCard';
 //                 {...provided.droppableProps}
 //                 ref={provided.innerRef}
 //                 className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
-//               >{props.tasks.map((task, index) => <Card key={task.id} task={task} index={index} />)}
+//               >{props.cards.map((card, index) => <Card key={card.id} card={card} index={index} />)}
 //                 {provided.placeholder}
 //               </div>
 //             )}
@@ -45,7 +45,7 @@ class InnerList extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.sortedCard != null) {
       return true;
-    } else if (nextProps.tasks == this.props.tasks) {
+    } else if (nextProps.cards == this.props.cards) {
       return false;
     }
     return true;
@@ -54,7 +54,7 @@ class InnerList extends React.Component {
     super(props)
   }
   render() {
-    return this.props.tasks.map((task, index) => (<Card deleteCard={this.props.deleteCard} renderChange={this.props.renderChange} key={task.id} task={task} index={index} />))
+    return this.props.cards.map((card, index) => (<Card deleteCard={this.props.deleteCard} renderChange={this.props.renderChange} key={card.id} card={card} index={index} />))
   }
 }
 class Board extends React.Component {
@@ -71,7 +71,7 @@ class Board extends React.Component {
     this.setState({ dialogOpen: false })
   };
   handleDelete = result => {
-    this.props.deleteCard({ columnId: this.props.column.id, taskId: result })
+    this.props.deleteCard({ columnId: this.props.column.id, cardId: result })
   }
   render() {
     const { classes } = this.props
@@ -86,14 +86,14 @@ class Board extends React.Component {
               {...provided.dragHandleProps}
             >{this.props.column.title}</h3>
             <div className={classes.containerRelative}>
-              <h5 className={classes.Total}>Cantidad Total: {this.props.tasks.length}</h5>
+              <h5 className={classes.Total}>Cantidad Total: {this.props.cards.length}</h5>
               <Tooltip title="ordenar" placement="top" arrow>
                 <IconButton className={classes.sortButton} onClick={() => { this.props.sortCards(this.props.column.id) }}>
                   <SortIcon />
                 </IconButton>
               </Tooltip>
             </div>
-            <Droppable droppableId={this.props.column.id} type="task"
+            <Droppable droppableId={this.props.column.id} type="card"
             // type={props.column.id==='column-3'?'done':'active'}
             // isDropDisabled={props.isDropDisabled}
             >
@@ -103,7 +103,7 @@ class Board extends React.Component {
                   ref={provided.innerRef}
                   className={`${classes.List} ${snapshot.isDraggingOver ? classes.draggingOver : ''}`}
                 >
-                  <InnerList tasks={this.props.tasks} deleteCard={this.handleDelete} renderChange={this.props.renderChange} sortedCard={this.state.sortedCards} />
+                  <InnerList cards={this.props.cards} deleteCard={this.handleDelete} renderChange={this.props.renderChange} sortedCard={this.state.sortedCards} />
                   {provided.placeholder}
                 </div>
               )}

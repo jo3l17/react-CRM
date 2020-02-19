@@ -122,11 +122,11 @@ function EditCard(props) {
             console.log(JSON.stringify(sendedForm))
             axios.post(BackUrl + 'tableros/prospectos/editar', sendedForm).then(res => {
                 setValidate(false)
-                console.log(res)
+                console.log(res.data.content)
+                props.handleClose({ message: 'OK', content: { id: props.modalId, content: res.data.content } })
             }).catch(error => {
                 console.log(error)
             })
-            props.handleClose({ message: 'OK', content: { id: props.modalId, content: sendedForm } })
         } else {
             return false
         }
