@@ -14,27 +14,52 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import MaterialTable from "material-table";
+import MaterialTable, { MTableCell } from "material-table";
 import axios from 'axios'
 import { BackUrl } from '../utilities/const';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import PhoneIcon from '@material-ui/icons/Phone';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import EditIcon from '@material-ui/icons/Edit';
+import useStyles from '../styles/Table';
+import AdjustIcon from '@material-ui/icons/Adjust';
+import { Button, Badge } from '@material-ui/core';
 
 export default function Table() {
-    // useEffect(() => {
-    //     axios.get(BackUrl + 'clientes/obtener/1').then(res => {
-    //         // console.log(res.data)
-    //         console.log(res.data.content)
-    //         console.log(JSON.stringify(res.data.content[24]))
-    //         console.log(JSON.stringify(res.data.content[0]))
-    //     }).catch(error => {
-    //         console.log(error)
-    //     })
-    // }, []);
+    const classes = useStyles()
     const Nombre = function (props) {
         return (
-            <div>
-                <h3 style={{ margin: 0 }}>{props.data.tipo == 'persona' ? props.data.nombres + ' ' + props.data.apellidos : props.data.empresa + ' ' + props.data.ruc}<br /></h3>
-                Telefono:{props.data.telefono}<br />
-                Correo:{props.data.correo}
+            <div className={classes.containerCell}>
+                <div className={classes.leftButtonsContainer}>
+                    <Button>
+                        <EditIcon />
+                    </Button>
+                    <Button>
+                        <AdjustIcon />
+                    </Button>
+                </div>
+                <div className={classes.persona}>
+                    <h3 style={{ margin: 0 }}>{props.data.tipo == 'persona' ? props.data.nombres + ' ' + props.data.apellidos : props.data.empresa + ' ' + props.data.ruc}<br /></h3>
+                    Telefono:{props.data.telefono}<br />
+                    Correo:{props.data.correo}
+                </div>
+                <div className={classes.interaccionesContainer}>
+                    <Button>
+                        <Badge color="primary" badgeContent={6}>
+                            <WhatsAppIcon />
+                        </Badge>
+                    </Button>
+                    <Button>
+                        <Badge color="primary" badgeContent={6}>
+                            <PhoneIcon />
+                        </Badge>
+                    </Button>
+                    <Button>
+                        <Badge color="primary" badgeContent={6}>
+                            <MailOutlineIcon />
+                        </Badge>
+                    </Button>
+                </div>
             </div>
         )
     }
@@ -187,19 +212,20 @@ export default function Table() {
             }
         ]
     )
-
+    const tableRef = React.createRef()
     return (
         <div style={{ maxWidth: '100%' }}>
             <MaterialTable
+                tableRef={tableRef}
                 icons={tableIcons}
                 columns={[
-                    { title: "Clientes", field: "cliente" },
-                    { title: "Prioridad", field: "prioridad", type: "numeric" },
-                    { title: "Estado", field: "estadoCliente" },
+                    { title: "Clientes", field: "cliente", cellStyle: { width: '500px', display: 'block' } },
+                    { title: "Prioridad", field: "prioridad", type: "numeric", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
+                    { title: "Estado", field: "estadoCliente", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     // { title: "Intencion de compra", field: "birthCity", lookup: { 34: "İstanbul", 63: "Şanlıurfa" } }
-                    { title: "Intencion de compra", field: "IntencionCompra", type: 'numeric' },
-                    { title: "Numero de interacciones", field: "NumeroInteracciones", type: 'numeric' },
-                    { title: "Cantidad de cierres", field: "CantidadCierres", type: 'numeric' }
+                    { title: "Intencion de compra", field: "IntencionCompra", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
+                    { title: "Numero de interacciones", field: "NumeroInteracciones", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
+                    { title: "Cantidad de cierres", field: "CantidadCierres", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } }
                 ]}
                 data={data}
                 title="Demo Title"
@@ -218,7 +244,28 @@ export default function Table() {
                         }
                     }
                 }}
+                components={{
+                    Cell: props => (
+                        <MTableCell {...props} style={{ padding: 0 }} />
+                    )
+                }}
+                detailPanel={[{
+                    icon: null,
+                    render: rowData => (
+                        <iframe
+                            width="100%"
+                            height="315"
+                            src="https://www.youtube.com/embed/C0DPdy98e4c"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        />
+                    )
+                }]}
             />
-        </div>
+            <button onClick={() => {
+                tableRef.current.onToggleDetailPanel([0], rowData => <div>holo</div>)
+            }}>toggle second line</button>
+        </div >
     );
 }

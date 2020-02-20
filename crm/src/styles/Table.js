@@ -1,13 +1,19 @@
-// import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core";
 
-
-// const getMuiTheme = () => createMuiTheme({
-//     overrides: {
-//         MUIDataTableBodyCell: {
-//             root: {
-//                 backgroundColor: "#FF0000"
-//             }
-//         }
-//     }
-// })
-// export default getMuiTheme
+const useStyles = makeStyles(theme => ({
+    interaccionesContainer: {
+        display: 'flex',
+    },
+    containerCell: {
+        display: 'flex',
+    },
+    persona: {
+        width: '60%',
+        marginLeft:5
+    },
+    leftButtonsContainer: {
+        maxWidth: 64,
+        borderRight:'1px solid black'
+    }
+}))
+export default useStyles
