@@ -9,9 +9,9 @@ import Router from 'next/router'
 import { islogged } from '../services/UserService';
 
 export default function login() {
-    useEffect(()=>{
+    useEffect(() => {
         islogged('/tablero')
-    },[])
+    }, [])
     const submit = e => {
         e.preventDefault()
         const form = {
@@ -20,9 +20,11 @@ export default function login() {
         }
         axios.post(BackUrl + 'usuarios/login', form).then(respuesta => {
             console.log(respuesta)
-            if(respuesta.data.message=='OK'){
+            if (respuesta.data.message == 'OK') {
                 Router.push('/tablero')
-                localStorage.setItem('token',respuesta.data.token)
+                localStorage.setItem('token', respuesta.data.token)
+            } else {
+                setValues({ ...values, password: '', passwordError: true })
             }
         }).catch(error => {
             console.log(error)
@@ -33,6 +35,7 @@ export default function login() {
         usuario: '',
         password: '',
         showPassword: false,
+        passwordError: false,
     });
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
@@ -65,6 +68,7 @@ export default function login() {
                                     type={values.showPassword ? 'text' : 'password'}
                                     value={values.password}
                                     onChange={handleForm('password')}
+                                    error={values.passwordError && values.password == ""}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton

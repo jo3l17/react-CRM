@@ -11,6 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 import { lengthValidation, minMaxValidation, emailValidation } from '../utilities/validator'
 import { formatDate } from '../utilities/formaters'
 import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 
 function AddCard(props) {
     const today = new Date();
@@ -124,7 +125,7 @@ function AddCard(props) {
                 delete formDataBase.cliente.apellidos
                 delete formDataBase.cliente.genero
             }
-            console.log(Form)
+            formDataBase.token = userLogged()
             axios.post(BackUrl + 'tableros/prospectos/agregar', formDataBase).then(res => {
                 console.log(res);
                 if (res.data.prospecto.message == 'OK' && res.data.cliente.message == 'OK') {

@@ -103,7 +103,10 @@ const useStyles = makeStyles(theme => ({
         textDecoration: 'none',
         color: theme.palette.primary.main,
         fontSize: '1em',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        maxWidth: 150,
+        maxHeight: 40,
+        overflow: 'hidden'
     },
     prioridad: {
         borderRadius: '50%',

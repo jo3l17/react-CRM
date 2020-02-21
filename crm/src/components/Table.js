@@ -24,10 +24,23 @@ import EditIcon from '@material-ui/icons/Edit';
 import useStyles from '../styles/Table';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import { Button, Badge } from '@material-ui/core';
+import { userLogged } from '../services/UserService';
 
 export default function Table() {
+    let tableRef = React.createRef()
     const classes = useStyles()
+    const onToggleDetailPanel = (id) => {
+        console.log(tableRef)
+        const idArray = tableRef.current.state.data
+        const newArray = idArray.map(data => data.cliente.props.data.id)
+        tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
+            rowData => {
+                return (<div>holo</div>)
+            }
+        )
+    }
     const Nombre = function (props) {
+        console.log(props.data.interacciones)
         return (
             <div className={classes.containerCell}>
                 <div className={classes.leftButtonsContainer}>
@@ -44,18 +57,20 @@ export default function Table() {
                     Correo:{props.data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button>
-                        <Badge color="primary" badgeContent={6}>
+                    <Button onClick={() => {
+                        onToggleDetailPanel(props.data.id)
+                    }}>
+                        <Badge badgeContent={props.data.interacciones.whastapp} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
                     <Button>
-                        <Badge color="primary" badgeContent={6}>
+                        <Badge  badgeContent={props.data.interacciones.telefono} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
                     <Button>
-                        <Badge color="primary" badgeContent={6}>
+                        <Badge badgeContent={props.data.interacciones.correo} showZero>
                             <MailOutlineIcon />
                         </Badge>
                     </Button>
@@ -106,6 +121,11 @@ export default function Table() {
                             hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
                             direccion: "",
                             web: null,
+                            interacciones:{
+                                whatsapp:1,
+                                telefono:2,
+                                correo:0
+                            },
                             t_prospectos: {
                                 id: 14,
                                 id_cliente: 25,
@@ -148,6 +168,11 @@ export default function Table() {
                             hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
                             direccion: "",
                             web: null,
+                            interacciones:{
+                                whatsapp:1,
+                                telefono:2,
+                                correo:0
+                            },
                             t_prospectos: {
                                 id: 14,
                                 id_cliente: 25,
@@ -190,6 +215,11 @@ export default function Table() {
                             hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
                             direccion: "",
                             web: null,
+                            interacciones:{
+                                whatsapp:1,
+                                telefono:2,
+                                correo:0
+                            },
                             t_prospectos: {
                                 id: 14,
                                 id_cliente: 25,
@@ -212,14 +242,13 @@ export default function Table() {
             }
         ]
     )
-    const tableRef = React.createRef()
     return (
         <div style={{ maxWidth: '100%' }}>
             <MaterialTable
                 tableRef={tableRef}
                 icons={tableIcons}
                 columns={[
-                    { title: "Clientes", field: "cliente", cellStyle: { width: '500px', display: 'block' } },
+                    { title: "Clientes", field: "cliente", cellStyle: { width: '500px', display: 'block' }, sorting: false },
                     { title: "Prioridad", field: "prioridad", type: "numeric", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     { title: "Estado", field: "estadoCliente", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     // { title: "Intencion de compra", field: "birthCity", lookup: { 34: "İstanbul", 63: "Şanlıurfa" } }
@@ -227,7 +256,32 @@ export default function Table() {
                     { title: "Numero de interacciones", field: "NumeroInteracciones", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     { title: "Cantidad de cierres", field: "CantidadCierres", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } }
                 ]}
-                data={data}
+                data={query => {
+                    return new Promise((resolve, reject) => {
+                        axios.post(BackUrl + 'vista_clientes/obtener', { query, token: userLogged() }).then(res => {
+                            console.log(res)
+                            const newData = res.data.content.map(data => ({
+                                cliente: <Nombre
+                                    data={data}
+                                />,
+                                prioridad: data.ultimo_prospecto.prioridad,
+                                estadoCliente: data.estado_cliente,
+                                IntencionCompra: data.intencion_compra,
+                                NumeroInteracciones: data.numero_interacciones,
+                                CantidadCierres: data.cantidad_cierres
+                            }))
+                            resolve({
+                                data: newData,
+                                page: 0,
+                                totalCount: 10
+                            })
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    })
+                }
+                }
+                // data={data}
                 title="Demo Title"
                 localization={{
                     pagination: {
@@ -245,26 +299,45 @@ export default function Table() {
                     }
                 }}
                 components={{
-                    Cell: props => (
-                        <MTableCell {...props} style={{ padding: 0 }} />
-                    )
+                    Cell: props => {
+                        var newProps = {
+                            ...props,
+                        }
+                        if (props.value?.props?.data.tipo == 'persona') {
+                            newProps.value = props.value?.props?.data.nombres + ' ' + props.value?.props?.data.apellidos + ' ' + props.value?.props?.data.correo + ' ' + props.value?.props?.data.telefono
+                        } else if (props.value?.props?.data.tipo == 'empresa') {
+                            newProps.value = props.value?.props?.data.empresa + ' ' + props.value?.props?.data.ruc + ' ' + props.value?.props?.data.correo + ' ' + props.value?.props?.data.telefono
+                        }
+                        return (
+                            <MTableCell {...props} style={{ padding: 0 }} />
+                        )
+                    }
                 }}
-                detailPanel={[{
-                    icon: null,
-                    render: rowData => (
-                        <iframe
-                            width="100%"
-                            height="315"
-                            src="https://www.youtube.com/embed/C0DPdy98e4c"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                    )
-                }]}
+            // detailPanel={rowData => {
+            //     return (
+            //         <Button onClick={() => {
+            //             tableRef.current.onToggleDetailPanel(
+            //                 [rowData.tableData.id],
+            //                 tableRef.current.props.detailPanel
+            //             )
+            //         }} >Close</Button>
+            //     )
+            // }}
+            // detailPanel={[{
+            //     icon: null,
+            //     render: rowData => (
+            //         <iframe
+            //             width="100%"
+            //             height="315"
+            //             src="https://www.youtube.com/embed/C0DPdy98e4c"
+            //             frameborder="0"
+            //             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            //             allowFullScreen
+            //         />
+            //     )
+            // }]}
             />
             <button onClick={() => {
-                tableRef.current.onToggleDetailPanel([0], rowData => <div>holo</div>)
             }}>toggle second line</button>
         </div >
     );

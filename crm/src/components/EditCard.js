@@ -15,6 +15,7 @@ import { useTheme } from '@material-ui/core/styles';
 import { formatDate } from '../utilities/formaters';
 import { lengthValidation, minMaxValidation } from '../utilities/validator'
 import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 
 const DialogTitle = withStyles(useStyles)(props => {
     const { children, classes, onClose, ...other } = props;
@@ -120,6 +121,7 @@ function EditCard(props) {
                 porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
             }
             console.log(JSON.stringify(sendedForm))
+            sendedForm.token = userLogged()
             axios.post(BackUrl + 'tableros/prospectos/editar', sendedForm).then(res => {
                 setValidate(false)
                 console.log(res.data.content)

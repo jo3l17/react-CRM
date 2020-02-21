@@ -4,10 +4,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/DeleteCloseCard'
 import axios from 'axios';
 import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 function DeleteCloseCard(props) {
     const cardState = estado => {
         const id = parseInt(props.modalId.split('-')[1])
         let objEliminar = { id, estado }
+        objEliminar.token = userLogged()
         axios.post(BackUrl + 'prospectos/cierre', objEliminar).then(res => {
             console.log(res)
             if (res.data.message == 'OK') {

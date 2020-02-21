@@ -8,6 +8,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useStyles from '../styles/Tablero'
 import { withStyles, Button, LinearProgress } from '@material-ui/core';
 import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 class InnerList extends React.PureComponent {
   render() {
     const { column, cardMap, index, sortCards, renderChange, addCard, deleteCard } = this.props;
@@ -128,6 +129,7 @@ class Tablero extends React.Component {
       idColumna: idColumn
     }
     console.log(newOrder);
+    newOrder.token=userLogged()
     axios.post(BackUrl + 'prospectos/cambiar_estado', newOrder).then(res => {
       console.log(res)
     }).catch(error => {
