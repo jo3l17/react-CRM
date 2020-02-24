@@ -28,15 +28,32 @@ import AdjustIcon from '@material-ui/icons/Adjust';
 import { Button, Badge } from '@material-ui/core';
 import { userLogged } from '../services/UserService';
 import EventIcon from '@material-ui/icons/Event';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 
 export default function Table() {
     let tableRef = React.createRef()
     const classes = useStyles()
     let pageSize = 5
     const [pageSizeOptions, setPageSizeOptions] = React.useState([5, 10, 20])
-    // const [pageSize, setPageSize] = useAsyncState(5)
-    const onToggleDetailPanel = (id) => {
-        // console.log(tableRef)
+    const Estado = function(props){
+        console.log(props.estado)
+        if(props.estado=='positiva'){
+            return(
+                <SentimentSatisfiedAltIcon style={{color:'green'}}/>
+            )
+        }else if(props.estado=='neutra'){
+            return(
+                <SentimentSatisfiedIcon style={{color:'gray'}}/>
+            )
+        }else{
+            return(
+                <SentimentVeryDissatisfiedIcon style={{color:'red'}}/>
+            )
+        }
+    }
+    const togglePanelWhatsapp = (id) => {
         const idArray = tableRef.current.state.data
         const newArray = idArray.map(data => data.cliente.props.data.id)
         tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
@@ -44,7 +61,7 @@ export default function Table() {
                 return (
                     <MaterialTable
                         icons={tableIcons}
-                        title="Positioning Actions Column Preview"
+                        title="Interacciones"
                         columns={[
                             { title: 'Interaccion', field: 'interaccion' },
                             { title: 'Estado', field: 'estado' },
@@ -56,8 +73,8 @@ export default function Table() {
                             },
                         ]}
                         data={[
-                            { interaccion: 'Mehmet', estado: 'Baran', startDate: 1987, endDate: 2020 },
-                            { interaccion: 'Zerya Betül', estado: 'Baran', startDate: 2017, endDate: 2020 },
+                            { interaccion: 'Mehmet', estado: <Estado estado={'positiva'}/>, startDate: '1987-02-12T00:00:00', endDate: 2020 },
+                            { interaccion: 'Zerya Betül', estado: <Estado estado={'negativa'}/>, startDate: 2017, endDate: 2020 },
                         ]}
                         actions={[
                             {
@@ -94,13 +111,121 @@ export default function Table() {
             }
         )
     }
-    const onToggleDetailPanel2 = (id) => {
+    const togglePanelCalls = (id) => {
         // console.log(tableRef)
         const idArray = tableRef.current.state.data
         const newArray = idArray.map(data => data.cliente.props.data.id)
         tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
             rowData => {
-                return <div>otra gata</div>
+                return (
+                    <MaterialTable
+                        icons={tableIcons}
+                        title="Interacciones"
+                        columns={[
+                            { title: 'Interaccion', field: 'interaccion' },
+                            { title: 'Estado', field: 'estado' },
+                            { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
+                            {
+                                title: 'Fecha de Finalizacion',
+                                field: 'endDate',
+                                type: 'date'
+                            },
+                        ]}
+                        data={[
+                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'positiva'}/>, startDate: '2016-02-12T00:00:00', endDate: 2020 },
+                            { interaccion: 'Zerya Betül', estado: <Estado estado={'neutra'}/>, startDate: 2017, endDate: 2020 },
+                        ]}
+                        actions={[
+                            {
+                                icon: () => <Edit />,
+                                tooltip: 'Editar',
+                                onClick: (event, rowData) => alert("editar" + rowData.interaccion)
+                            },
+                            rowData => ({
+                                icon: () => <Delete />,
+                                tooltip: 'Delete User',
+                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                disabled: rowData.birthYear < 2000
+                            }),
+                            rowData => ({
+                                icon: () => <EventIcon />,
+                                tooltip: 'Delete User',
+                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                disabled: rowData.birthYear < 2000
+                            })
+                        ]}
+                        localization={{
+                            header: {
+                                actions: 'acciones'
+                            }
+                        }}
+                        options={{
+                            actionsColumnIndex: -1,
+                            pageSize: pageSize,
+                            pageSizeOptions: pageSizeOptions
+                        }}
+                    >
+                    </MaterialTable>
+                )
+            }
+        )
+    }
+    const togglePanelMail = (id) => {
+        // console.log(tableRef)
+        const idArray = tableRef.current.state.data
+        const newArray = idArray.map(data => data.cliente.props.data.id)
+        tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
+            rowData => {
+                return (
+                    <MaterialTable
+                        icons={tableIcons}
+                        title="Interacciones"
+                        columns={[
+                            { title: 'Interaccion', field: 'interaccion' },
+                            { title: 'Estado', field: 'estado' },
+                            { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
+                            {
+                                title: 'Fecha de Finalizacion',
+                                field: 'endDate',
+                                type: 'date'
+                            },
+                        ]}
+                        data={[
+                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'neutra'}/>, startDate: '1987-02-12T00:00:00', endDate: 2020 },
+                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'negativa'}/>, startDate: 2017, endDate: 2020 },
+                        ]}
+                        actions={[
+                            {
+                                icon: () => <Edit />,
+                                tooltip: 'Editar',
+                                onClick: (event, rowData) => alert("editar" + rowData.interaccion)
+                            },
+                            rowData => ({
+                                icon: () => <Delete />,
+                                tooltip: 'Delete User',
+                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                disabled: rowData.birthYear < 2000
+                            }),
+                            rowData => ({
+                                icon: () => <EventIcon />,
+                                tooltip: 'Delete User',
+                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                disabled: rowData.birthYear < 2000
+                            })
+                        ]}
+                        localization={{
+                            header: {
+                                actions: 'acciones'
+                            }
+                        }}
+                        options={{
+                            actionsColumnIndex: -1,
+                            pageSize: pageSize,
+                            pageSizeOptions: pageSizeOptions
+                        }}
+                    >
+                    </MaterialTable>
+                )
             }
         )
     }
@@ -121,17 +246,17 @@ export default function Table() {
                     Correo:{props.data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button className={classes.interaccionesButton} onClick={() => { onToggleDetailPanel(props.data.id) }}>
+                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id) }}>
                         <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: classes.badge }} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
-                    <Button className={classes.interaccionesButton} onClick={() => { onToggleDetailPanel2(props.data.id) }}>
+                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelCalls(props.data.id) }}>
                         <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: classes.badge }} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
-                    <Button className={classes.interaccionesButton} onClick={() => { onToggleDetailPanel(props.data.id) }}>
+                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelMail(props.data.id) }}>
                         <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: classes.badge }} showZero>
                             <MailOutlineIcon />
                         </Badge>
@@ -346,7 +471,7 @@ export default function Table() {
                 }
                 }
                 // data={data}
-                title="Demo Title"
+                title="Clientes"
                 localization={{
                     pagination: {
                         labelRowsSelect: 'columnas',
