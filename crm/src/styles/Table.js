@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = theme => ({
+const useStyles = makeStyles(theme => ({
     interaccionesContainer: {
         display: 'flex',
     },
@@ -15,9 +15,13 @@ const useStyles = theme => ({
         maxWidth: 64,
         borderRight: '1px solid black'
     },
-    interaccionesbadge: {
-        backgroundColor:'black',
-        color:'blue'
+    badge: {
+        backgroundColor: theme.palette.tertiary.dark,
+        color: 'black'
+    },
+    interaccionesButton: {
+        border:`1px solid black`,
+        borderRadius:0
     }
-})
+}))
 export default useStyles
