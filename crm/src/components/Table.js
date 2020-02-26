@@ -1,29 +1,14 @@
-import React, { forwardRef, useEffect, useState } from 'react'
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import React from 'react'
 import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-import Save from '@material-ui/icons/Save';
-import Delete from '@material-ui/icons/delete';
-import MaterialTable, { MTableCell, MTableActions } from "material-table";
+import Delete from '@material-ui/icons/Delete';
+import MaterialTable, { MTableCell, MTableActions, MTableToolbar, MTableHeader } from "material-table";
 import axios from 'axios'
 import { BackUrl } from '../utilities/const';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import EditIcon from '@material-ui/icons/Edit';
-import useStyles from '../styles/Table';
+import useStyles, { styles } from '../styles/Table';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import { Button, Badge } from '@material-ui/core';
 import { userLogged } from '../services/UserService';
@@ -31,203 +16,182 @@ import EventIcon from '@material-ui/icons/Event';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import DescriptionIcon from '@material-ui/icons/Description';
+import AddIcon from '@material-ui/icons/Add';
+import tableIcons from '../utilities/TableIcons';
+import AddInteraccion from './AddInteraccion';
 
 export default function Table() {
     let tableRef = React.createRef()
+    let tableRefWhatsapp = React.createRef()
     const classes = useStyles()
     let pageSize = 5
+    // let openDialogAdd = false
+    const [openDialogAdd, setOpenDialogAdd] = React.useState(false)
+    let idProspecto
+    const handleOpenAddInteraccion = (idProspecto) => {
+        idProspecto = idProspecto
+        // openDialogAdd = true
+        setOpenDialogAdd(true)
+    }
+    const handleCloseAddInteraccion = result => {
+        // console.log(result)
+        // openDialogAdd = false
+        console.log(tableRef)
+        setOpenDialogAdd(false)
+    }
     const [pageSizeOptions, setPageSizeOptions] = React.useState([5, 10, 20])
-    const Estado = function(props){
-        console.log(props.estado)
-        if(props.estado=='positiva'){
-            return(
-                <SentimentSatisfiedAltIcon style={{color:'green'}}/>
+    let panelOpen = {
+        whatsapp: false,
+        telefono: false,
+        correo: false
+    }
+    let idOpen
+    let consulta = 'whatsapp'
+    const Estado = function (props) {
+        if (props.estado == 1) {
+            return (
+                <SentimentSatisfiedAltIcon style={{ color: 'green' }} />
             )
-        }else if(props.estado=='neutra'){
-            return(
-                <SentimentSatisfiedIcon style={{color:'gray'}}/>
+        } else if (props.estado == 0) {
+            return (
+                <SentimentSatisfiedIcon style={{ color: 'gray' }} />
             )
-        }else{
-            return(
-                <SentimentVeryDissatisfiedIcon style={{color:'red'}}/>
+        } else {
+            return (
+                <SentimentVeryDissatisfiedIcon style={{ color: 'red' }} />
             )
         }
     }
-    const togglePanelWhatsapp = (id) => {
-        const idArray = tableRef.current.state.data
-        const newArray = idArray.map(data => data.cliente.props.data.id)
-        tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
-            rowData => {
-                return (
-                    <MaterialTable
-                        icons={tableIcons}
-                        title="Interacciones"
-                        columns={[
-                            { title: 'Interaccion', field: 'interaccion' },
-                            { title: 'Estado', field: 'estado' },
-                            { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
-                            {
-                                title: 'Fecha de Finalizacion',
-                                field: 'endDate',
-                                type: 'date'
-                            },
-                        ]}
-                        data={[
-                            { interaccion: 'Mehmet', estado: <Estado estado={'positiva'}/>, startDate: '1987-02-12T00:00:00', endDate: 2020 },
-                            { interaccion: 'Zerya Betül', estado: <Estado estado={'negativa'}/>, startDate: 2017, endDate: 2020 },
-                        ]}
-                        actions={[
-                            {
-                                icon: () => <Edit />,
-                                tooltip: 'Editar',
-                                onClick: (event, rowData) => alert("editar" + rowData.interaccion)
-                            },
-                            rowData => ({
-                                icon: () => <Delete />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            }),
-                            rowData => ({
-                                icon: () => <EventIcon />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            })
-                        ]}
-                        localization={{
-                            header: {
-                                actions: 'acciones'
-                            }
-                        }}
-                        options={{
-                            actionsColumnIndex: -1,
-                            pageSize: pageSize,
-                            pageSizeOptions: pageSizeOptions
-                        }}
-                    >
-                    </MaterialTable>
-                )
-            }
-        )
+    const printTableRef = () => {
+        console.log(tableRef)
     }
-    const togglePanelCalls = (id) => {
-        // console.log(tableRef)
-        const idArray = tableRef.current.state.data
-        const newArray = idArray.map(data => data.cliente.props.data.id)
-        tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
-            rowData => {
-                return (
-                    <MaterialTable
-                        icons={tableIcons}
-                        title="Interacciones"
-                        columns={[
-                            { title: 'Interaccion', field: 'interaccion' },
-                            { title: 'Estado', field: 'estado' },
-                            { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
-                            {
-                                title: 'Fecha de Finalizacion',
-                                field: 'endDate',
-                                type: 'date'
-                            },
-                        ]}
-                        data={[
-                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'positiva'}/>, startDate: '2016-02-12T00:00:00', endDate: 2020 },
-                            { interaccion: 'Zerya Betül', estado: <Estado estado={'neutra'}/>, startDate: 2017, endDate: 2020 },
-                        ]}
-                        actions={[
-                            {
-                                icon: () => <Edit />,
-                                tooltip: 'Editar',
-                                onClick: (event, rowData) => alert("editar" + rowData.interaccion)
-                            },
-                            rowData => ({
-                                icon: () => <Delete />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            }),
-                            rowData => ({
-                                icon: () => <EventIcon />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            })
-                        ]}
-                        localization={{
-                            header: {
-                                actions: 'acciones'
-                            }
-                        }}
-                        options={{
-                            actionsColumnIndex: -1,
-                            pageSize: pageSize,
-                            pageSizeOptions: pageSizeOptions
-                        }}
-                    >
-                    </MaterialTable>
-                )
-            }
-        )
+    const ToolbarTitle = (props) => {
+        // console.log(props.idUltimoPropsecto)
+        return (<div><Button variant={'outlined'} onClick={() => { handleOpenAddInteraccion(props.idUltimoPropsecto) }} className={`${classes.interaccionesTableTitleButton} ${classes.interaccionesTableAgregar}`}
+            startIcon={<DescriptionIcon />}>Agregar</Button> <Button variant={'outlined'} className={`${classes.interaccionesTableTitleButton} ${classes.interaccionesTableGenerar}`}
+                startIcon={<AddIcon />}>Interactuar</Button></div>)
     }
-    const togglePanelMail = (id) => {
-        // console.log(tableRef)
+    const togglePanelWhatsapp = (id, tipo) => {
+        printTableRef()
+        consulta = tipo
         const idArray = tableRef.current.state.data
         const newArray = idArray.map(data => data.cliente.props.data.id)
-        tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
-            rowData => {
-                return (
-                    <MaterialTable
-                        icons={tableIcons}
-                        title="Interacciones"
-                        columns={[
-                            { title: 'Interaccion', field: 'interaccion' },
-                            { title: 'Estado', field: 'estado' },
-                            { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
-                            {
-                                title: 'Fecha de Finalizacion',
-                                field: 'endDate',
-                                type: 'date'
-                            },
-                        ]}
-                        data={[
-                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'neutra'}/>, startDate: '1987-02-12T00:00:00', endDate: 2020 },
-                            { interaccion: 'Lorem isum dolor sit amet, sconsectetur adipiscing elit Nunc Mattis, libero et congue dapibus, odio est looreet velit id sodales', estado: <Estado estado={'negativa'}/>, startDate: 2017, endDate: 2020 },
-                        ]}
-                        actions={[
-                            {
-                                icon: () => <Edit />,
-                                tooltip: 'Editar',
-                                onClick: (event, rowData) => alert("editar" + rowData.interaccion)
-                            },
-                            rowData => ({
-                                icon: () => <Delete />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            }),
-                            rowData => ({
-                                icon: () => <EventIcon />,
-                                tooltip: 'Delete User',
-                                onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                                disabled: rowData.birthYear < 2000
-                            })
-                        ]}
-                        localization={{
-                            header: {
-                                actions: 'acciones'
-                            }
-                        }}
-                        options={{
-                            actionsColumnIndex: -1,
-                            pageSize: pageSize,
-                            pageSizeOptions: pageSizeOptions
-                        }}
-                    >
-                    </MaterialTable>
-                )
+        if (idOpen == id) {
+            if (panelOpen[tipo] == true) {
+                panelOpen = {
+                    whatsapp: false,
+                    telefono: false,
+                    correo: false
+                }
+                idOpen = null
+                tableRef.current.onToggleDetailPanel([newArray.indexOf(id)], rowData => (<div></div>))
+            } else {
+                panelOpen = {
+                    whatsapp: false,
+                    telefono: false,
+                    correo: false
+                }
+                panelOpen[tipo] = true
+                return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange()
             }
-        )
+        } else {
+            if (idOpen) {
+                tableRef.current.onToggleDetailPanel([newArray.indexOf(idOpen)], rowData => (<div></div>))
+            }
+            idOpen = id
+            tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
+                rowData => {
+                    return (
+                        <MaterialTable
+                            tableRef={tableRefWhatsapp}
+                            style={styles.interaccionesTable}
+                            icons={tableIcons}
+                            title={<ToolbarTitle idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} />}
+                            columns={[
+                                { title: 'Interaccion', field: 'interaccion' },
+                                { title: 'Estado', field: 'estado' },
+                                { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
+                                {
+                                    title: 'Fecha de Finalizacion',
+                                    field: 'endDate',
+                                    type: 'date'
+                                },
+                            ]}
+                            data={query => {
+                                return new Promise((resolve, reject) => {
+                                    axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: consulta }).then(res => {
+                                        console.log(res)
+                                        const newData = res.data.content.map(data => ({
+                                            interaccion: data.comentario,
+                                            estado: <Estado estado={data.estado_interaccion} />,
+                                            startDate: data.hora_fecha_inicio,
+                                            endDate: data.hora_fecha_termino
+                                        }))
+                                        resolve({
+                                            data: newData,
+                                            page: res.data.page,
+                                            totalCount: res.data.totalCount
+                                        })
+                                    }).catch(error => {
+                                        console.log(error)
+                                    })
+                                })
+                            }}
+                            actions={[
+                                {
+                                    icon: () => <Edit />,
+                                    tooltip: 'Editar',
+                                    onClick: (event, rowData) => alert("editar" + rowData.interaccion)
+                                },
+                                rowData => ({
+                                    icon: () => <Delete />,
+                                    tooltip: 'Delete User',
+                                    onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                    disabled: rowData.birthYear < 2000
+                                }),
+                                rowData => ({
+                                    icon: () => <EventIcon />,
+                                    tooltip: 'Delete User',
+                                    onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                                    disabled: rowData.birthYear < 2000
+                                })
+                            ]}
+                            localization={{
+                                pagination: {
+                                    labelRowsSelect: 'columnas',
+                                    labelDisplayedRows: '{from}-{to} de {count}'
+                                },
+                                toolbar: {
+                                    nRowsSelected: '{0} columna(s) seleccionadas'
+                                },
+                                body: {
+                                    emptyDataSourceMessage: 'No hay data',
+                                    filterRow: {
+                                        filterTooltip: 'Filtrar'
+                                    }
+                                },
+                                header: {
+                                    actions: 'acciones'
+                                }
+                            }}
+                            options={{
+                                actionsColumnIndex: -1,
+                                pageSize: pageSize,
+                                pageSizeOptions: pageSizeOptions
+                            }}
+                            components={{
+                                Header: props => (
+                                    <MTableHeader style={styles.interaccionesTableHeader} {...props} />
+                                )
+                            }}
+                        >
+                        </MaterialTable>
+                    )
+                }
+            )
+        }
+        panelOpen[tipo] = true
     }
     const Nombre = function (props) {
         return (
@@ -246,17 +210,17 @@ export default function Table() {
                     Correo:{props.data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id) }}>
+                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
                         <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: classes.badge }} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
-                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelCalls(props.data.id) }}>
+                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
                         <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: classes.badge }} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
-                    <Button className={classes.interaccionesButton} onClick={() => { togglePanelMail(props.data.id) }}>
+                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
                         <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: classes.badge }} showZero>
                             <MailOutlineIcon />
                         </Badge>
@@ -265,172 +229,10 @@ export default function Table() {
             </div>
         )
     }
-    const tableIcons = {
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
-    };
-    const [data, setData] = React.useState(
-        [
-            {
-                cliente: <Nombre
-                    data={
-                        {
-                            id: 25,
-                            tipo: "empresa",
-                            nombres: "",
-                            apellidos: "",
-                            genero: "",
-                            empresa: "La iberica",
-                            ruc: 212390,
-                            telefono: 999999999,
-                            correo: 'asd@gmail.com',
-                            estado_cliente: 'Prospecto',
-                            intencion_compra: 0,
-                            numero_interacciones: 6,
-                            cantidad_cierres: 1,
 
-                            observacion: "",
-                            hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                            direccion: "",
-                            web: null,
-                            interacciones: {
-                                whatsapp: 1,
-                                telefono: 2,
-                                correo: 0
-                            },
-                            t_prospectos: {
-                                id: 14,
-                                id_cliente: 25,
-                                porcentaje_cierre: 0.7,
-                                prioridad: 5,
-                                hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                                hora_fecha_contacto: "2020-02-05T05:00:00.000Z",
-                                estado_finalizacion: "pendiente",
-                                comentario: null,
-                                id_estado_embudo_venta: 4
-                            }
-                        }
-                    }
-                />,
-                prioridad: 5,
-                estadoCliente: "Prospecto",
-                IntencionCompra: 0,
-                NumeroInteracciones: 3,
-                CantidadCierres: 1
-            },
-            {
-                cliente: <Nombre
-                    data={
-                        {
-                            id: 25,
-                            tipo: "persona",
-                            nombres: "Andres Alejandro",
-                            apellidos: "Juarez Jimenez",
-                            genero: "H",
-                            empresa: "",
-                            ruc: null,
-                            correo: 'and.all.jua.jim@hotmail.com',
-                            telefono: 954651219,
-                            estado_cliente: 'Prospecto',
-                            intencion_compra: 1,
-                            numero_interacciones: 9,
-                            cantidad_cierres: 3,
-
-                            observacion: "",
-                            hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                            direccion: "",
-                            web: null,
-                            interacciones: {
-                                whatsapp: 1,
-                                telefono: 2,
-                                correo: 0
-                            },
-                            t_prospectos: {
-                                id: 14,
-                                id_cliente: 25,
-                                porcentaje_cierre: 0.7,
-                                prioridad: 5,
-                                hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                                hora_fecha_contacto: "2020-02-05T05:00:00.000Z",
-                                estado_finalizacion: "pendiente",
-                                comentario: null,
-                                id_estado_embudo_venta: 4
-                            }
-                        }
-                    }
-                />,
-                prioridad: 5,
-                estadoCliente: "Prospecto",
-                IntencionCompra: 1,
-                NumeroInteracciones: 9,
-                CantidadCierres: 3
-            },
-            {
-                cliente: <Nombre
-                    data={
-                        {
-                            id: 25,
-                            tipo: "persona",
-                            nombres: "Joel",
-                            apellidos: "Valdez",
-                            genero: "H",
-                            empresa: "",
-                            ruc: null,
-                            correo: 'cvo523@hotmail.com',
-                            telefono: 979957017,
-                            estado_cliente: 'Cliente',
-                            intencion_compra: 2,
-                            numero_interacciones: 5,
-                            cantidad_cierres: 2,
-
-                            observacion: "",
-                            hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                            direccion: "",
-                            web: null,
-                            interacciones: {
-                                whatsapp: 1,
-                                telefono: 2,
-                                correo: 0
-                            },
-                            t_prospectos: {
-                                id: 14,
-                                id_cliente: 25,
-                                porcentaje_cierre: 0.7,
-                                prioridad: 10,
-                                hora_fecha_creacion: "2020-02-18T17:32:53.000Z",
-                                hora_fecha_contacto: "2020-02-05T05:00:00.000Z",
-                                estado_finalizacion: "pendiente",
-                                comentario: null,
-                                id_estado_embudo_venta: 4
-                            }
-                        }
-                    }
-                />,
-                prioridad: 10,
-                estadoCliente: "Cliente",
-                IntencionCompra: 2,
-                NumeroInteracciones: 5,
-                CantidadCierres: 2
-            }
-        ]
-    )
     return (
         <div style={{ maxWidth: '100%' }}>
+            <AddInteraccion id={idProspecto} open={openDialogAdd} handleClose={handleCloseAddInteraccion} />
             <MaterialTable
                 tableRef={tableRef}
                 icons={tableIcons}
@@ -438,13 +240,11 @@ export default function Table() {
                     { title: "Clientes", field: "cliente", cellStyle: { width: '500px', display: 'block' }, sorting: false },
                     { title: "Prioridad", field: "prioridad", type: "numeric", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     { title: "Estado", field: "estadoCliente", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
-                    // { title: "Intencion de compra", field: "birthCity", lookup: { 34: "İstanbul", 63: "Şanlıurfa" } }
-                    { title: "Intencion de compra", field: "IntencionCompra", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
-                    { title: "Numero de interacciones", field: "NumeroInteracciones", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
-                    { title: "Cantidad de cierres", field: "CantidadCierres", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } }
+                    { title: "Intencion de compra", field: "intencionCompra", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
+                    { title: "Numero de interacciones", field: "numeroInteracciones", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
+                    { title: "Cantidad de cierres", field: "cantidadCierres", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } }
                 ]}
                 data={query => {
-                    console.log(query)
                     return new Promise((resolve, reject) => {
                         axios.post(BackUrl + 'vista_clientes/obtener', { query, token: userLogged() }).then(res => {
                             console.log(res)
@@ -454,9 +254,9 @@ export default function Table() {
                                 />,
                                 prioridad: data.ultimo_prospecto.prioridad,
                                 estadoCliente: data.estado_cliente,
-                                IntencionCompra: data.intencion_compra,
-                                NumeroInteracciones: data.numero_interacciones,
-                                CantidadCierres: data.cantidad_cierres
+                                intencionCompra: data.intencion_compra,
+                                numeroInteracciones: data.numero_interacciones,
+                                cantidadCierres: data.cantidad_cierres
                             }))
                             pageSize = res.data.content.length
                             resolve({
@@ -470,7 +270,6 @@ export default function Table() {
                     })
                 }
                 }
-                // data={data}
                 title="Clientes"
                 localization={{
                     pagination: {
@@ -502,31 +301,8 @@ export default function Table() {
                         )
                     }
                 }}
-            // detailPanel={rowData => {
-            //     return (
-            //         <Button onClick={() => {
-            //             tableRef.current.onToggleDetailPanel(
-            //                 [rowData.tableData.id],
-            //                 tableRef.current.props.detailPanel
-            //             )
-            //         }} >Close</Button>
-            //     )
-            // }}
-            // detailPanel={[{
-            //     icon: null,
-            //     render: rowData => (
-            //         <iframe
-            //             width="100%"
-            //             height="315"
-            //             src="https://www.youtube.com/embed/C0DPdy98e4c"
-            //             frameborder="0"
-            //             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            //             allowFullScreen
-            //         />
-            //     )
-            // }]}
             />
-            <button onClick={() => { console.log(tableRef) }}>Print table ref</button>
+            <button onClick={() => { printTableRef() }}>Print table ref</button>
         </div >
     );
 }

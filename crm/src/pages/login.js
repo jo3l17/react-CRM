@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, TextField, InputLabel, FormControl, Input, InputAdornment, IconButton, Grid, Button } from '@material-ui/core'
+import { Container, TextField, InputLabel, FormControl, Input, InputAdornment, IconButton, Grid, Button, FormHelperText } from '@material-ui/core'
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import useStyles from '../styles/login';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import Router from 'next/router'
 import { islogged } from '../services/UserService';
+import { lengthValidation } from '../utilities/validator';
 
 export default function login() {
     useEffect(() => {
@@ -14,17 +15,24 @@ export default function login() {
     }, [])
     const submit = e => {
         e.preventDefault()
+        if (values.usuario == '') {
+            setValues({ ...values, userError: true, userErrorText: 'ingrese usuario o correo' })
+            return;
+        } else if (values.password == '') {
+            setValues({ ...values, passwordErrorText: 'ingrese una contraseña', passwordError: true })
+            return;
+        }
         const form = {
             usuario: values.usuario,
             password: values.password
         }
-        axios.post(BackUrl + 'usuarios/login', form).then(respuesta => {
-            console.log(respuesta)
-            if (respuesta.data.message == 'OK') {
+        axios.post(BackUrl + 'usuarios/login', form).then(res => {
+            console.log(res)
+            if (res.data.message == 'OK') {
                 Router.push('/tablero')
-                localStorage.setItem('token', respuesta.data.token)
+                localStorage.setItem('token', res.data.token)
             } else {
-                setValues({ ...values, password: '', passwordError: true })
+                setValues({ ...values, password: '', passwordError: true, passwordErrorText: res.data.content })
             }
         }).catch(error => {
             console.log(error)
@@ -36,12 +44,15 @@ export default function login() {
         password: '',
         showPassword: false,
         passwordError: false,
+        passwordErrorText: '',
+        userError: false,
+        userErrorText: ''
     });
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
     };
     const handleForm = prop => event => {
-        setValues({ ...values, [prop]: event.target.value });
+        setValues({ ...values, [prop]: event.target.value, userErrorText: '', userError: false, passwordErrorText: '', passwordError: false });
     };
     return (
         <div className={classes.fullContainer}>
@@ -57,10 +68,12 @@ export default function login() {
                                 value={values.usuario}
                                 onChange={handleForm('usuario')}
                                 fullWidth
+                                error={values.userError}
+                                helperText={values.userErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl
+                            <FormControl  error={values.passwordError && values.password == ""}
                                 fullWidth>
                                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                                 <Input
@@ -68,7 +81,6 @@ export default function login() {
                                     type={values.showPassword ? 'text' : 'password'}
                                     value={values.password}
                                     onChange={handleForm('password')}
-                                    error={values.passwordError && values.password == ""}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
@@ -81,6 +93,7 @@ export default function login() {
                                         </InputAdornment>
                                     }
                                 />
+                                <FormHelperText >{values.passwordErrorText}</FormHelperText>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>

@@ -128,7 +128,6 @@ class Tablero extends React.Component {
       id: idCard,
       idColumna: idColumn
     }
-    console.log(newOrder);
     newOrder.token=userLogged()
     axios.post(BackUrl + 'prospectos/cambiar_estado', newOrder).then(res => {
       console.log(res)
@@ -138,37 +137,8 @@ class Tablero extends React.Component {
     this.setState(newState);
   }
   addCard = result => {
-    console.log(result);
     const column = this.state.columns[result.id]
-    // const cards = this.state.cards
-    // const lastCardId = cards[Object.keys(cards)[Object.keys(cards).length - 1]] ? cards[Object.keys(cards)[Object.keys(cards).length - 1]].id : 'card-1'
-    // const newId = parseInt(lastCardId.split('-')[1]) + 1
     const newCard = result.content
-    //   id: `card-${newId}`,
-    //   content: {
-    //     idCliente: newId,
-    //     tipo: result.content.tipo,
-    //     titulo: result.content.titulo,
-    //     nombres: result.content.nombres,
-    //     empresa: result.content.empresa,
-    //     genero: result.content.genero,
-    //     ruc: result.content.ruc,
-    //     apellidos: result.content.apellidos,
-    //     prioridad: result.content.prioridad,
-    //     prioridadColor: result.content.prioridadColor,
-    //     prioridadColorText: result.content.prioridadColor,
-    //     tiempoSinContacto: result.content.tiempoSinContacto,
-    //     tiempoSinContactoNumber: result.content.tiempoSinContactoNumber,
-    //     fechaContacto: result.content.fechaContacto,
-    //     porcentajeCierre: result.content.porcentajeCierre,
-    //     porcentajeColor: result.content.porcentajeColor,
-    //     interacciones: {
-    //       whatsapp: 0,
-    //       telefono: 0,
-    //       correo: 0
-    //     }
-    //   }
-    // }
     const newCardIds = column.cardIds
     newCardIds.push(newCard.id)
     const newCards = {
