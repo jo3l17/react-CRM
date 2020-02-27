@@ -1,20 +1,40 @@
 import React from 'react'
+import axios from 'axios'
 import MaterialTable, { MTableHeader } from 'material-table'
-import { Button } from '@material-ui/core'
+import { userLogged } from '../services/UserService'
+import ToolbarTitle from './ToolbarTitle'
+import { BackUrl } from '../utilities/const';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+import EventIcon from '@material-ui/icons/Event';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 
-export default function TableInteracciones() {
-    const ToolbarTitle = (props) => {
-        // console.log(props.idUltimoPropsecto)
-        return (<div><Button variant={'outlined'} onClick={() => { handleOpenAddInteraccion(props.idUltimoPropsecto) }} className={`${classes.interaccionesTableTitleButton} ${classes.interaccionesTableAgregar}`}
-            startIcon={<DescriptionIcon />}>Agregar</Button> <Button variant={'outlined'} className={`${classes.interaccionesTableTitleButton} ${classes.interaccionesTableGenerar}`}
-                startIcon={<AddIcon />}>Interactuar</Button></div>)
+export default function TableInteracciones(props) {
+    const { rowData, styles, tableRef, icons, consulta, id } = props;
+    const [canal, setCanal] = React.useState(consulta)
+    const Estado = function (props) {
+        if (props.estado == 1) {
+            return (
+                <SentimentSatisfiedAltIcon style={{ color: 'green' }} />
+            )
+        } else if (props.estado == 0) {
+            return (
+                <SentimentSatisfiedIcon style={{ color: 'gray' }} />
+            )
+        } else {
+            return (
+                <SentimentVeryDissatisfiedIcon style={{ color: 'red' }} />
+            )
+        }
     }
     return (
         <MaterialTable
-            tableRef={tableRefWhatsapp}
-            style={styles.interaccionesTable}
-            icons={tableIcons}
-            title={<ToolbarTitle idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} />}
+            tableRef={tableRef}
+            style={styles}
+            icons={icons}
+            title={<ToolbarTitle idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} canal={canal} />}
             columns={[
                 { title: 'Interaccion', field: 'interaccion' },
                 { title: 'Estado', field: 'estado' },
@@ -26,8 +46,9 @@ export default function TableInteracciones() {
                 },
             ]}
             data={query => {
+                setCanal(query.tipo ? query.tipo : consulta)
                 return new Promise((resolve, reject) => {
-                    axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: consulta }).then(res => {
+                    axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: query.tipo ? query.tipo : consulta }).then(res => {
                         console.log(res)
                         const newData = res.data.content.map(data => ({
                             interaccion: data.comentario,
@@ -84,8 +105,8 @@ export default function TableInteracciones() {
             }}
             options={{
                 actionsColumnIndex: -1,
-                pageSize: pageSize,
-                pageSizeOptions: pageSizeOptions
+                pageSize: 5,
+                pageSizeOptions: [3, 5, 10]
             }}
             components={{
                 Header: props => (
