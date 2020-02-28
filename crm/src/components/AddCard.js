@@ -397,40 +397,21 @@ function AddCard(props) {
                             </Grid>
                             <Grid item sm={4} xs={12}>
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <Hidden smDown>
-                                        <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="dd/MM/yyyy"
-                                            style={{ margin: 5, width: '100%' }}
-                                            id={"date-picker-inline" + props.modalId}
-                                            label="Fecha de contacto"
-                                            value={Form.fechaContacto}
-                                            onChange={(event) => { handleForm(event, 'fechaContacto') }}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                            maxDate={today}
-                                            error={validate && FormValidation.fechaContacto != ''}
-                                            helperText={FormValidation.fechaContacto}
-                                        />
-                                    </Hidden>
-                                    <Hidden mdUp>
-                                        <KeyboardDatePicker
-                                            style={{ margin: 5, width: '100%' }}
-                                            id={"date-picker-dialog" + props.modalId}
-                                            label="Fecha de contacto"
-                                            format="dd/MM/yyyy"
-                                            value={Form.fechaContacto}
-                                            onChange={(event) => { handleForm(event, 'fechaContacto') }}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                            maxDate={today}
-                                            error={validate && FormValidation.fechaContacto != ''}
-                                            helperText={FormValidation.fechaContacto}
-                                        />
-                                    </Hidden>
+                                    <KeyboardDatePicker
+                                        variant={fullScreen ? 'dialog' : 'inline'}
+                                        format="dd/MM/yyyy"
+                                        style={{ margin: 5, width: '100%' }}
+                                        id={"date-picker-inline" + props.modalId}
+                                        label="Fecha de contacto"
+                                        value={Form.fechaContacto}
+                                        onChange={(event) => { handleForm(event, 'fechaContacto') }}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                        maxDate={today}
+                                        error={validate && FormValidation.fechaContacto != ''}
+                                        helperText={FormValidation.fechaContacto}
+                                    />
                                 </MuiPickersUtilsProvider>
                             </Grid>
                             <Grid item xs={12}>
