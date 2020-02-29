@@ -29,20 +29,23 @@ export default function TableInteracciones(props) {
             )
         }
     }
+    const refreshData = ()=>{
+        return tableRef.current && tableRef.current.onQueryChange()
+    }
     return (
         <MaterialTable
             tableRef={tableRef}
             style={styles}
             icons={icons}
-            title={<ToolbarTitle idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} canal={canal} />}
+            title={<ToolbarTitle refreshData={refreshData} idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} canal={canal} />}
             columns={[
                 { title: 'Interaccion', field: 'interaccion' },
                 { title: 'Estado', field: 'estado' },
-                { title: 'Fecha de Inicio', field: 'startDate', type: 'date' },
+                { title: 'Fecha de Inicio', field: 'startDate', type: 'datetime' },
                 {
                     title: 'Fecha de Finalizacion',
                     field: 'endDate',
-                    type: 'date'
+                    type: 'datetime'
                 },
             ]}
             data={query => {

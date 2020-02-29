@@ -53,7 +53,7 @@ export default function Table() {
                     correo: false
                 }
                 panelOpen[tipo] = true
-                return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange({tipo:tipo})
+                return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange({canal:tipo})
             }
         } else {
             console.log(tipo)
@@ -89,17 +89,17 @@ export default function Table() {
                     Correo:{props.data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
+                    <Button className={`${classes.interaccionesButton} ${panelOpen.whatsapp?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
                         <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: classes.badge }} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
-                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
+                    <Button className={`${classes.interaccionesButton} ${panelOpen.telefono?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
                         <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: classes.badge }} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
-                    <Button disabled={props.data.ultimo_prospecto.id ? false : true} className={classes.interaccionesButton} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
+                    <Button className={`${classes.interaccionesButton} ${panelOpen.correo?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
                         <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: classes.badge }} showZero>
                             <MailOutlineIcon />
                         </Badge>

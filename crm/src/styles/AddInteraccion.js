@@ -15,5 +15,33 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexWrap: 'wrap',
     },
+    successButton: {
+        backgroundColor: theme.palette.tertiary.light,
+        borderColor: theme.palette.tertiary.darker,
+        color: theme.palette.tertiary.darker,
+        '&:hover': {
+            // backgroundColor: theme.palette.tertiary.darker,
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
+        },
+        '&:focus': {
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
+        }
+    },
+    cancelButton: {
+        backgroundColor: theme.palette.tertiary.light,
+        borderColor: theme.palette.tertiary.darker,
+        color: theme.palette.tertiary.darker,
+        '&:hover': {
+            // backgroundColor: theme.palette.tertiary.darker,
+            borderColor: theme.palette.error.main,
+            color: theme.palette.error.main,
+        },
+        '&:focus': {
+            borderColor: theme.palette.error.main,
+            color: theme.palette.error.main,
+        }
+    },
 }))
 export default useStyles

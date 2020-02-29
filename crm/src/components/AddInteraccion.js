@@ -1,19 +1,17 @@
 import React from 'react'
-import { Dialog, useMediaQuery, useTheme, DialogTitle, Typography, IconButton, Grid, DialogContent, FormControl, InputLabel, Select, MenuItem, TextField } from '@material-ui/core'
+import { Dialog, useMediaQuery, useTheme, DialogTitle, Typography, IconButton, Grid, DialogContent, FormControl, InputLabel, Select, MenuItem, TextField, DialogActions, Button } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import useStyles from '../styles/AddInteraccion';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker, DatePicker, TimePicker, KeyboardDateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
+import { formatDate } from '../utilities/formaters'
+import { userLogged } from '../services/UserService';
 
 export default function AddInteraccion(props) {
-    console.log(props)
-    const theme = useTheme();
-    const classes = useStyles()
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const submit = event => {
-        console.log(selectedDate)
-        event.preventDefault()
-    }
+    const today = new Date();
+    const [validate, setValidate] = React.useState(false)
     const [form, setForm] = React.useState(
         {
             horaFechaInicio: null,
@@ -22,11 +20,69 @@ export default function AddInteraccion(props) {
             comentario: ''
         }
     )
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
-    const handleDateChange = date => {
-        setSelectedDate(date);
-        console.log(date)
-    };
+    const [formValidation, setFormValidation] = React.useState(
+        {
+            horaFechaInicio: '',
+            horaFechaTermino: '',
+            estadoInteraccion: '',
+            comentario: ''
+        }
+    )
+    const theme = useTheme();
+    const classes = useStyles()
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const validateForm = formulario => {
+        if (formulario.horaFechaInicio == 'Invalid Date' || formulario.horaFechaTermino == 'Invalid Date') {
+            if (formulario.horaFechaInicio == 'Invalid Date') {
+                setFormValidation({
+                    ...formValidation,
+                    horaFechaInicio: 'Fecha Invalida',
+                })
+            }
+            return false
+        }
+        const validation = {
+            horaFechaInicio: '',
+            horaFechaTermino: '',
+            estadoInteraccion: '',
+            comentario: ''
+        }
+        const formValidationTemp = {
+            horaFechaInicio: (formulario.horaFechaInicio == '' || formulario.horaFechaInicio == null) ? 'la fecha no puede ser vacia' : '',
+            horaFechaTermino: '',
+            estadoInteraccion: '',
+            comentario: ''
+        }
+        setFormValidation(formValidationTemp)
+        if (JSON.stringify(formValidationTemp) == JSON.stringify(validation)) {
+            return true
+        } else {
+            return false
+        }
+    }
+    const submit = event => {
+        event.preventDefault()
+        setValidate(true);
+        if (validateForm(form)) {
+            let sendedForm = {
+                ...form,
+                horaFechaInicio: formatDate(form.horaFechaInicio),
+                horaFechaTermino: form.horaFechaTermino ? formatDate(form.horaFechaTermino) : null,
+                canal: props.canal,
+                idProspecto: props.id,
+                token: userLogged()
+            }
+            axios.post(BackUrl + 'interacciones/agregar', sendedForm).then(res => {
+                if(res.data.message=='OK'){
+                    props.handleClose('OK')
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+        } else {
+            return
+        }
+    }
     const handleForm = (value, key) => {
         const tempForm = {
             ...form,
@@ -36,12 +92,9 @@ export default function AddInteraccion(props) {
             ...form,
             [key]: value
         })
-        // if (validate) {
-        //     validateForm(tempForm)
-        // }
-    }
-    const handleSubmit = (event) => {
-
+        if (validate) {
+            validateForm(tempForm)
+        }
     }
     return (
         <Dialog fullWidth={true}
@@ -52,7 +105,7 @@ export default function AddInteraccion(props) {
             open={props.open}
             scroll="paper">
             <DialogTitle id={"dialog-" + props.idUltimoPropsecto} disableTypography className={classes.root} >
-                <Typography variant="h6">Agregar Prospecto</Typography>
+                <Typography variant="h6">Agregar Interaccion</Typography>
                 {props.handleClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={props.handleClose}>
                         <CloseIcon />
@@ -77,6 +130,9 @@ export default function AddInteraccion(props) {
                                             'aria-label': 'change date',
                                         }}
                                         invalidDateMessage={'fecha invalida'}
+                                        error={validate && formValidation.horaFechaInicio != ''}
+                                        helperText={formValidation.horaFechaInicio}
+                                        maxDate={today}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -151,6 +207,14 @@ export default function AddInteraccion(props) {
                     </div>
                 </form>
             </DialogContent>
+            <DialogActions>
+                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={props.handleClose}>
+                    Cancelar
+                </Button>
+                <Button variant="outlined" className={classes.successButton} autoFocus onClick={submit}>
+                    Guardar Cambios
+                </Button>
+            </DialogActions>
         </Dialog>
     )
 }

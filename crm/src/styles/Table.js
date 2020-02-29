@@ -24,6 +24,10 @@ const useStyles = makeStyles(theme => ({
         border: `1px solid black`,
         borderRadius: 0
     },
+    selected:{
+        borderColor:theme.palette.secondary.main,
+        color:theme.palette.secondary.main
+    },
     interaccionesTableTitle: {
         marginLeft: 10
     },
