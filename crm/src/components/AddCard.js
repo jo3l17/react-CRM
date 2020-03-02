@@ -102,10 +102,10 @@ function AddCard(props) {
             }
             let formDataBase = {
                 prospecto: {
-                    porcentaje_cierre: sendedForm.porcentajeCierre,
+                    porcentajeCierre: sendedForm.porcentajeCierre,
                     prioridad: sendedForm.prioridad,
-                    id_estado_embudo_venta: parseInt(props.modalId.split('-')[1]),
-                    hora_fecha_contacto: sendedForm.fechaContacto,
+                    idEstadoEmbudoVenta: parseInt(props.modalId.split('-')[1]),
+                    horaFechaContacto: sendedForm.fechaContacto,
                 },
                 cliente: {
                     empresa: sendedForm.empresa,

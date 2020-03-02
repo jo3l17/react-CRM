@@ -13,11 +13,18 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import useStyles from '../styles/TableInteracciones';
 import { withStyles } from '@material-ui/core'
 import { useConfirmation } from '../services/ConfimationService';
+import EditInteraccion from './EditInteraccion'
+import EditFechaInteraccion from './EditFechaInteraccion'
 
 function TableInteracciones(props) {
     const confirm = useConfirmation();
     const { rowData, styles, tableRef, icons, consulta, id, classes } = props;
-    const [canal, setCanal] = React.useState(consulta)
+    const [canal, setCanal] = React.useState(consulta);
+    const [editOpen, setEditOpen] = React.useState(false);
+    const [editFechaOpen, setEditFechaOpen] = React.useState(false)
+    const [idInteraccion, setIdInteraccion] = React.useState();
+    const [dataInteraccion, setDataInteraccion] = React.useState()
+    const [settedData, setSettedData] = React.useState(false);
     const Estado = function (props) {
         if (props.estado == 1) {
             return (
@@ -31,6 +38,33 @@ function TableInteracciones(props) {
             return (
                 <SentimentVeryDissatisfiedIcon style={{ color: 'red' }} />
             )
+        }
+    }
+    const handleSetSettedData = value => {
+        setSettedData(value);
+    }
+    const handleEditOpen = (id, data) => {
+        setSettedData(false);
+        setDataInteraccion(data);
+        setIdInteraccion(id);
+        setEditOpen(true);
+    }
+    const handleEditClose = result => {
+        setEditOpen(false);
+        if (result == 'OK') {
+            refreshData()
+        }
+    }
+    const handleEditFechaOpen = (id, data) => {
+        setSettedData(false);
+        setDataInteraccion(data);
+        setIdInteraccion(id);
+        setEditFechaOpen(true);
+    }
+    const handleEditFechaClose = result => {
+        setEditFechaOpen(false);
+        if (result == 'OK') {
+            refreshData()
         }
     }
     const confirmar = (id) => {
@@ -58,92 +92,99 @@ function TableInteracciones(props) {
         return tableRef.current && tableRef.current.onQueryChange()
     }
     return (
-        <MaterialTable
-            tableRef={tableRef}
-            style={styles}
-            icons={icons}
-            title={<ToolbarTitle refreshData={refreshData} idUltimoPropsecto={rowData.cliente.props.data.ultimo_prospecto.id} canal={canal} />}
-            columns={[
-                { title: 'Interaccion', field: 'interaccion' },
-                { title: 'Estado', field: 'estado' },
-                { title: 'Fecha de Inicio', field: 'startDate', type: 'datetime' },
-                {
-                    title: 'Fecha de Finalizacion',
-                    field: 'endDate',
-                    type: 'datetime'
-                },
-            ]}
-            data={query => {
-                setCanal(query.tipo ? query.tipo : consulta)
-                return new Promise((resolve, reject) => {
-                    axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: query.tipo ? query.tipo : consulta }).then(res => {
-                        console.log(res)
-                        const newData = res.data.content.map(data => ({
-                            interaccion: data.comentario,
-                            estado: <Estado estado={data.estado_interaccion} id={data.id} />,
-                            startDate: data.hora_fecha_inicio,
-                            endDate: data.hora_fecha_termino
-                        }))
-                        resolve({
-                            data: newData,
-                            page: res.data.page,
-                            totalCount: res.data.totalCount
-                        })
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                })
-            }}
-            actions={[
-                {
-                    icon: () => <Edit />,
-                    tooltip: 'Editar',
-                    onClick: (event, rowData) => alert("editar" + rowData.interaccion)
-                },
-                rowData => ({
-                    icon: () => <Delete />,
-                    tooltip: 'Delete User',
-                    onClick: (event, rowData) => {
-                        confirmar(rowData.estado.props.id);
-                        console.log(rowData)
+        <>
+            <MaterialTable
+                tableRef={tableRef}
+                style={styles}
+                icons={icons}
+                title={<ToolbarTitle refreshData={refreshData} idUltimoPropsecto={rowData.cliente.props.data.ultimoProspecto.id} canal={canal} />}
+                columns={[
+                    { title: 'Interaccion', field: 'interaccion' },
+                    { title: 'Estado', field: 'estado' },
+                    { title: 'Fecha de Inicio', field: 'startDate', type: 'datetime' },
+                    {
+                        title: 'Fecha de Finalizacion',
+                        field: 'endDate',
+                        type: 'datetime'
                     },
-                }),
-                rowData => ({
-                    icon: () => <EventIcon className={rowData.endDate ? '' : classes.error} />,
-                    tooltip: 'Delete User',
-                    onClick: (event, rowData) => alert("You want to delete " + rowData.interaccion),
-                })
-            ]}
-            localization={{
-                pagination: {
-                    labelRowsSelect: 'columnas',
-                    labelDisplayedRows: '{from}-{to} de {count}'
-                },
-                toolbar: {
-                    nRowsSelected: '{0} columna(s) seleccionadas'
-                },
-                body: {
-                    emptyDataSourceMessage: 'No hay data',
-                    filterRow: {
-                        filterTooltip: 'Filtrar'
+                ]}
+                data={query => {
+                    setCanal(query.tipo ? query.tipo : consulta)
+                    return new Promise((resolve, reject) => {
+                        axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: query.tipo ? query.tipo : consulta }).then(res => {
+                            console.log(res)
+                            const newData = res.data.content.map(data => ({
+                                interaccion: data.comentario,
+                                estado: <Estado estado={data.estadoInteraccion} id={data.id} data={data} />,
+                                startDate: data.horaFechaInicio,
+                                endDate: data.horaFechaTermino
+                            }))
+                            resolve({
+                                data: newData,
+                                page: res.data.page,
+                                totalCount: res.data.totalCount
+                            })
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    })
+                }}
+                actions={[
+                    {
+                        icon: () => <Edit />,
+                        tooltip: 'Editar',
+                        onClick: (event, rowData) => {
+                            handleEditOpen(rowData.estado.props.id, rowData.estado.props.data)
+                        }
+                    },
+                    rowData => ({
+                        icon: () => <Delete />,
+                        tooltip: 'Delete User',
+                        onClick: (event, rowData) => {
+                            confirmar(rowData.estado.props.id);
+                        },
+                    }),
+                    rowData => ({
+                        icon: () => <EventIcon className={rowData.endDate ? '' : classes.error} />,
+                        tooltip: 'Delete User',
+                        onClick: (event, rowData) => {
+                            handleEditFechaOpen(rowData.estado.props.id, rowData.estado.props.data)
+                        }
+                    })
+                ]}
+                localization={{
+                    pagination: {
+                        labelRowsSelect: 'columnas',
+                        labelDisplayedRows: '{from}-{to} de {count}'
+                    },
+                    toolbar: {
+                        nRowsSelected: '{0} columna(s) seleccionadas'
+                    },
+                    body: {
+                        emptyDataSourceMessage: 'No hay data',
+                        filterRow: {
+                            filterTooltip: 'Filtrar'
+                        }
+                    },
+                    header: {
+                        actions: 'acciones'
                     }
-                },
-                header: {
-                    actions: 'acciones'
-                }
-            }}
-            options={{
-                actionsColumnIndex: -1,
-                pageSize: 5,
-                pageSizeOptions: [3, 5, 10]
-            }}
-            components={{
-                Header: props => (
-                    <MTableHeader style={styles.interaccionesTableHeader} {...props} />
-                )
-            }}
-        >
-        </MaterialTable>
+                }}
+                options={{
+                    actionsColumnIndex: -1,
+                    pageSize: 5,
+                    pageSizeOptions: [3, 5, 10]
+                }}
+                components={{
+                    Header: props => (
+                        <MTableHeader style={styles.interaccionesTableHeader} {...props} />
+                    )
+                }}
+            >
+            </MaterialTable>
+            <EditInteraccion open={editOpen} id={idInteraccion} handleClose={handleEditClose} settedData={settedData} setSettedData={handleSetSettedData} data={dataInteraccion} />
+            <EditFechaInteraccion id={idInteraccion} open={editFechaOpen} handleClose={handleEditFechaClose} settedData={settedData} setSettedData={handleSetSettedData} horaFechaInicio={dataInteraccion && dataInteraccion.horaFechaInicio} horaFechaTermino={dataInteraccion && dataInteraccion.horaFechaTermino} />
+        </>
     )
 }
 export default withStyles(useStyles)(TableInteracciones)

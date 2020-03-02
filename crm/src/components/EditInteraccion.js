@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Dialog, useMediaQuery, useTheme, DialogTitle, Typography, IconButton, Grid, DialogContent, FormControl, InputLabel, Select, MenuItem, TextField, DialogActions, Button } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
-import useStyles from '../styles/AddInteraccion';
+import useStyles from '../styles/EditInteraccion';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker, DatePicker, TimePicker, KeyboardDateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import axios from 'axios';
@@ -9,11 +9,29 @@ import { BackUrl } from '../utilities/const';
 import { formatDate } from '../utilities/formaters'
 import { userLogged } from '../services/UserService';
 
-export default function AddInteraccion(props) {
+export default function EditInteraccion(props) {
+    const { settedData, setSettedData } = props
+    useEffect(() => {
+        if (props.data && !settedData) {
+            setForm(
+                {
+                    horaFechaInicio: new Date(props.data.horaFechaCreacion),
+                    horaFechaTermino: props.data.horaFechaTermino ? new Date(props.data.horaFechaTermino) : null,
+                    estadoInteraccion: props.data.estadoInteraccion,
+                    comentario: props.data.comentario
+                })
+            setSettedData(true)
+        }
+    })
     const today = new Date();
     const [validate, setValidate] = React.useState(false)
-    const [form, setForm] = React.useState(
+    const [form, setForm] = React.useState(props.data ?
         {
+            horaFechaInicio: new Date(props.data.horaFechaCreacion),
+            horaFechaTermino: props.data.horaFechaTermino ? new Date(props.data.horaFechaTermino) : null,
+            estadoInteraccion: props.data.estadoInteraccion,
+            comentario: props.data.comentario
+        } : {
             horaFechaInicio: null,
             horaFechaTermino: null,
             estadoInteraccion: 0,
@@ -68,11 +86,10 @@ export default function AddInteraccion(props) {
                 ...form,
                 horaFechaInicio: formatDate(form.horaFechaInicio),
                 horaFechaTermino: form.horaFechaTermino ? formatDate(form.horaFechaTermino) : null,
-                canal: props.canal,
-                idProspecto: props.id,
+                id: props.id,
                 token: userLogged()
             }
-            axios.post(BackUrl + 'interacciones/agregar', sendedForm).then(res => {
+            axios.post(BackUrl + 'interacciones/editar', sendedForm).then(res => {
                 if (res.data.message == 'OK') {
                     props.handleClose('OK')
                 }
@@ -105,7 +122,7 @@ export default function AddInteraccion(props) {
             open={props.open}
             scroll="paper">
             <DialogTitle id={"dialog-" + props.id} disableTypography className={classes.root} >
-                <Typography variant="h6">Agregar Interaccion</Typography>
+                <Typography variant="h6">Editar Interaccion</Typography>
                 {props.handleClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={props.handleClose}>
                         <CloseIcon />

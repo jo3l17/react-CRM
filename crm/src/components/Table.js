@@ -64,19 +64,13 @@ export default function Table(props) {
                 return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange({ canal: tipo })
             }
         } else {
-            console.log(id)
-            console.log('aqui')
             panelOpen = {
                 whatsapp: false,
                 telefono: false,
                 correo: false
             }
             panelOpen[tipo] = true
-            console.log(panelOpen)
-            console.log(panelOpenPrueba)
-            setPanelOpenPrueba(panelOpen)
             forceUpdate()
-            console.log('=>')
             if (idOpen) {
                 tableRef.current.onToggleDetailPanel([newArray.indexOf(idOpen)], rowData => (<div></div>))
             }
@@ -150,11 +144,11 @@ export default function Table(props) {
                                 cliente: <Nombre
                                     data={data}
                                 />,
-                                prioridad: data.ultimo_prospecto.prioridad,
-                                estadoCliente: data.estado_cliente,
-                                intencionCompra: data.intencion_compra,
-                                numeroInteracciones: data.numero_interacciones,
-                                cantidadCierres: data.cantidad_cierres
+                                prioridad: data.ultimoProspecto.prioridad,
+                                estadoCliente: data.estadoCliente,
+                                intencionCompra: data.intencionCompra,
+                                numeroInteracciones: data.numeroInteracciones,
+                                cantidadCierres: data.cantidadCierres
                             }))
                             pageSize = res.data.content.length
                             resolve({
