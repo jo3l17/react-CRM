@@ -20,13 +20,18 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.tertiary.dark,
         color: 'black'
     },
+    badgeInverted:{
+        backgroundColor: 'white',
+        color: 'black'
+    },
     interaccionesButton: {
         border: `1px solid black`,
         borderRadius: 0
     },
     selected:{
-        borderColor:theme.palette.secondary.main,
-        color:theme.palette.secondary.main
+        // borderColor:theme.palette.tertiary.dark,
+        // color:theme.palette.tertiary.dark,
+        backgroundColor:theme.palette.tertiary.dark
     },
     interaccionesTableTitle: {
         marginLeft: 10

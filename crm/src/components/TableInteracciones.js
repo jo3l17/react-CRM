@@ -10,9 +10,11 @@ import EventIcon from '@material-ui/icons/Event';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import useStyles from '../styles/TableInteracciones';
+import { withStyles } from '@material-ui/core'
 
-export default function TableInteracciones(props) {
-    const { rowData, styles, tableRef, icons, consulta, id } = props;
+function TableInteracciones(props) {
+    const { rowData, styles, tableRef, icons, consulta, id,classes } = props;
     const [canal, setCanal] = React.useState(consulta)
     const Estado = function (props) {
         if (props.estado == 1) {
@@ -29,7 +31,7 @@ export default function TableInteracciones(props) {
             )
         }
     }
-    const refreshData = ()=>{
+    const refreshData = () => {
         return tableRef.current && tableRef.current.onQueryChange()
     }
     return (
@@ -78,14 +80,14 @@ export default function TableInteracciones(props) {
                 rowData => ({
                     icon: () => <Delete />,
                     tooltip: 'Delete User',
-                    onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                    disabled: rowData.birthYear < 2000
+                    onClick: (event, rowData) => {
+                        console.log(rowData)
+                    },
                 }),
                 rowData => ({
-                    icon: () => <EventIcon />,
+                    icon: () => <EventIcon className={rowData.endDate ? '' : classes.error} />,
                     tooltip: 'Delete User',
                     onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
-                    disabled: rowData.birthYear < 2000
                 })
             ]}
             localization={{
@@ -120,3 +122,4 @@ export default function TableInteracciones(props) {
         </MaterialTable>
     )
 }
+export default withStyles(useStyles)(TableInteracciones)

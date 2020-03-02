@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import MaterialTable, { MTableCell, MTableActions, MTableToolbar, MTableHeader } from "material-table";
 import axios from 'axios'
 import { BackUrl } from '../utilities/const';
@@ -14,22 +14,27 @@ import tableIcons from '../utilities/TableIcons';
 import AddInteraccion from './AddInteraccion';
 import TableInteracciones from './TableInteracciones';
 
-export default function Table() {
-    let tableRef = React.createRef()
-    let tableRefWhatsapp = React.createRef()
+export default function Table(props) {
+    let { tableRef, tableRefWhatsapp } = props
     const classes = useStyles()
     let pageSize = 5
-
-    const [pageSizeOptions, setPageSizeOptions] = React.useState([5, 10, 20])
+    const [, updateState] = React.useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
     let panelOpen = {
         whatsapp: false,
         telefono: false,
         correo: false
     }
+    const [panelOpenPrueba, setPanelOpenPrueba] = React.useState({
+        whatsapp: false,
+        telefono: false,
+        correo: false
+    })
     let idOpen
     let consulta = 'whatsapp'
     const printTableRef = () => {
-        console.log(tableRef)
+        // console.log(tableRef)
+        console.log(panelOpenPrueba)
     }
     const togglePanelWhatsapp = (id, tipo) => {
         const idArray = tableRef.current.state.data
@@ -41,11 +46,13 @@ export default function Table() {
                     telefono: false,
                     correo: false
                 }
+                setPanelOpenPrueba(panelOpen)
                 idOpen = null
                 tableRef.current.onToggleDetailPanel([newArray.indexOf(id)], rowData => {
                     console.log(rowData)
                     return (<div></div>)
                 })
+                return
             } else {
                 panelOpen = {
                     whatsapp: false,
@@ -53,12 +60,24 @@ export default function Table() {
                     correo: false
                 }
                 panelOpen[tipo] = true
-                return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange({canal:tipo})
+                setPanelOpenPrueba(panelOpen)
+                return tableRefWhatsapp.current && tableRefWhatsapp.current.onQueryChange({ canal: tipo })
             }
         } else {
-            console.log(tipo)
+            console.log(id)
+            console.log('aqui')
+            panelOpen = {
+                whatsapp: false,
+                telefono: false,
+                correo: false
+            }
+            panelOpen[tipo] = true
+            console.log(panelOpen)
+            console.log(panelOpenPrueba)
+            setPanelOpenPrueba(panelOpen)
+            forceUpdate()
+            console.log('=>')
             if (idOpen) {
-                console.log('here')
                 tableRef.current.onToggleDetailPanel([newArray.indexOf(idOpen)], rowData => (<div></div>))
             }
             idOpen = id
@@ -70,9 +89,9 @@ export default function Table() {
                 }
             )
         }
-        panelOpen[tipo] = true
     }
     const Nombre = function (props) {
+        // console.log(panelOpen)
         return (
             <div className={classes.containerCell}>
                 <div className={classes.leftButtonsContainer}>
@@ -89,18 +108,18 @@ export default function Table() {
                     Correo:{props.data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button className={`${classes.interaccionesButton} ${panelOpen.whatsapp?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
-                        <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.whatsapp && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
+                        <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: (panelOpen.whatsapp && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
-                    <Button className={`${classes.interaccionesButton} ${panelOpen.telefono?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
-                        <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.telefono && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
+                        <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: (panelOpen.telefono && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
-                    <Button className={`${classes.interaccionesButton} ${panelOpen.correo?classes.selected:''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
-                        <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.correo && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
+                        <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: (panelOpen.correo && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <MailOutlineIcon />
                         </Badge>
                     </Button>
