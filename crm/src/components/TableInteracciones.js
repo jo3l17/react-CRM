@@ -12,9 +12,11 @@ import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissa
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import useStyles from '../styles/TableInteracciones';
 import { withStyles } from '@material-ui/core'
+import { useConfirmation } from '../services/ConfimationService';
 
 function TableInteracciones(props) {
-    const { rowData, styles, tableRef, icons, consulta, id,classes } = props;
+    const confirm = useConfirmation();
+    const { rowData, styles, tableRef, icons, consulta, id, classes } = props;
     const [canal, setCanal] = React.useState(consulta)
     const Estado = function (props) {
         if (props.estado == 1) {
@@ -30,6 +32,27 @@ function TableInteracciones(props) {
                 <SentimentVeryDissatisfiedIcon style={{ color: 'red' }} />
             )
         }
+    }
+    const confirmar = (id) => {
+        confirm({
+            variant: "danger",
+            catchOnCancel: true,
+            title: 'Seguro que quieres eliminar esta interaccion',
+            description: 'Si borras esta interaccion ya fuiste'
+        })
+            .then(() => {
+                axios.post(BackUrl + 'interacciones/eliminar', {
+                    id,
+                    token: userLogged()
+                }).then(res => {
+                    refreshData()
+                    console.log(res)
+                }).catch(error => {
+                    refreshData()
+                    console.log(error)
+                })
+            })
+            .catch(() => { console.log('nel prro') })
     }
     const refreshData = () => {
         return tableRef.current && tableRef.current.onQueryChange()
@@ -57,7 +80,7 @@ function TableInteracciones(props) {
                         console.log(res)
                         const newData = res.data.content.map(data => ({
                             interaccion: data.comentario,
-                            estado: <Estado estado={data.estado_interaccion} />,
+                            estado: <Estado estado={data.estado_interaccion} id={data.id} />,
                             startDate: data.hora_fecha_inicio,
                             endDate: data.hora_fecha_termino
                         }))
@@ -81,13 +104,14 @@ function TableInteracciones(props) {
                     icon: () => <Delete />,
                     tooltip: 'Delete User',
                     onClick: (event, rowData) => {
+                        confirmar(rowData.estado.props.id);
                         console.log(rowData)
                     },
                 }),
                 rowData => ({
                     icon: () => <EventIcon className={rowData.endDate ? '' : classes.error} />,
                     tooltip: 'Delete User',
-                    onClick: (event, rowData) => confirm("You want to delete " + rowData.interaccion),
+                    onClick: (event, rowData) => alert("You want to delete " + rowData.interaccion),
                 })
             ]}
             localization={{

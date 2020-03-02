@@ -7,6 +7,7 @@ import theme from './theme'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { useEffect } from 'react'
 import { islogged } from './services/UserService'
+import { ConfirmationServiceProvider } from './services/ConfimationService';
 
 function App(props) {
   useEffect(() => {
@@ -14,15 +15,17 @@ function App(props) {
   }, [])
   const classes = useStyles();
   return (
-    <MuiThemeProvider theme={theme}>
-      <div className={classes.root}>
-        <Header />
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          {props.children}
-        </main>
-      </div>
-    </MuiThemeProvider>
+    <ConfirmationServiceProvider>
+      <MuiThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <Header />
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
+            {props.children}
+          </main>
+        </div>
+      </MuiThemeProvider>
+    </ConfirmationServiceProvider>
   );
 }
 
