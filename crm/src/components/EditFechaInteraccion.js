@@ -12,10 +12,10 @@ import { BackUrl } from '../utilities/const';
 export default function EditFechaInteraccion(props) {
     const { horaFechaInicio, horaFechaTermino, settedData, setSettedData } = props
     useEffect(() => {
-        if (horaFechaTermino && !settedData) {
+        if (!settedData) {
             setForm(
                 {
-                    horaFechaTermino
+                    horaFechaTermino: horaFechaTermino ? new Date(horaFechaTermino) : null,
                 })
             setSettedData(true)
         }
@@ -39,6 +39,13 @@ export default function EditFechaInteraccion(props) {
             setFormValidation({
                 ...formValidation,
                 horaFechaTermino: 'Fecha Invalida',
+            })
+            return false
+        }
+        if (new Date(form.horaFechaTermino) < new Date(horaFechaInicio) && form.horaFechaTermino != null) {
+            setFormValidation({
+                ...formValidation,
+                horaFechaTermino: 'La fecha no puede ser menor a la fecha de inicio',
             })
             return false
         }
@@ -115,7 +122,7 @@ export default function EditFechaInteraccion(props) {
                                         format="dd/MM/yyyy"
                                         margin="normal"
                                         id="horaFechaTerminoDate"
-                                        label="Inicio Fecha"
+                                        label="Fecha Termino"
                                         value={form.horaFechaTermino}
                                         onChange={(event) => { handleForm(event, 'horaFechaTermino') }}
                                         KeyboardButtonProps={{
@@ -124,8 +131,8 @@ export default function EditFechaInteraccion(props) {
                                         invalidDateMessage={'fecha invalida'}
                                         error={validate && formValidation.horaFechaTermino != ''}
                                         helperText={formValidation.horaFechaTermino}
-                                        minDate={horaFechaInicio}
-                                        minDateMessage={'la fecha no puede ser menor a: ' + horaFechaInicio}
+                                        minDate={new Date(horaFechaInicio)}
+                                        minDateMessage={'La fecha no puede ser menor a la fecha de inicio'}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -133,7 +140,7 @@ export default function EditFechaInteraccion(props) {
                                         variant={fullScreen ? 'dialog' : 'inline'}
                                         margin="normal"
                                         id="horaFechaTerminoTime"
-                                        label="Inicio Hora"
+                                        label="Hora Termino"
                                         value={form.horaFechaTermino}
                                         onChange={(event) => { handleForm(event, 'horaFechaTermino') }}
                                         KeyboardButtonProps={{

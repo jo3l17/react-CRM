@@ -31,6 +31,15 @@ export default function AddInteraccion(props) {
     const theme = useTheme();
     const classes = useStyles()
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const restartValidation = () => {
+        setValidate(false);
+        setFormValidation({
+            horaFechaInicio: '',
+            horaFechaTermino: '',
+            estadoInteraccion: '',
+            comentario: ''
+        })
+    }
     const validateForm = formulario => {
         if (formulario.horaFechaInicio == 'Invalid Date' || formulario.horaFechaTermino == 'Invalid Date') {
             if (formulario.horaFechaInicio == 'Invalid Date') {
@@ -74,6 +83,12 @@ export default function AddInteraccion(props) {
             }
             axios.post(BackUrl + 'interacciones/agregar', sendedForm).then(res => {
                 if (res.data.message == 'OK') {
+                    setForm({
+                        horaFechaInicio: null,
+                        horaFechaTermino: null,
+                        estadoInteraccion: 0,
+                        comentario: ''
+                    })
                     props.handleClose('OK')
                 }
             }).catch(error => {
@@ -103,11 +118,12 @@ export default function AddInteraccion(props) {
             onClose={props.handleClose}
             aria-labelledby={"dialog-" + props.id}
             open={props.open}
-            scroll="paper">
+            scroll="paper"
+            onBackdropClick={() => { restartValidation() }}>
             <DialogTitle id={"dialog-" + props.id} disableTypography className={classes.root} >
                 <Typography variant="h6">Agregar Interaccion</Typography>
                 {props.handleClose ? (
-                    <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={props.handleClose}>
+                    <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={() => { restartValidation(); props.handleClose() }}>
                         <CloseIcon />
                     </IconButton>
                 ) : null}
@@ -208,7 +224,7 @@ export default function AddInteraccion(props) {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={props.handleClose}>
+                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={() => { restartValidation(); props.handleClose() }}>
                     Cancelar
                 </Button>
                 <Button variant="outlined" className={classes.successButton} autoFocus onClick={submit}>

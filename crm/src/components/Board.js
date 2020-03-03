@@ -66,7 +66,7 @@ class Board extends React.Component {
     this.setState({ dialogOpen: true })
   };
   handleClose = result => {
-    if (result.message == 'OK')
+    if (result && result.message == 'OK')
       this.props.addCard(result.content)
     this.setState({ dialogOpen: false })
   };

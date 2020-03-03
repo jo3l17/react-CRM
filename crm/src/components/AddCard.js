@@ -130,26 +130,26 @@ function AddCard(props) {
                 console.log(res);
                 if (res.data.prospecto.message == 'OK' && res.data.cliente.message == 'OK') {
                     setValidate(false)
+                    setForm(
+                        {
+                            tipo: 'persona',
+                            titulo: '',
+                            nombres: '',
+                            apellidos: '',
+                            ruc: '',
+                            empresa: '',
+                            genero: '',
+                            telefono: '',
+                            correo: '',
+                            porcentajeCierre: '',
+                            prioridad: '',
+                            fechaContacto: null,
+                            direccion: '',
+                            comentario: ''
+                        }
+                    )
                     props.handleClose({ message: 'OK', content: { id: props.modalId, content: res.data.content } })
                 }
-                setForm(
-                    {
-                        tipo: 'persona',
-                        titulo: '',
-                        nombres: '',
-                        apellidos: '',
-                        ruc: '',
-                        empresa: '',
-                        genero: '',
-                        telefono: '',
-                        correo: '',
-                        porcentajeCierre: '',
-                        prioridad: '',
-                        fechaContacto: null,
-                        direccion: '',
-                        comentario: ''
-                    }
-                )
             }).catch(error => {
                 console.log(error)
             })
@@ -188,6 +188,20 @@ function AddCard(props) {
             comentario: ''
         }
     );
+    const restartValidation = () => {
+        setValidate(false)
+        setFormValidation({
+            nombres: '',
+            apellidos: '',
+            ruc: '',
+            empresa: '',
+            correo: '',
+            telefono: '',
+            prioridad: '',
+            porcentajeCierre: '',
+            fechaContacto: '',
+        })
+    }
     const handleForm = (value, key) => {
         if (key == "fechaContacto") {
             value = (value != '' && value != null) ? formatDate(value) : ''
@@ -214,11 +228,12 @@ function AddCard(props) {
             onClose={props.handleClose}
             aria-labelledby={"dialog-" + props.modalId}
             open={props.open}
-            scroll="paper">
+            scroll="paper"
+            onBackdropClick={() => { restartValidation() }}>
             <DialogTitle id={"dialog-" + props.modalId} disableTypography className={classes.root} >
                 <Typography variant="h6">Agregar Prospecto</Typography>
                 {props.handleClose ? (
-                    <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={props.handleClose}>
+                    <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={() => { restartValidation(); props.handleClose() }}>
                         <CloseIcon />
                     </IconButton>
                 ) : null}
@@ -376,6 +391,7 @@ function AddCard(props) {
                                     margin="normal"
                                     error={validate && FormValidation.prioridad != ''}
                                     helperText={FormValidation.prioridad}
+                                    inputProps={{ min: "0", max: "10" }}
                                 />
                             </Grid>
                             <Grid item sm={4} xs={6}>
@@ -393,6 +409,7 @@ function AddCard(props) {
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">%</InputAdornment>
                                     }}
+                                    inputProps={{ min: "0", max: "10" }}
                                 />
                             </Grid>
                             <Grid item sm={4} xs={12}>
@@ -439,7 +456,7 @@ function AddCard(props) {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={props.handleClose}>
+                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={() => { restartValidation(); props.handleClose() }}>
                     Cancelar
                 </Button>
                 <Button variant="outlined" className={classes.successButton} autoFocus onClick={submit}>

@@ -42,7 +42,7 @@ class Tablero extends React.Component {
     const cardMap = this.state.cards
     const cardOrdered = column.cardIds.map(cardId => cardMap[cardId])
     cardOrdered.sort((a, b) => (a.content.prioridad - b.content.prioridad))
-    const newcardIds = cardOrdered.map((card) => card.id)
+    const newCardIds = cardOrdered.map((card) => card.id)
     const newColumn = {
       ...column,
       cardIds: newCardIds
@@ -190,7 +190,7 @@ class Tablero extends React.Component {
     this.setState(newState)
   }
   componentDidMount() {
-    axios.get(BackUrl + 'tableros/obtener/1').then(res => {
+    axios.post(BackUrl + 'tableros/obtener/',{token:userLogged()}).then(res => {
       this.setState(res.data.content);
     }).catch(error => {
       console.log(error)

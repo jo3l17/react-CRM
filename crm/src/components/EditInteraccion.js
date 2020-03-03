@@ -179,6 +179,8 @@ export default function EditInteraccion(props) {
                                             'aria-label': 'change date',
                                         }}
                                         invalidDateMessage={'fecha invalida'}
+                                        minDate={form.horaFechaInicio}
+                                        minDateMessage={'La fecha no puede ser menor a la fecha de inicio'}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>

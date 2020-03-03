@@ -33,11 +33,11 @@ export default function Table(props) {
     let idOpen
     let consulta = 'whatsapp'
     const printTableRef = () => {
-        // console.log(tableRef)
+        console.log(tableRef)
         console.log(panelOpenPrueba)
     }
     const togglePanelWhatsapp = (id, tipo) => {
-        const idArray = tableRef.current.state.data
+        const idArray = tableRef && tableRef.current.state.data
         const newArray = idArray.map(data => data.cliente.props.data.id)
         if (idOpen == id) {
             if (panelOpen[tipo] == true) {
@@ -78,13 +78,14 @@ export default function Table(props) {
             tableRef.current.onToggleDetailPanel([newArray.indexOf(id)],
                 rowData => {
                     return (
-                        <TableInteracciones consulta={tipo} rowData={rowData} styles={styles.interaccionesTable} icons={tableIcons} tableRef={tableRefWhatsapp} id={id} />
+                        <TableInteracciones index={newArray.indexOf(id)} updateMainTable={forceUpdate} tableRefMain={tableRef} consulta={tipo} rowData={rowData} styles={styles.interaccionesTable} icons={tableIcons} tableRef={tableRefWhatsapp} id={id} />
                     )
                 }
             )
         }
     }
     const Nombre = function (props) {
+        const { data } = props
         // console.log(panelOpen)
         return (
             <div className={classes.containerCell}>
@@ -97,23 +98,23 @@ export default function Table(props) {
                     </Button>
                 </div>
                 <div className={classes.persona}>
-                    <h3 style={{ margin: 0 }}>{props.data.tipo == 'persona' ? props.data.nombres + ' ' + props.data.apellidos : props.data.empresa + ' ' + (props.data.ruc ? props.data.ruc : '')}<br /></h3>
-                    Telefono:{props.data.telefono}<br />
-                    Correo:{props.data.correo}
+                    <h3 style={{ margin: 0 }}>{data.tipo == 'persona' ? data.nombres + ' ' + data.apellidos : data.empresa + ' ' + (data.ruc ? data.ruc : '')}<br /></h3>
+                    Telefono:{data.telefono}<br />
+                    Correo:{data.correo}
                 </div>
                 <div className={classes.interaccionesContainer}>
-                    <Button className={`${classes.interaccionesButton} ${(panelOpen.whatsapp && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'whatsapp') }}>
-                        <Badge badgeContent={props.data.interacciones.whastapp} classes={{ badge: (panelOpen.whatsapp && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.whatsapp && data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(data.id, 'whatsapp') }}>
+                        <Badge badgeContent={data.interacciones.whatsapp} classes={{ badge: (panelOpen.whatsapp && data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <WhatsAppIcon />
                         </Badge>
                     </Button>
-                    <Button className={`${classes.interaccionesButton} ${(panelOpen.telefono && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'telefono') }}>
-                        <Badge badgeContent={props.data.interacciones.telefono} classes={{ badge: (panelOpen.telefono && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.telefono && data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(data.id, 'telefono') }}>
+                        <Badge badgeContent={data.interacciones.telefono} classes={{ badge: (panelOpen.telefono && data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <PhoneIcon />
                         </Badge>
                     </Button>
-                    <Button className={`${classes.interaccionesButton} ${(panelOpen.correo && props.data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(props.data.id, 'correo') }}>
-                        <Badge badgeContent={props.data.interacciones.correo} classes={{ badge: (panelOpen.correo && props.data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
+                    <Button className={`${classes.interaccionesButton} ${(panelOpen.correo && data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(data.id, 'correo') }}>
+                        <Badge badgeContent={data.interacciones.correo} classes={{ badge: (panelOpen.correo && data.id == idOpen) ? classes.badgeInverted : classes.badge }} showZero>
                             <MailOutlineIcon />
                         </Badge>
                     </Button>

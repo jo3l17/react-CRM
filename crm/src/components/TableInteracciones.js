@@ -79,6 +79,9 @@ function TableInteracciones(props) {
                     id,
                     token: userLogged()
                 }).then(res => {
+                    props.tableRefMain.current.state.data[props.index].cliente.props.data.interacciones[canal]--
+                    props.tableRefMain.current.state.data[props.index].numeroInteracciones--
+                    props.updateMainTable();
                     refreshData()
                     console.log(res)
                 }).catch(error => {
@@ -91,13 +94,18 @@ function TableInteracciones(props) {
     const refreshData = () => {
         return tableRef.current && tableRef.current.onQueryChange()
     }
+    const addInteraccionVisual = () => {
+        props.tableRefMain.current.state.data[props.index].cliente.props.data.interacciones[canal]++;
+        props.tableRefMain.current.state.data[props.index].numeroInteracciones++;
+        props.updateMainTable();
+    }
     return (
         <>
             <MaterialTable
                 tableRef={tableRef}
                 style={styles}
                 icons={icons}
-                title={<ToolbarTitle refreshData={refreshData} idUltimoPropsecto={rowData.cliente.props.data.ultimoProspecto.id} canal={canal} />}
+                title={<ToolbarTitle refreshData={() => { addInteraccionVisual(); refreshData() }} idUltimoPropsecto={rowData.cliente.props.data.ultimoProspecto.id} canal={canal} />}
                 columns={[
                     { title: 'Interaccion', field: 'interaccion' },
                     { title: 'Estado', field: 'estado' },
