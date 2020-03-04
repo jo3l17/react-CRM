@@ -71,8 +71,8 @@ function TableInteracciones(props) {
         confirm({
             variant: "danger",
             catchOnCancel: true,
-            title: 'Seguro que quieres eliminar esta interaccion',
-            description: 'Si borras esta interaccion ya fuiste'
+            title: 'Seguro que quiere eliminar esta interaccion',
+            description: 'Eliminando esta interaccion tendra menos informacion sobre su cliente'
         })
             .then(() => {
                 axios.post(BackUrl + 'interacciones/eliminar', {

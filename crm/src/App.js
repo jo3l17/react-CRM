@@ -15,8 +15,8 @@ function App(props) {
   }, [])
   const classes = useStyles();
   return (
-    <ConfirmationServiceProvider>
-      <MuiThemeProvider theme={theme}>
+    <MuiThemeProvider theme={theme}>
+      <ConfirmationServiceProvider>
         <div className={classes.root}>
           <Header />
           <main className={classes.content}>
@@ -24,8 +24,8 @@ function App(props) {
             {props.children}
           </main>
         </div>
-      </MuiThemeProvider>
-    </ConfirmationServiceProvider>
+      </ConfirmationServiceProvider>
+    </MuiThemeProvider>
   );
 }
 
