@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Container, TextField, InputLabel, FormControl, Input, InputAdornment, IconButton, Grid, Button, FormHelperText } from '@material-ui/core'
+import { Container, TextField, InputLabel, FormControl, Input, InputAdornment, IconButton, Grid, Button, FormHelperText, MuiThemeProvider, Typography } from '@material-ui/core'
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import useStyles from '../styles/login';
@@ -8,6 +8,7 @@ import { BackUrl } from '../utilities/const';
 import Router from 'next/router'
 import { islogged } from '../services/UserService';
 import { lengthValidation } from '../utilities/validator';
+import theme from '../theme';
 
 export default function login() {
     useEffect(() => {
@@ -55,55 +56,57 @@ export default function login() {
         setValues({ ...values, [prop]: event.target.value, userErrorText: '', userError: false, passwordErrorText: '', passwordError: false });
     };
     return (
-        <div className={classes.fullContainer}>
-            <Container maxWidth="sm" className={classes.container}>
-                <h3>Login</h3>
-                <form onSubmit={submit}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="usuario o correo"
-                                id="usuario"
-                                margin="normal"
-                                value={values.usuario}
-                                onChange={handleForm('usuario')}
-                                fullWidth
-                                error={values.userError}
-                                helperText={values.userErrorText}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl  error={values.passwordError && values.password == ""}
-                                fullWidth>
-                                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                                <Input
-                                    id="standard-adornment-password"
-                                    type={values.showPassword ? 'text' : 'password'}
-                                    value={values.password}
-                                    onChange={handleForm('password')}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={event => { event.preventDefault() }}
-                                            >
-                                                {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
+        <MuiThemeProvider theme={theme}>
+            <div className={classes.fullContainer}>
+                <Container maxWidth="sm" className={classes.container}>
+                    <Typography variant="h4">Login</Typography>
+                    <form onSubmit={submit}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="usuario o correo"
+                                    id="usuario"
+                                    margin="normal"
+                                    value={values.usuario}
+                                    onChange={handleForm('usuario')}
+                                    fullWidth
+                                    error={values.userError}
+                                    helperText={values.userErrorText}
                                 />
-                                <FormHelperText >{values.passwordErrorText}</FormHelperText>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" onClick={submit}>
-                                Ingresar
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl error={values.passwordError && values.password == ""}
+                                    fullWidth>
+                                    <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                                    <Input
+                                        id="standard-adornment-password"
+                                        type={values.showPassword ? 'text' : 'password'}
+                                        value={values.password}
+                                        onChange={handleForm('password')}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={event => { event.preventDefault() }}
+                                                >
+                                                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                    />
+                                    <FormHelperText >{values.passwordErrorText}</FormHelperText>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button type="submit" className={classes.loginButton} variant="outlined" onClick={submit}>
+                                    Ingresar
                             </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
-            </Container>
-        </div>
+                    </form>
+                </Container>
+            </div>
+        </MuiThemeProvider>
     )
 }

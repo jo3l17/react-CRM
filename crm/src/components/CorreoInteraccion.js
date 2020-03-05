@@ -3,59 +3,73 @@ import { Dialog, useMediaQuery, DialogTitle, Typography, IconButton, DialogConte
 import theme from '../theme';
 import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/CorreoInteraccion';
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
+
 
 export default function CorreoInteraccion(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const classes = useStyles();
     const submit = event => {
+        const token = userLogged()
         event.preventDefault()
-    }
-    const [files, setFiles] = React.useState([])
-    const [filesToUpload, setFilesToUpload] = React.useState()
-
-    const FilesPreview = (props) => {
-        let arrayFiles = []
-        if (filesToUpload) {
-            // for (let i = 0; i < filesToUpload.length; i++) {
-            //     const element = filesToUpload[i];
-            //     arrayFiles.push(element)
-            // }
-            console.log(filesToUpload)
-            arrayFiles = Array.from(filesToUpload)
+        console.log(filesToUpload)
+        console.log(filesTest)
+        const formdata = new FormData();
+        const options = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }
-        return (
-            <Grid item xs={12}>
-                {arrayFiles && arrayFiles.map((file, index) => <div key={index}>{file.name}
-                    <IconButton aria-label="close" type="button"
-                        onClick={() => { deleteAdjunto(index) }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </div>)}
-                <button onClick={() => { console.log(filesToUpload); console.log(files) }}>holo</button>
-            </Grid>
-        )
+        filesToUpload.forEach(element => {
+            formdata.append('attachments',element)
+        });
+        // formdata.append('attachmentsArray', filesToUpload)
+        // formdata.append('attachmentstest', filesTest)
+        formdata.append('token', token)
+        formdata.append('subject', 'asdasd')
+        formdata.append('body', 'hola')
+        formdata.append('to', 'cvo523hotmail.com')
+        axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
+        ).then(res => {
+            console.log(res)
+        }).catch(error => {
+            console.log(error)
+        })
+    }
+    const [filesToUpload, setFilesToUpload] = React.useState([])
+    const [filesTest, setFilesTest] = React.useState()
+    const FilesPreview = (props) => {
+        if (filesToUpload) {
+            return (
+                <Grid item xs={12}>
+                    {filesToUpload && filesToUpload.map((file, index) => <div key={index}>{file.name}
+                        <IconButton aria-label="close" type="button"
+                            onClick={() => { deleteAdjunto(index) }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </div>)}
+                </Grid>
+            )
+        } else {
+            return <div></div>
+        }
     }
     const handleEvent = event => {
-        console.log(event.target.files)
-        setFilesToUpload(event.target.files)
+        const lastArray = [...filesToUpload]
+        const newFileList = Array.from(event.target.files)
+        setFilesTest(event.target.files)
+        let Arrayconcat = lastArray.concat(newFileList)
+        setFilesToUpload(Arrayconcat)
     }
     const deleteAdjunto = (index) => {
-        let obj = {
-            0: 'holo',
-            1: 'nelll'
-        }
-        delete obj[1]
-        console.log(obj)
-        const arrayTempFiles = files
-        const objTempFiles = { ...filesToUpload }
-        console.log(objTempFiles)
-        console.log(objTempFiles[index])
-        delete objTempFiles[index]
-        console.log(objTempFiles)
+        let arrayTempFiles = [...filesToUpload]
+        console.log(arrayTempFiles)
         arrayTempFiles.splice(index, 1)
-        setFilesToUpload(objTempFiles)
-        setFiles(arrayTempFiles)
+        console.log(arrayTempFiles)
+        setFilesToUpload(arrayTempFiles)
     }
     return (
         <Dialog
@@ -109,7 +123,7 @@ export default function CorreoInteraccion(props) {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={() => { restartValidation(); props.handleClose() }}>
+                <Button variant="outlined" className={classes.cancelButton} type="button" onClick={() => { props.handleClose() }}>
                     Cancelar
                 </Button>
                 <Button variant="outlined" className={classes.successButton} autoFocus onClick={submit}>
