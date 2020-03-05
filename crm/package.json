@@ -15,6 +15,7 @@
     "date-fns": "^2.9.0",
     "express": "^4.17.1",
     "material-table": "^1.57.2",
+    "material-ui-chip-input": "^2.0.0-beta.2",
     "mui-datatables": "^2.14.0",
     "next": "^9.2.1",
     "react": "^16.12.0",
@@ -23,7 +24,8 @@
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
-    "styled-components": "^5.0.0"
+    "styled-components": "^5.0.0",
+    "suneditor-react": "^2.6.7"
   },
   "scripts": {
     "test": "react-scripts test",

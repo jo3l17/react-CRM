@@ -6,7 +6,7 @@ import useStyles from '../styles/CorreoInteraccion';
 import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
-
+import ChipInput from 'material-ui-chip-input'
 
 export default function CorreoInteraccion(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -23,10 +23,8 @@ export default function CorreoInteraccion(props) {
             }
         }
         filesToUpload.forEach(element => {
-            formdata.append('attachments',element)
+            formdata.append('attachments', element)
         });
-        // formdata.append('attachmentsArray', filesToUpload)
-        // formdata.append('attachmentstest', filesTest)
         formdata.append('token', token)
         formdata.append('subject', 'asdasd')
         formdata.append('body', 'hola')
@@ -71,6 +69,10 @@ export default function CorreoInteraccion(props) {
         console.log(arrayTempFiles)
         setFilesToUpload(arrayTempFiles)
     }
+    const [emailAdresses, setEmailAdresses] = React.useState()
+    const handleChange = algo => {
+        console.log(algo)
+    }
     return (
         <Dialog
             fullWidth={true}
@@ -93,8 +95,17 @@ export default function CorreoInteraccion(props) {
                 <form onSubmit={submit} autoComplete="off">
                     <div className={classes.form}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <TextField fullWidth label="Destinatario" variant="outlined" />
+                            </Grid> */}
+                            <Grid item xs={12}>
+                                <ChipInput
+                                    variant="outlined"
+                                    label="Destinatario"
+                                    fullWidth
+                                    value={emailAdresses}
+                                    onChange={chips => handleChange(chips)}
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField fullWidth label="Asunto" variant="outlined" />
