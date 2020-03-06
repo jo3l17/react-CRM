@@ -1,35 +1,22 @@
 import React from 'react';
 import clsx from 'clsx';
-import AppBar from '@material-ui/core/AppBar';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
+import { SwipeableDrawer, Badge, AppBar, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography, CssBaseline, useTheme } from '@material-ui/core';
+import useStyles from '../styles/Header';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Link from 'next/link'
-import CssBaseline from '@material-ui/core/CssBaseline';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BuildIcon from '@material-ui/icons/Build';
-import useStyles from '../styles/Header';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import EditIcon from '@material-ui/icons/Edit';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import UndoIcon from '@material-ui/icons/Undo';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import RedoIcon from '@material-ui/icons/Redo';
 import LockIcon from '@material-ui/icons/Lock';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { SwipeableDrawer } from '@material-ui/core';
+import Link from 'next/link';
+import PublicIcon from '@material-ui/icons/Public';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -48,7 +35,6 @@ function Header(props) {
   const [open, setOpen] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const Tools = (
     <div>
       <Divider />
@@ -84,6 +70,17 @@ function Header(props) {
             <LockIcon />
           </ListItemIcon>
           <ListItemText primary={"Bloquear"} />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <Badge badgeContent={<PublicIcon fontSize="small"/>}>
+              <WhatsAppIcon />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary={"Whatsapp"} />
         </ListItem>
       </List>
     </div>

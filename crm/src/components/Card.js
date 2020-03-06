@@ -37,7 +37,7 @@ function Card(props) {
     setOpenDialogDelete(true);
   };
   const handleCloseDelete = result => {
-    if (result = 'deleted') {
+    if (result == 'deleted') {
       props.deleteCard(props.card.id)
     }
     setOpenDialogDelete(false);
