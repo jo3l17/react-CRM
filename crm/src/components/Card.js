@@ -4,14 +4,75 @@ import useStyles from '../styles/Card';
 import { List, ListItem, ListItemIcon, Divider, Grid, Button, CircularProgress } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import Link from 'next/link'
-import DeleteIcon from '@material-ui/icons/Delete';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import EditCard from './EditCard';
 import GavelIcon from '@material-ui/icons/Gavel';
 import DeleteCloseCard from './DeleteCloseCard';
+import CorreoInteraccion from './CorreoInteraccion';
+import { useConfirmation } from '../services/ConfimationService';
+import WhatsappInteraccion from './WhatsappInteraccion';
+
 function Card(props) {
+  const confirm = useConfirmation()
+  const classes = useStyles();
+  const isDragDisabled = props.card.id === 'asd';
+  const correo = props.card.content.correo
+  const telefono = props.card.content.telefono
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
+  const [openDialogCorreoInteraccion, setOpenDialogCorreoInteraccion] = React.useState(false)
+  const [openDialogWhatsappInteraccion, setOpenDialogWhatsappInteraccion] = React.useState(false)
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+  const handleClose = result => {
+    if (result.message === 'OK') {
+      props.renderChange(result.content)
+    }
+    setOpenDialog(false);
+  };
+  const handleClickOpenDelete = () => {
+    setOpenDialogDelete(true);
+  };
+  const handleCloseDelete = result => {
+    if (result = 'deleted') {
+      props.deleteCard(props.card.id)
+    }
+    setOpenDialogDelete(false);
+  };
+  const handleOpenInteraccion = value => {
+    if (value == 'correo') {
+      if (correo.length == 0) {
+        confirm({
+          variant: "info",
+          catchOnCancel: true,
+          title: 'No hay correo',
+          description: 'no puede interactuar porque el cliente no tiene correo',
+        }).then(() => {
+        })
+      } else {
+        setOpenDialogCorreoInteraccion(true)
+      }
+    } else if (value == 'whatsapp') {
+      if (telefono.length == 0) {
+        confirm({
+          variant: "info",
+          catchOnCancel: true,
+          title: 'No hay telefono',
+          description: 'no puede interactuar porque el cliente no tiene un numero de telefono',
+        }).then(() => {
+        })
+      } else {
+        setOpenDialogWhatsappInteraccion(true)
+      }
+    }
+  }
+  const handleCloseCorreoInteraccion = result => {
+    setOpenDialogWhatsappInteraccion(false)
+    setOpenDialogCorreoInteraccion(false)
+  }
   function tiempoSinContacto() {
     if (props.card.content.tiempoSinContactoNumber != null) {
       return (
@@ -23,31 +84,6 @@ function Card(props) {
       return <div style={{ height: 20 }}></div>
     }
   }
-  // const {renderChange} = props.renderChange
-  const isDragDisabled = props.card.id === 'asd';
-  const classes = useStyles();
-  const preventDefault = event => event.preventDefault();
-
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpenDialog(true);
-  };
-  const handleClose = result => {
-    if (result.message === 'OK') {
-      props.renderChange(result.content)
-    }
-    setOpenDialog(false);
-  };
-  const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
-  const handleClickOpenDelete = () => {
-    setOpenDialogDelete(true);
-  };
-  const handleCloseDelete = result => {
-    if (result = 'deleted') {
-      props.deleteCard(props.card.id)
-    }
-    setOpenDialogDelete(false);
-  };
   return (
     <Draggable draggableId={props.card.id}
       index={props.index}
@@ -63,6 +99,8 @@ function Card(props) {
           {/* <div className={classes.handle} {...provided.dragHandleProps}>
           </div> */}
           <EditCard open={openDialog} handleClose={handleClose} data={props.card} modalId={props.card.id} />
+          <CorreoInteraccion id={props.card.content.id} open={openDialogCorreoInteraccion} handleClose={handleCloseCorreoInteraccion} correo={correo} />
+          <WhatsappInteraccion id={props.card.content.id} open={openDialogWhatsappInteraccion} handleClose={handleCloseCorreoInteraccion} telefono={telefono} />
           <DeleteCloseCard open={openDialogDelete} handleClose={handleCloseDelete} data={props.card} modalId={props.card.id} />
           <div className={classes.container}>
             <List className={classes.leftList}>
@@ -105,17 +143,17 @@ function Card(props) {
           </div>
           <div className={classes.interacciones}>
             <div className={classes.interaccionesButtons}>
-              <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
-                {props.card.content.interacciones.telefono} &nbsp;<PhoneIcon />
-              </Button>
-            </div>
-            <div className={classes.interaccionesButtons}>
-              <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
+              <Button variant="outlined" onClick={()=>{handleOpenInteraccion('whatsapp')}} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.card.content.interacciones.whatsapp} &nbsp;<WhatsAppIcon />
               </Button>
             </div>
             <div className={classes.interaccionesButtons}>
               <Button variant="outlined" className={`${classes.interaccionesButton} ${classes.darkButton}`}>
+                {props.card.content.interacciones.telefono} &nbsp;<PhoneIcon />
+              </Button>
+            </div>
+            <div className={classes.interaccionesButtons}>
+              <Button variant="outlined" onClick={()=>{handleOpenInteraccion('correo')}} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.card.content.interacciones.correo} &nbsp;<MailOutlineIcon />
               </Button>
             </div>

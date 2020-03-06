@@ -99,8 +99,8 @@ export default function Table(props) {
                 </div>
                 <div className={classes.persona}>
                     <h3 style={{ margin: 0 }}>{data.tipo == 'persona' ? data.nombres + ' ' + data.apellidos : data.empresa + ' ' + (data.ruc ? data.ruc : '')}<br /></h3>
-                    Telefono:{data.telefono}<br />
-                    Correo:{data.correo}
+                    Telefono:{data.telefono[0] || ''}<br />
+                    Correo:{data.correo[0] || ''}
                 </div>
                 <div className={classes.interaccionesContainer}>
                     <Button className={`${classes.interaccionesButton} ${(panelOpen.whatsapp && data.id == idOpen) ? classes.selected : ''}`} onClick={() => { togglePanelWhatsapp(data.id, 'whatsapp') }}>

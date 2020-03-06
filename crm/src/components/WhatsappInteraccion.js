@@ -7,32 +7,31 @@ import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
 
-export default function CorreoInteraccion(props) {
+export default function WhatsappInteraccion(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const classes = useStyles();
     const submit = event => {
-        const token = userLogged()
-        event.preventDefault()
-        const formdata = new FormData();
-        filesToUpload.forEach(element => {
-            formdata.append('attachments', element)
-        });
-        props.correo.forEach(element => {
-            formdata.append('to', element)
-        })
-        formdata.append('idProspecto', props.id)
-        formdata.append('token', token)
-        formdata.append('subject', email.subject)
-        formdata.append('body', email.body)
-        axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
-        ).then(res => {
-            console.log(res)
-            if (res.data.message == 'OK') {
-                props.handleClose('OK')
-            }
-        }).catch(error => {
-            console.log(error)
-        })
+        // const token = userLogged()
+        // event.preventDefault()
+        // const formdata = new FormData();
+        // filesToUpload.forEach(element => {
+        //     formdata.append('attachments', element)
+        // });
+        // props.correo.forEach(element => {
+        //     formdata.append('to', element)
+        // })
+        // formdata.append('token', token)
+        // formdata.append('subject', email.subject)
+        // formdata.append('body', email.body)
+        // axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
+        // ).then(res => {
+        //     console.log(res)
+        //     if(res.message=='OK'){
+        //         props.handleClose('OK')
+        //     }
+        // }).catch(error => {
+        //     console.log(error)
+        // })
     }
     const [filesToUpload, setFilesToUpload] = React.useState([])
     const FilesPreview = (props) => {
@@ -67,10 +66,10 @@ export default function CorreoInteraccion(props) {
         body: ''
     })
     const handleChange = (value, prop) => {
-        setEmail({
-            ...email,
-            [prop]: value
-        })
+        if (prop == 'to') {
+            emailToChange.push(value)
+            value = emailToChange
+        }
     }
     return (
         <Dialog
@@ -83,7 +82,7 @@ export default function CorreoInteraccion(props) {
             scroll="paper"
         >
             <DialogTitle id={"dialog-" + props.id} disableTypography className={classes.root} >
-                <Typography variant="h6">Enviar Correo</Typography>
+                <Typography variant="h6">Enviar Whatsapp</Typography>
                 {props.handleClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={() => { props.handleClose() }}>
                         <CloseIcon />
@@ -94,11 +93,6 @@ export default function CorreoInteraccion(props) {
                 <form onSubmit={submit} autoComplete="off">
                     <div className={classes.form}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField fullWidth label="Asunto" variant="outlined"
-                                    value={email.subject}
-                                    onChange={event => handleChange(event.target.value, 'subject')} />
-                            </Grid>
                             <Grid item xs={12}>
                                 <TextField fullWidth multiline rows="5" label="Mensaje" variant="outlined"
                                     value={email.body}
@@ -129,7 +123,7 @@ export default function CorreoInteraccion(props) {
                     Cancelar
                 </Button>
                 <Button variant="outlined" className={classes.successButton} autoFocus onClick={submit}>
-                    Enviar Correo
+                    Enviar Whatsapp
                 </Button>
             </DialogActions>
         </Dialog>

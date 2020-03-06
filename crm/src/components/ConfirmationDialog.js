@@ -24,16 +24,16 @@ export const ConfirmationDialog = ({
                 {variant === "danger" && (
                     <>
                         <Button variant="outlined" className={classes.successButton} onClick={onSubmit}>
-                            {confirmButtonText ? confirmButtonText : 'Si'}
+                            {confirmButtonText || 'Si'}
                         </Button>
                         <Button variant="outlined" className={classes.cancelButton} onClick={onClose} autoFocus>
-                            {cancelButtonText ? cancelButtonText : 'Cancelar'}
+                            {cancelButtonText || 'Cancelar'}
                         </Button>
                     </>
                 )}
                 {variant === "info" && (
                     <Button variant="outlined" className={classes.successButton} onClick={onSubmit}>
-                        {infoButtonText ? infoButtonText : 'OK'}
+                        {infoButtonText || 'OK'}
                     </Button>
                 )}
             </DialogActions>

@@ -6,6 +6,7 @@ import useStyles from '../styles/CorreoInteraccion';
 import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
+import ChipInput from 'material-ui-chip-input'
 
 export default function CorreoInteraccion(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -13,28 +14,33 @@ export default function CorreoInteraccion(props) {
     const submit = event => {
         const token = userLogged()
         event.preventDefault()
+        console.log(filesToUpload)
+        console.log(filesTest)
         const formdata = new FormData();
+        const options = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
         filesToUpload.forEach(element => {
             formdata.append('attachments', element)
         });
-        props.correo.forEach(element => {
+        email.to.forEach(element => {
+
             formdata.append('to', element)
         })
-        formdata.append('idProspecto', props.id)
         formdata.append('token', token)
         formdata.append('subject', email.subject)
         formdata.append('body', email.body)
         axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
         ).then(res => {
             console.log(res)
-            if (res.data.message == 'OK') {
-                props.handleClose('OK')
-            }
         }).catch(error => {
             console.log(error)
         })
     }
     const [filesToUpload, setFilesToUpload] = React.useState([])
+    const [filesTest, setFilesTest] = React.useState()
     const FilesPreview = (props) => {
         if (filesToUpload) {
             return (
@@ -54,22 +60,40 @@ export default function CorreoInteraccion(props) {
     const handleEvent = event => {
         const lastArray = [...filesToUpload]
         const newFileList = Array.from(event.target.files)
+        setFilesTest(event.target.files)
         let Arrayconcat = lastArray.concat(newFileList)
         setFilesToUpload(Arrayconcat)
     }
     const deleteAdjunto = (index) => {
         let arrayTempFiles = [...filesToUpload]
+        console.log(arrayTempFiles)
         arrayTempFiles.splice(index, 1)
+        console.log(arrayTempFiles)
         setFilesToUpload(arrayTempFiles)
     }
     const [email, setEmail] = React.useState({
         subject: '',
+        to: [],
         body: ''
     })
     const handleChange = (value, prop) => {
+        let emailToChange = [...email.to]
+        if (prop == 'to') {
+            emailToChange.push(value)
+            value = emailToChange
+        }
+        console.log(value)
         setEmail({
             ...email,
             [prop]: value
+        })
+    }
+    const handleDelete = (value, index) => {
+        let Arr = [...email.to]
+        Arr.splice(index, 1)
+        setEmail({
+            ...email,
+            'to': Arr
         })
     }
     return (
@@ -94,6 +118,19 @@ export default function CorreoInteraccion(props) {
                 <form onSubmit={submit} autoComplete="off">
                     <div className={classes.form}>
                         <Grid container spacing={2}>
+                            {/* <Grid item xs={12}>
+                                <TextField fullWidth label="Destinatario" variant="outlined" />
+                            </Grid> */}
+                            <Grid item xs={12}>
+                                <ChipInput
+                                    variant="outlined"
+                                    label="Destinatario"
+                                    fullWidth
+                                    value={email.to}
+                                    onAdd={chips => handleChange(chips, 'to')}
+                                    onDelete={(value, index) => handleDelete(value, index)}
+                                />
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField fullWidth label="Asunto" variant="outlined"
                                     value={email.subject}

@@ -19,6 +19,7 @@ import EditFechaInteraccion from './EditFechaInteraccion'
 function TableInteracciones(props) {
     const confirm = useConfirmation();
     const { rowData, styles, tableRef, icons, consulta, id, classes } = props;
+    
     const [canal, setCanal] = React.useState(consulta);
     const [editOpen, setEditOpen] = React.useState(false);
     const [editFechaOpen, setEditFechaOpen] = React.useState(false)
@@ -105,7 +106,7 @@ function TableInteracciones(props) {
                 tableRef={tableRef}
                 style={styles}
                 icons={icons}
-                title={<ToolbarTitle refreshData={() => { addInteraccionVisual(); refreshData() }} idUltimoPropsecto={rowData.cliente.props.data.ultimoProspecto.id} canal={canal} />}
+                title={<ToolbarTitle refreshData={() => { addInteraccionVisual(); refreshData() }} idUltimoPropsecto={rowData.cliente.props.data.ultimoProspecto.id} correo={rowData.cliente.props.data.correo} telefono={rowData.cliente.props.data.telefono} canal={canal} />}
                 columns={[
                     { title: 'Interaccion', field: 'interaccion' },
                     { title: 'Estado', field: 'estado' },
@@ -117,7 +118,7 @@ function TableInteracciones(props) {
                     },
                 ]}
                 data={query => {
-                    setCanal(query.tipo ? query.tipo : consulta)
+                    setCanal(query.canal ? query.canal : consulta)
                     return new Promise((resolve, reject) => {
                         axios.post(BackUrl + 'vista_clientes/interacciones/obtener_por_canal', { query, token: userLogged(), idCliente: id, canal: query.tipo ? query.tipo : consulta }).then(res => {
                             console.log(res)

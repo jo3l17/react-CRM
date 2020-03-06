@@ -114,7 +114,9 @@ function AddCard(props) {
                     apellidos: sendedForm.apellidos,
                     genero: sendedForm.genero,
                     direccion: sendedForm.direccion,
-                    comentario: sendedForm.comentario
+                    comentario: sendedForm.comentario,
+                    telefono:sendedForm.telefono,
+                    correo:sendedForm.correo
                 },
             }
             if (Form.tipo == 'persona') {
@@ -436,6 +438,7 @@ function AddCard(props) {
                                     id={"direccion" + props.modalId}
                                     label="Direccion"
                                     fullWidth
+                                    style={{ margin: 5 }}
                                     value={Form.direccion}
                                     onChange={(event) => setForm({ ...Form, direccion: event.target.value })}
                                 />
@@ -445,6 +448,7 @@ function AddCard(props) {
                                     id={"comentarios" + props.modalId}
                                     label="Comentarios"
                                     multiline
+                                    style={{ margin: 5 }}
                                     fullWidth
                                     rows="3"
                                     value={Form.comentario}
