@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.tertiary.dark,
         color: 'black'
     },
-    badgeInverted:{
+    badgeInverted: {
         backgroundColor: 'white',
         color: 'black'
     },
@@ -28,10 +28,10 @@ const useStyles = makeStyles(theme => ({
         border: `1px solid black`,
         borderRadius: 0
     },
-    selected:{
+    selected: {
         // borderColor:theme.palette.tertiary.dark,
         // color:theme.palette.tertiary.dark,
-        backgroundColor:theme.palette.tertiary.dark
+        backgroundColor: theme.palette.tertiary.dark
     },
     interaccionesTableTitle: {
         marginLeft: 10
@@ -57,16 +57,35 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.tertiary.light,
             color: theme.palette.secondary.main,
             borderColor: theme.palette.secondary.main
+        },
+    },
+    '@keyframes rotate': {
+        '0%': {
+            transform: 'rotate(0deg)',
+        },
+        '50%': {
+            transform: 'rotate(180deg)',
+        },
+        '100%': {
+            transform: 'rotate(0deg)',
         }
     },
+    sort: {
+        color:'green',
+        '&:hover':{
+            animation:`$rotate 3000ms ${theme.transitions.easing.easeInOut}`
+        },
+    }
+
 }))
 export default useStyles
 export const styles = {
     interaccionesTable: {
         backgroundColor: theme.palette.tertiary.main,
-        borderTop:`1px solid ${theme.palette.tertiary.dark}`
+        borderTop: `1px solid ${theme.palette.tertiary.dark}`
     },
-    interaccionesTableHeader:{
+    interaccionesTableHeader: {
         backgroundColor: `${theme.palette.tertiary.main} !important`,
-    }
+    },
+
 }

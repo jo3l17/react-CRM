@@ -17,6 +17,7 @@ import RedoIcon from '@material-ui/icons/Redo';
 import LockIcon from '@material-ui/icons/Lock';
 import Link from 'next/link';
 import PublicIcon from '@material-ui/icons/Public';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -76,11 +77,19 @@ function Header(props) {
       <List>
         <ListItem button>
           <ListItemIcon>
-            <Badge badgeContent={<PublicIcon fontSize="small"/>}>
+            <Badge badgeContent={<PublicIcon fontSize="small" />}>
               <WhatsAppIcon />
             </Badge>
           </ListItemIcon>
           <ListItemText primary={"Whatsapp"} />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <Badge badgeContent={<PublicIcon fontSize="small" />}>
+              <MailOutlineIcon />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary={"Correo"} />
         </ListItem>
       </List>
     </div>

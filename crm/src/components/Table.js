@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import MaterialTable, { MTableCell, MTableActions, MTableToolbar, MTableHeader } from "material-table";
 import axios from 'axios'
 import { BackUrl } from '../utilities/const';
@@ -13,13 +13,16 @@ import { userLogged } from '../services/UserService';
 import tableIcons from '../utilities/TableIcons';
 import AddInteraccion from './AddInteraccion';
 import TableInteracciones from './TableInteracciones';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 export default function Table(props) {
     let { tableRef, tableRefWhatsapp } = props
     const classes = useStyles()
     let pageSize = 5
     const [, updateState] = React.useState();
-    const forceUpdate = useCallback(() => updateState({}), []);
+    const forceUpdate = React.useCallback(() => updateState({}), []);
     let panelOpen = {
         whatsapp: false,
         telefono: false,
@@ -31,7 +34,6 @@ export default function Table(props) {
         correo: false
     })
     let idOpen
-    let consulta = 'whatsapp'
     const printTableRef = () => {
         console.log(tableRef)
         console.log(panelOpenPrueba)
@@ -122,14 +124,56 @@ export default function Table(props) {
             </div>
         )
     }
-
+    const [sortHeader, setSortHeader] = React.useState({
+        whatsapp: 0,
+        telefono: 0,
+        correo: 0
+    })
+    const sortHeaderby = prop => {
+        let headerSort = {
+            whatsapp: 0,
+            telefono: 0,
+            correo: 0
+        }
+        if (sortHeader[prop] == 1) {
+            headerSort[prop] = 2
+        } else if (sortHeader[prop] == 2) {
+            headerSort[prop] == 0
+        } else {
+            headerSort[prop]++
+        }
+        setSortHeader(headerSort)
+        return tableRef.current && tableRef.current.onQueryChange({
+            orderCanal: headerSort[prop] == 0 ? null : {
+                orderBy: prop,
+                orderDirection: headerSort[prop] == 1 ? 'asc' : 'desc'
+            }
+        })
+    }
+    const BotonesSort = () => {
+        return (
+            <div>Clientes
+            <div style={{ float: 'right' }}>
+                    <Button onClick={() => { sortHeaderby('whatsapp') }} className={classes.sort}>
+                        {sortHeader.whatsapp == 0 ? <ImportExportIcon /> : (sortHeader.whatsapp == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                    </Button>
+                    <Button onClick={() => { sortHeaderby('telefono') }} className={classes.sort}>
+                        {sortHeader.telefono == 0 ? <ImportExportIcon /> : (sortHeader.telefono == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                    </Button>
+                    <Button onClick={() => { sortHeaderby('correo') }} className={classes.sort}>
+                        {sortHeader.correo == 0 ? <ImportExportIcon /> : (sortHeader.correo == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                    </Button>
+                </div>
+            </div>
+        )
+    }
     return (
         <div style={{ maxWidth: '100%' }}>
             <MaterialTable
                 tableRef={tableRef}
                 icons={tableIcons}
                 columns={[
-                    { title: "Clientes", field: "cliente", cellStyle: { width: '500px', display: 'block' }, sorting: false },
+                    { title: <BotonesSort />, field: "cliente", cellStyle: { width: '500px', display: 'block' }, headerStyle: { paddingRight: 0 }, sorting: false },
                     { title: "Prioridad", field: "prioridad", type: "numeric", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     { title: "Estado", field: "estadoCliente", cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },
                     { title: "Intencion de compra", field: "intencionCompra", type: 'numeric', cellStyle: { textAlign: 'center' }, headerStyle: { textAlign: 'center' } },

@@ -11,15 +11,14 @@ import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAlt'
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import useStyles from '../styles/TableInteracciones';
-import { withStyles } from '@material-ui/core'
 import { useConfirmation } from '../services/ConfimationService';
 import EditInteraccion from './EditInteraccion'
 import EditFechaInteraccion from './EditFechaInteraccion'
 
 function TableInteracciones(props) {
+    const classes= useStyles()
     const confirm = useConfirmation();
-    const { rowData, styles, tableRef, icons, consulta, id, classes } = props;
-    
+    const { rowData, styles, tableRef, icons, consulta, id } = props;
     const [canal, setCanal] = React.useState(consulta);
     const [editOpen, setEditOpen] = React.useState(false);
     const [editFechaOpen, setEditFechaOpen] = React.useState(false)
@@ -141,21 +140,21 @@ function TableInteracciones(props) {
                 actions={[
                     {
                         icon: () => <Edit />,
-                        tooltip: 'Editar',
+                        tooltip: 'Editar Interaccion',
                         onClick: (event, rowData) => {
                             handleEditOpen(rowData.estado.props.id, rowData.estado.props.data)
                         }
                     },
                     rowData => ({
                         icon: () => <Delete />,
-                        tooltip: 'Delete User',
+                        tooltip: 'Eliminar Interaccion',
                         onClick: (event, rowData) => {
                             confirmar(rowData.estado.props.id);
                         },
                     }),
                     rowData => ({
                         icon: () => <EventIcon className={rowData.endDate ? '' : classes.error} />,
-                        tooltip: 'Delete User',
+                        tooltip: 'Fecha de finalizacion',
                         onClick: (event, rowData) => {
                             handleEditFechaOpen(rowData.estado.props.id, rowData.estado.props.data)
                         }
@@ -196,4 +195,4 @@ function TableInteracciones(props) {
         </>
     )
 }
-export default withStyles(useStyles)(TableInteracciones)
+export default TableInteracciones
