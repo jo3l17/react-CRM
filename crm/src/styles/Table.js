@@ -61,20 +61,20 @@ const useStyles = makeStyles(theme => ({
     },
     '@keyframes rotate': {
         '0%': {
-            transform: 'rotate(0deg)',
-        },
-        '50%': {
             transform: 'rotate(180deg)',
         },
+        // '50%': {
+        //     transform: 'rotate(180deg)',
+        // },
         '100%': {
             transform: 'rotate(0deg)',
         }
     },
-    sort: {
-        color:'green',
-        '&:hover':{
-            animation:`$rotate 3000ms ${theme.transitions.easing.easeInOut}`
-        },
+    downAnimation: {
+        animation: `$rotate 200ms ${theme.transitions.easing.easeInOut}`,
+    },
+    sort:{
+        color: theme.palette.tertiary.dark,
     }
 
 }))

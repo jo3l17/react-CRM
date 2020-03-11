@@ -137,7 +137,7 @@ function Card(props) {
               <div className={classes.porcentajeWrapper}>
                 {tiempoSinContacto()}
                 <div className={classes.porcentajeCierre}>{props.card.content.porcentajeCierre}</div>
-                <CircularProgress variant="static" value={props.card.content.porcentajeCierre} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
+                <CircularProgress variant="static" value={props.card.content.porcentajeCierre?props.card.content.porcentajeCierre:0} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
               </div>
             </div>
           </div>

@@ -18,6 +18,8 @@ import LockIcon from '@material-ui/icons/Lock';
 import Link from 'next/link';
 import PublicIcon from '@material-ui/icons/Public';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import CorreoInteraccionGlobal from './CorreoInteraccionGlobal';
+import WhatsappInteraccionGlobal from './WhatsappInteraccionGlobal';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -29,6 +31,17 @@ function Header(props) {
   const MenuDrawerToggle = () => {
     setMenuOpen(!menuOpen);
   };
+  const handleCloseInteraccion = result => {
+    console.log(result)
+    setOpenDialogCorreoInteraccion(false)
+    setOpenDialogWhatsappInteraccion(false)
+  }
+  const handleOpenCorreoInteraccion = () => {
+    setOpenDialogCorreoInteraccion(true)
+  }
+  const handleOpenWhatsappInteraccion = () => {
+    setOpenDialogWhatsappInteraccion(true)
+  }
   const preventDefault = event => event.preventDefault();
   const { container } = props;
   const classes = useStyles();
@@ -36,6 +49,8 @@ function Header(props) {
   const [open, setOpen] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [openDialogCorreoInteraccion, setOpenDialogCorreoInteraccion] = React.useState(false)
+  const [openDialogWhatsappInteraccion, setOpenDialogWhatsappInteraccion] = React.useState(false)
   const Tools = (
     <div>
       <Divider />
@@ -75,7 +90,7 @@ function Header(props) {
       </List>
       <Divider />
       <List>
-        <ListItem button>
+        <ListItem button onClick={handleOpenWhatsappInteraccion}>
           <ListItemIcon>
             <Badge badgeContent={<PublicIcon fontSize="small" />}>
               <WhatsAppIcon />
@@ -83,7 +98,7 @@ function Header(props) {
           </ListItemIcon>
           <ListItemText primary={"Whatsapp"} />
         </ListItem>
-        <ListItem button>
+        <ListItem button onClick={handleOpenCorreoInteraccion}>
           <ListItemIcon>
             <Badge badgeContent={<PublicIcon fontSize="small" />}>
               <MailOutlineIcon />
@@ -151,6 +166,8 @@ function Header(props) {
   );
   return (
     <div>
+      <WhatsappInteraccionGlobal id={'WhatsappGlobal'} open={openDialogWhatsappInteraccion} handleClose={handleCloseInteraccion}/>
+      <CorreoInteraccionGlobal id={'CorreoGlobal'} open={openDialogCorreoInteraccion} handleClose={handleCloseInteraccion} />
       <CssBaseline />
       <AppBar
         position="fixed"

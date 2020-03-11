@@ -6,33 +6,33 @@ import useStyles from '../styles/CorreoInteraccion';
 import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
+import AutocompleteWhatsapp from './AutcompleteWhatsapp';
 
-export default function WhatsappInteraccion(props) {
+export default function WhatsappInteraccionGlobal(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const classes = useStyles();
     const submit = event => {
-        const token = userLogged()
-        event.preventDefault()
-        const formdata = new FormData();
+        // const token = userLogged()
+        // event.preventDefault()
+        // const formdata = new FormData();
         // filesToUpload.forEach(element => {
         //     formdata.append('attachments', element)
         // });
-        props.telefono.forEach(element => {
-            formdata.append('to', element)
-        })
-        formdata.append('idProspecto', props.id)
-        formdata.append('token', token)
-        formdata.append('body', whatsapp.body)
-        axios.post(BackUrl + 'interacciones/generar_interaccion/whatsapp', formdata
-        ).then(res => {
-            console.log(res)
-            if(res.data.message=='OK'){
-                props.handleClose('OK')
-                window.open(res.data.link, "_blank")
-            }
-        }).catch(error => {
-            console.log(error)
-        })
+        // props.correo.forEach(element => {
+        //     formdata.append('to', element)
+        // })
+        // formdata.append('token', token)
+        // formdata.append('subject', email.subject)
+        // formdata.append('body', email.body)
+        // axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
+        // ).then(res => {
+        //     console.log(res)
+        //     if(res.message=='OK'){
+        //         props.handleClose('OK')
+        //     }
+        // }).catch(error => {
+        //     console.log(error)
+        // })
     }
     const [filesToUpload, setFilesToUpload] = React.useState([])
     const FilesPreview = (props) => {
@@ -62,14 +62,15 @@ export default function WhatsappInteraccion(props) {
         arrayTempFiles.splice(index, 1)
         setFilesToUpload(arrayTempFiles)
     }
-    const [whatsapp, setWhatsapp] = React.useState({
+    const [email, setEmail] = React.useState({
+        subject: '',
         body: ''
     })
     const handleChange = (value, prop) => {
-        setWhatsapp({
-            ...whatsapp,
-            [prop]:value
-        })
+        if (prop == 'to') {
+            emailToChange.push(value)
+            value = emailToChange
+        }
     }
     return (
         <Dialog
@@ -94,11 +95,14 @@ export default function WhatsappInteraccion(props) {
                     <div className={classes.form}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
+                                <AutocompleteWhatsapp handleChange={handleChange}/>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField fullWidth multiline rows="5" label="Mensaje" variant="outlined"
-                                    value={whatsapp.body}
+                                    value={email.body}
                                     onChange={event => handleChange(event.target.value, 'body')} />
                             </Grid>
-                            {/* <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <input
                                     accept="*"
                                     className={classes.input}
@@ -112,7 +116,7 @@ export default function WhatsappInteraccion(props) {
                                         Subir Archivos adjuntos
                                     </Button>
                                 </label>
-                            </Grid> */}
+                            </Grid>
                             <FilesPreview />
                         </Grid>
                     </div>

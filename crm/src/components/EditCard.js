@@ -2,7 +2,7 @@ import 'date-fns';
 import React from 'react';
 import axios from 'axios';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, FormControl, Select, InputLabel, MenuItem, InputAdornment } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -13,7 +13,7 @@ import useStyles from '../styles/EditCard';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { formatDate } from '../utilities/formaters';
-import { lengthValidation, minMaxValidation } from '../utilities/validator'
+import { lengthValidation, minMaxValidation, emailValidation } from '../utilities/validator'
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
 
@@ -55,6 +55,12 @@ function EditCard(props) {
             prioridad: '',
             porcentajeCierre: '',
             fechaContacto: '',
+            telefono: [
+                '', ''
+            ],
+            correo: [
+                '', ''
+            ]
         }
         let formValidationTemp = {}
         if (formulario.tipo == "persona") {
@@ -67,19 +73,13 @@ function EditCard(props) {
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                 fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
+                telefono: [
+                    lengthValidation(formulario.telefono[0], 9), formulario.telefono[1]?.length > 0 ? lengthValidation(formulario.telefono[1], 9) : ''
+                ],
+                correo: [
+                    emailValidation(formulario.correo[0]), formulario.correo[1]?.length > 0 ? emailValidation(formulario.correo[1]) : ''
+                ],
             }
-            setFormValidation(
-                {
-                    ...FormValidation,
-                    empresa: '',
-                    ruc: '',
-                    nombres: lengthValidation(formulario.nombres, 3),
-                    apellidos: lengthValidation(formulario.apellidos, 3),
-                    prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
-                    porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
-                }
-            )
         } else {
             formValidationTemp = {
                 ...FormValidation,
@@ -90,20 +90,15 @@ function EditCard(props) {
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                 fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
+                telefono: [
+                    lengthValidation(formulario.telefono[0], 9), formulario.telefono[1]?.length > 0 ? lengthValidation(formulario.telefono[1], 9) : ''
+                ],
+                correo: [
+                    emailValidation(formulario.correo[0]), formulario.correo[1]?.length > 0 ? emailValidation(formulario.correo[1]) : ''
+                ],
             }
-            setFormValidation(
-                {
-                    ...FormValidation,
-                    nombres: '',
-                    apellidos: '',
-                    empresa: lengthValidation(formulario.empresa, 3),
-                    ruc: '',
-                    prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
-                    porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
-                    fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
-                }
-            )
         }
+        setFormValidation(formValidationTemp)
         if (JSON.stringify(validation) != JSON.stringify(formValidationTemp)) {
             return false
         } else {
@@ -120,7 +115,6 @@ function EditCard(props) {
                 prioridad: parseInt(Form.prioridad),
                 porcentajeCierre: (Form.porcentajeCierre && Form.porcentajeCierre == '') ? null : parseInt(Form.porcentajeCierre)
             }
-            console.log(JSON.stringify(sendedForm))
             sendedForm.token = userLogged()
             axios.post(BackUrl + 'tableros/prospectos/editar', sendedForm).then(res => {
                 setValidate(false)
@@ -133,9 +127,14 @@ function EditCard(props) {
             return false
         }
     }
-    const handleForm = (value, key) => {
+    const handleForm = (value, key, i = 0) => {
         if (key == "fechaContacto") {
             value = (value != '' && value != null) ? formatDate(value) : ''
+        }
+        if (key == 'telefono' || key == 'correo') {
+            let newArray = [...Form[key]]
+            newArray[i] = value
+            value = newArray
         }
         const tempForm = {
             ...Form,
@@ -159,6 +158,12 @@ function EditCard(props) {
             prioridad: '',
             porcentajeCierre: '',
             fechaContacto: '',
+            telefono: [
+                '', ''
+            ],
+            correo: [
+                '', ''
+            ]
         }
     )
     const [Form, setForm] = React.useState(props.data.content);
@@ -262,7 +267,7 @@ function EditCard(props) {
                                 label="Prioridad"
                                 style={{ margin: 5 }}
                                 defaultValue={Form.prioridad}
-                                onChange={(event) => setForm({ ...Form, prioridad: parseInt(event.target.value) })}
+                                onChange={(event) => handleForm(parseInt(event.target.value), 'prioridad')}
                                 type="number"
                                 fullWidth
                                 margin="normal"
@@ -276,7 +281,7 @@ function EditCard(props) {
                                 label="Porcentaje de cierre"
                                 style={{ margin: 5 }}
                                 defaultValue={Form.porcentajeCierre}
-                                onChange={(event) => setForm({ ...Form, porcentajeCierre: parseInt(event.target.value) })}
+                                onChange={(event) => handleForm(parseInt(event.target.value), 'porcentajeCierre')}
                                 type="number"
                                 fullWidth
                                 margin="normal"
@@ -324,6 +329,62 @@ function EditCard(props) {
                                     />
                                 </Hidden>
                             </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id={"telefono1" + props.modalId}
+                                label="Telefono Primario"
+                                style={{ margin: 5 }}
+                                value={Form.telefono[0]}
+                                onChange={(event) => { handleForm(event.target.value, 'telefono', 0) }}
+                                type="number"
+                                fullWidth
+                                margin="normal"
+                                error={validate && FormValidation.telefono[0] != ''}
+                                helperText={FormValidation.telefono[0]}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id={"telefono2" + props.modalId}
+                                label="Telefono Secundario"
+                                style={{ margin: 5 }}
+                                value={Form.telefono[1]}
+                                onChange={(event) => { handleForm(event.target.value, 'telefono', 1) }}
+                                type="number"
+                                fullWidth
+                                margin="normal"
+                                error={validate && FormValidation.telefono[1] != ''}
+                                helperText={FormValidation.telefono[1]}
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                id={"Correo1" + props.modalId}
+                                label="Correo Primario"
+                                style={{ margin: 5 }}
+                                value={Form.correo[0]}
+                                onChange={(event) => { handleForm(event.target.value, 'correo', 0) }}
+                                type="email"
+                                fullWidth
+                                margin="normal"
+                                error={validate && FormValidation.correo[0] != ''}
+                                helperText={FormValidation.correo[0]}
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                id={"Correo2" + props.modalId}
+                                label="Correo Secundario"
+                                style={{ margin: 5 }}
+                                value={Form.correo[1]}
+                                onChange={(event) => { handleForm(event.target.value, 'correo', 1) }}
+                                type="email"
+                                fullWidth
+                                margin="normal"
+                                error={validate && FormValidation.correo[1] != ''}
+                                helperText={FormValidation.correo[1]}
+                            />
                         </Grid>
                     </Grid>
                 </div>

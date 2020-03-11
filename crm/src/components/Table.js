@@ -153,15 +153,15 @@ export default function Table(props) {
     const BotonesSort = () => {
         return (
             <div>Clientes
-            <div style={{ float: 'right' }}>
+                <div style={{ float: 'right' }}>
                     <Button onClick={() => { sortHeaderby('whatsapp') }} className={classes.sort}>
-                        {sortHeader.whatsapp == 0 ? <ImportExportIcon /> : (sortHeader.whatsapp == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                        {sortHeader.whatsapp == 0 ? <ImportExportIcon /> : (sortHeader.whatsapp == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon className={classes.downAnimation} />)}
                     </Button>
                     <Button onClick={() => { sortHeaderby('telefono') }} className={classes.sort}>
-                        {sortHeader.telefono == 0 ? <ImportExportIcon /> : (sortHeader.telefono == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                        {sortHeader.telefono == 0 ? <ImportExportIcon /> : (sortHeader.telefono == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon className={classes.downAnimation} />)}
                     </Button>
                     <Button onClick={() => { sortHeaderby('correo') }} className={classes.sort}>
-                        {sortHeader.correo == 0 ? <ImportExportIcon /> : (sortHeader.correo == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />)}
+                        {sortHeader.correo == 0 ? <ImportExportIcon /> : (sortHeader.correo == 1 ? <ArrowUpwardIcon /> : <ArrowDownwardIcon className={classes.downAnimation} />)}
                     </Button>
                 </div>
             </div>

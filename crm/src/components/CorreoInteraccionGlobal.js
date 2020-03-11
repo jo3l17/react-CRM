@@ -7,8 +7,9 @@ import axios from 'axios';
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
 import ChipInput from 'material-ui-chip-input'
+import AutocompleteCorreo from './AutocompleteCorreo';
 
-export default function CorreoInteraccion(props) {
+export default function CorreoInteraccionGlobal(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const classes = useStyles();
     const submit = event => {
@@ -26,13 +27,15 @@ export default function CorreoInteraccion(props) {
             formdata.append('attachments', element)
         });
         email.to.forEach(element => {
-
-            formdata.append('to', element)
+            formdata.append('idClientes', element.id||element)
+        })
+        email.to.forEach(element => {
+            formdata.append('to', element.correo||element)
         })
         formdata.append('token', token)
         formdata.append('subject', email.subject)
         formdata.append('body', email.body)
-        axios.post(BackUrl + 'interacciones/generar_interaccion/correo', formdata
+        axios.post(BackUrl + 'interacciones/generar_interaccion_global/correo', formdata
         ).then(res => {
             console.log(res)
         }).catch(error => {
@@ -77,12 +80,6 @@ export default function CorreoInteraccion(props) {
         body: ''
     })
     const handleChange = (value, prop) => {
-        let emailToChange = [...email.to]
-        if (prop == 'to') {
-            emailToChange.push(value)
-            value = emailToChange
-        }
-        console.log(value)
         setEmail({
             ...email,
             [prop]: value
@@ -107,7 +104,7 @@ export default function CorreoInteraccion(props) {
             scroll="paper"
         >
             <DialogTitle id={"dialog-" + props.id} disableTypography className={classes.root} >
-                <Typography variant="h6">Enviar Correo</Typography>
+                <Typography variant="h6">Enviar Correos</Typography>
                 {props.handleClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} type="button" onClick={() => { props.handleClose() }}>
                         <CloseIcon />
@@ -118,18 +115,8 @@ export default function CorreoInteraccion(props) {
                 <form onSubmit={submit} autoComplete="off">
                     <div className={classes.form}>
                         <Grid container spacing={2}>
-                            {/* <Grid item xs={12}>
-                                <TextField fullWidth label="Destinatario" variant="outlined" />
-                            </Grid> */}
                             <Grid item xs={12}>
-                                <ChipInput
-                                    variant="outlined"
-                                    label="Destinatario"
-                                    fullWidth
-                                    value={email.to}
-                                    onAdd={chips => handleChange(chips, 'to')}
-                                    onDelete={(value, index) => handleDelete(value, index)}
-                                />
+                                <AutocompleteCorreo handleChange={handleChange} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField fullWidth label="Asunto" variant="outlined"
