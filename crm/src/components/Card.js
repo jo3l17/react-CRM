@@ -137,13 +137,14 @@ function Card(props) {
               <div className={classes.porcentajeWrapper}>
                 {tiempoSinContacto()}
                 <div className={classes.porcentajeCierre}>{props.card.content.porcentajeCierre}</div>
-                <CircularProgress variant="static" value={props.card.content.porcentajeCierre?props.card.content.porcentajeCierre:0} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
+                {console.log(parseInt(props.card.content.porcentajeCierre))}
+                <CircularProgress variant="static" value={props.card.content.porcentajeCierre ? parseInt(props.card.content.porcentajeCierre) : 0} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
               </div>
             </div>
           </div>
           <div className={classes.interacciones}>
             <div className={classes.interaccionesButtons}>
-              <Button variant="outlined" onClick={()=>{handleOpenInteraccion('whatsapp')}} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
+              <Button variant="outlined" onClick={() => { handleOpenInteraccion('whatsapp') }} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.card.content.interacciones.whatsapp} &nbsp;<WhatsAppIcon />
               </Button>
             </div>
@@ -153,7 +154,7 @@ function Card(props) {
               </Button>
             </div>
             <div className={classes.interaccionesButtons}>
-              <Button variant="outlined" onClick={()=>{handleOpenInteraccion('correo')}} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
+              <Button variant="outlined" onClick={() => { handleOpenInteraccion('correo') }} className={`${classes.interaccionesButton} ${classes.darkButton}`}>
                 {props.card.content.interacciones.correo} &nbsp;<MailOutlineIcon />
               </Button>
             </div>
