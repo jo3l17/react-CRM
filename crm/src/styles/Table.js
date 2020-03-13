@@ -10,7 +10,9 @@ const useStyles = makeStyles(theme => ({
     },
     persona: {
         width: '60%',
-        marginLeft: 5
+        marginLeft: 5,
+        overflow: 'scroll',
+        maxWidth: '60%',
     },
     leftButtonsContainer: {
         maxWidth: 64,
@@ -73,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     downAnimation: {
         animation: `$rotate 200ms ${theme.transitions.easing.easeInOut}`,
     },
-    sort:{
+    sort: {
         color: theme.palette.tertiary.dark,
     }
 
