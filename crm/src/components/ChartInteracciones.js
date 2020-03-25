@@ -5,7 +5,6 @@ import {
 import { Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import TopSellers from './TopSellers';
 import Summary from './Summary';
-import Metas from './Metas';
 
 export default function ChartInteracciones() {
     const [data, setData] = React.useState([
@@ -127,12 +126,6 @@ export default function ChartInteracciones() {
                     <div>
                         <Summary timeType={'Mensual'} />
                     </div>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Metas />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-
                 </Grid>
             </Grid>
         </>
