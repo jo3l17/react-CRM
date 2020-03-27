@@ -418,7 +418,7 @@ export default function Metas() {
                                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const labelId = `enhanced-table-checkbox-${index}`;
-                                    return (<TableRowMetas row={row} labelId={labelId} updateData={updateData} />)
+                                    return (<TableRowMetas key={`metas-row-${index}`} row={row} labelId={labelId} updateData={updateData} />)
                                     // <TableRow
                                     //     hover
                                     //     role="checkbox"
