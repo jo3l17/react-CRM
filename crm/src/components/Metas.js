@@ -294,9 +294,9 @@ const TableRowMetas = (props) => {
             .then(() => {
                 axios.post(BackUrl + 'estadisticas/eliminar/meta', { token, id }).then(res => {
                     console.log(res)
-                    // if (res.data.message == 'OK') {
-                    //     updateData()
-                    // }
+                    if (res.data.message == 'OK') {
+                        updateData()
+                    }
                 }).catch(error => {
                     console.log(error)
                 })
