@@ -5,53 +5,67 @@ import {
 import { Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import TopSellers from './TopSellers';
 import Summary from './Summary';
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 
 export default function ChartInteracciones() {
     const [data, setData] = React.useState([
         {
-            name: 'Page A', ventas: 4000, conversiones: 2400, contactos: 2400,
+            name: 'Page A', ganados: 4000, perdidos: 2400, generados: 2400,
         },
         {
-            name: 'Page B', ventas: 3000, conversiones: 1398, contactos: 2210,
+            name: 'Page B', ganados: 3000, perdidos: 1398, generados: 2210,
         },
         {
-            name: 'Page C', ventas: 2000, conversiones: 4000, contactos: 2290,
+            name: 'Page C', ganados: 2000, perdidos: 4000, generados: 2290,
         },
         {
-            name: 'Page D', ventas: 2780, conversiones: 3908, contactos: 2000,
+            name: 'Page D', ganados: 2780, perdidos: 3908, generados: 2000,
         },
         {
-            name: 'Page E', ventas: 1890, conversiones: 4800, contactos: 2181,
+            name: 'Page E', ganados: 1890, perdidos: 4800, generados: 2181,
         },
         {
-            name: 'Page F', ventas: 2390, conversiones: 3800, contactos: 2500,
+            name: 'Page F', ganados: 2390, perdidos: 3800, generados: 2500,
         },
         {
-            name: 'Page G', ventas: 3490, conversiones: 4300, contactos: 2100,
+            name: 'Page G', ganados: 3490, perdidos: 4300, generados: 2100,
         },
     ])
+    React.useEffect(() => {
+        let token = userLogged()
+        axios.post(BackUrl + 'estadisticas/obtener', { token }).then(res => {
+            console.log(res)
+            if (res.data.message == 'OK') {
+                setData(res.data.content)
+            }
+        }).catch(error => {
+            console.log(error)
+        })
+    }, []);
     const randomData = () => {
         setData([
             {
-                name: 'Page A', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 5000,
+                name: 'Page A', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 5000,
             },
             {
-                name: 'Page B', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2210,
+                name: 'Page B', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2210,
             },
             {
-                name: 'Page C', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2290,
+                name: 'Page C', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2290,
             },
             {
-                name: 'Page D', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2000,
+                name: 'Page D', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2000,
             },
             {
-                name: 'Page E', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2181,
+                name: 'Page E', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2181,
             },
             {
-                name: 'Page F', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2500,
+                name: 'Page F', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2500,
             },
             {
-                name: 'Page G', ventas: Math.floor(Math.random() * 10) * 1000, conversiones: Math.floor(Math.random() * 10) * 1000, contactos: 2100,
+                name: 'Page G', ganados: Math.floor(Math.random() * 10) * 1000, perdidos: Math.floor(Math.random() * 10) * 1000, generados: 2100,
             },
         ])
     }
@@ -98,7 +112,6 @@ export default function ChartInteracciones() {
     }
     return (
         <>
-            <button onClick={() => { randomData() }}>random data</button>
             <Filters />
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={8}>
@@ -114,9 +127,9 @@ export default function ChartInteracciones() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="ventas" stroke="#8884d8" activeDot={{ r: 8 }} animationDuration={250} />
-                            <Line type="monotone" dataKey="conversiones" stroke="#82ca9d" animationDuration={250} />
-                            <Line type="monotone" dataKey="contactos" stroke="#4e4e4e" animationDuration={250} />
+                            <Line type="monotone" dataKey="ganados" stroke="#8884d8" activeDot={{ r: 8 }} animationDuration={250} />
+                            <Line type="monotone" dataKey="perdidos" stroke="#82ca9d" animationDuration={250} />
+                            <Line type="monotone" dataKey="generados" stroke="#4e4e4e" animationDuration={250} />
                         </LineChart>
                     </ResponsiveContainer>
                 </Grid>

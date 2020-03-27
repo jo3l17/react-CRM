@@ -44,12 +44,10 @@ const rows = [
 export default function TopSellers() {
     React.useEffect(() => {
         let token = userLogged()
-        axios.post(BackUrl + 'estadisticas/obtener/top',{token}).then(res => {
+        axios.post(BackUrl + 'estadisticas/obtener/top', { token }).then(res => {
             console.log(res)
         }).catch(error => {
-            {
-                console.log(error)
-            }
+            console.log(error)
         })
     }, []);
     const classes = useStyles();
