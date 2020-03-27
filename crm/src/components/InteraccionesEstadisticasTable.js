@@ -44,7 +44,7 @@ export default function InteraccionesEstadisticasTable() {
                 </TableHead>
                 <TableBody>
                     {rows.map((row, i) => (
-                        <TableRow key={row.name}>
+                        <TableRow key={row.indicadores}>
                             <TableCell className={`${classes.cell} ${classes.headingCell}`} component="th"  scope="row">
                                 {row.indicadores}
                             </TableCell>

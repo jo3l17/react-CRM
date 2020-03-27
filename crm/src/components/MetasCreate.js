@@ -1,7 +1,10 @@
 import React from 'react'
 import { Dialog, useTheme, useMediaQuery, DialogTitle, Typography, IconButton, DialogContent, Grid, TextField, DialogActions, Button } from '@material-ui/core'
 import useStyles from '../styles/MetasCreate';
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@material-ui/icons/Close';
+import axios from 'axios';
+import { userLogged } from '../services/UserService';
+import { BackUrl } from '../utilities/const';
 
 export default function MetasCreate(props) {
     const theme = useTheme();
@@ -17,11 +20,19 @@ export default function MetasCreate(props) {
     const submit = event => {
         setValidate(true)
         event.preventDefault();
-        setForm({
-            objetivo: '',
-            valor: ''
+        const token = userLogged()
+        axios.post(BackUrl + 'estadisticas/agregar/metas', { ...form, token }).then(res => {
+            console.log(res)
+            if (res.data.message == 'OK') {
+                setForm({
+                    objetivo: '',
+                    valor: ''
+                })
+                props.handleClose('OK')
+            }
+        }).catch(error => {
+            console.log(error)
         })
-        props.handleClose('OK')
     }
     const handleForm = (value, key) => {
         setForm({

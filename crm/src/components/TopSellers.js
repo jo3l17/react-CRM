@@ -7,7 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import theme from '../theme';
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 
 const useStyles = makeStyles({
     table: {
@@ -40,6 +42,16 @@ const rows = [
 ];
 
 export default function TopSellers() {
+    React.useEffect(() => {
+        let token = userLogged()
+        axios.post(BackUrl + 'estadisticas/obtener/top',{token}).then(res => {
+            console.log(res)
+        }).catch(error => {
+            {
+                console.log(error)
+            }
+        })
+    }, []);
     const classes = useStyles();
 
     return (
