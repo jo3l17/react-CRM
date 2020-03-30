@@ -12,7 +12,7 @@ import { Checkbox } from '@material-ui/core';
 export default function AutocompleteCorreo(props) {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-    const { handleChange } = props
+    const { handleChange, value } = props
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const [setted, setSetted] = React.useState(false)
@@ -64,7 +64,8 @@ export default function AutocompleteCorreo(props) {
             options={options}
             loading={loading}
             noOptionsText={'No hay correos'}
-            onChange={(event, newValue) => { handleChange(newValue, 'to') }}
+            value={value}
+            onChange={(event, newValue) => { handleChange(newValue, 'to')}}
             renderInput={params => (
                 <TextField
                     {...params}

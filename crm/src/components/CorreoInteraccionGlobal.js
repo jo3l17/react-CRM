@@ -27,10 +27,10 @@ export default function CorreoInteraccionGlobal(props) {
             formdata.append('attachments', element)
         });
         email.to.forEach(element => {
-            formdata.append('idClientes', element.id||element)
+            formdata.append('idClientes', element.id || element)
         })
         email.to.forEach(element => {
-            formdata.append('to', element.correo||element)
+            formdata.append('to', element.correo || element)
         })
         formdata.append('token', token)
         formdata.append('subject', email.subject)
@@ -38,6 +38,11 @@ export default function CorreoInteraccionGlobal(props) {
         axios.post(BackUrl + 'interacciones/generar_interaccion_global/correo', formdata
         ).then(res => {
             console.log(res)
+            if (res.data.message == 'OK') {
+                setFilesToUpload([])
+                setEmail({ subject: '', body: '', to: [] })
+                props.handleClose('OK')
+            }
         }).catch(error => {
             console.log(error)
         })
@@ -116,7 +121,7 @@ export default function CorreoInteraccionGlobal(props) {
                     <div className={classes.form}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <AutocompleteCorreo handleChange={handleChange} />
+                                <AutocompleteCorreo value={email.to} handleChange={handleChange} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField fullWidth label="Asunto" variant="outlined"

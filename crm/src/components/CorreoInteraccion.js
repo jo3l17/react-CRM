@@ -28,6 +28,11 @@ export default function CorreoInteraccion(props) {
         ).then(res => {
             console.log(res)
             if (res.data.message == 'OK') {
+                setEmail({
+                    body:'',
+                    subject:''
+                })
+                setFilesToUpload([])
                 props.handleClose('OK')
             }
         }).catch(error => {
