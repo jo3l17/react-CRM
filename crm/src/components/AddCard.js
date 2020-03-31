@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
-import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, InputLabel, FormControl, Select, MenuItem, RadioGroup, FormControlLabel, Radio, DialogTitle, DialogContent, DialogActions, InputAdornment } from '@material-ui/core';
+import { Dialog, Typography, Button, IconButton, TextField, Grid, Hidden, InputLabel, FormControl, Select, MenuItem, RadioGroup, FormControlLabel, Radio, DialogTitle, DialogContent, DialogActions, InputAdornment, NoSsr } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import useStyles from '../styles/AddCard';
@@ -12,6 +12,8 @@ import { lengthValidation, minMaxValidation, emailValidation } from '../utilitie
 import { formatDate } from '../utilities/formaters'
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
+import MuiPhoneInput from 'material-ui-phone-number';
+import dynamic from 'next/dynamic';
 
 function AddCard(props) {
     const today = new Date();
@@ -37,7 +39,7 @@ function AddCard(props) {
                 nombres: lengthValidation(formulario.nombres, 3),
                 apellidos: lengthValidation(formulario.apellidos, 3),
                 correo: emailValidation(formulario.correo),
-                telefono: lengthValidation(formulario.telefono, 9),
+                // telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                 fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
@@ -50,7 +52,7 @@ function AddCard(props) {
                     nombres: lengthValidation(formulario.nombres, 3),
                     apellidos: lengthValidation(formulario.apellidos, 3),
                     correo: emailValidation(formulario.correo),
-                    telefono: lengthValidation(formulario.telefono, 9),
+                    // telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                     fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
@@ -64,7 +66,7 @@ function AddCard(props) {
                 empresa: lengthValidation(formulario.empresa, 3),
                 ruc: '',
                 correo: emailValidation(formulario.correo),
-                telefono: lengthValidation(formulario.telefono, 9),
+                // telefono: lengthValidation(formulario.telefono, 9),
                 prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                 porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                 fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
@@ -77,13 +79,15 @@ function AddCard(props) {
                     empresa: lengthValidation(formulario.empresa, 3),
                     ruc: '',
                     correo: emailValidation(formulario.correo),
-                    telefono: lengthValidation(formulario.telefono, 9),
+                    // telefono: lengthValidation(formulario.telefono, 9),
                     prioridad: (!formulario.prioridad || formulario.prioridad.length == 0) ? lengthValidation(formulario.prioridad, 0) : minMaxValidation(formulario.prioridad, 1, 10),
                     porcentajeCierre: (!formulario.porcentajeCierre || formulario.porcentajeCierre.length == 0) ? '' : minMaxValidation(formulario.porcentajeCierre, 0, 100),
                     fechaContacto: formulario.fechaContacto == 'NaN-NaN-NaNT00:00:00' ? 'Fecha Invalida' : (today < new Date(formulario.fechaContacto) ? 'La fecha no puede ser mayor' : ''),
                 }
             )
         }
+        console.log(validation);
+        console.log(JSON.stringify(formValidationTemp));
         if (JSON.stringify(validation) != JSON.stringify(formValidationTemp)) {
             return false
         } else {
@@ -115,8 +119,8 @@ function AddCard(props) {
                     genero: sendedForm.genero,
                     direccion: sendedForm.direccion,
                     comentario: sendedForm.comentario,
-                    telefono:sendedForm.telefono,
-                    correo:sendedForm.correo
+                    telefono: sendedForm.telefono,
+                    correo: sendedForm.correo
                 },
             }
             if (Form.tipo == 'persona') {
@@ -205,6 +209,7 @@ function AddCard(props) {
         })
     }
     const handleForm = (value, key) => {
+        console.log(value);
         if (key == "fechaContacto") {
             value = (value != '' && value != null) ? formatDate(value) : ''
         }
@@ -295,7 +300,7 @@ function AddCard(props) {
                                             </FormControl>
                                         </Grid>
                                         <Grid item sm={4} xs={6}>
-                                            <TextField
+                                            {/* <TextField
                                                 id={"Telefono" + props.modalId}
                                                 label="Telefono"
                                                 style={{ margin: 5 }}
@@ -306,7 +311,18 @@ function AddCard(props) {
                                                 margin="normal"
                                                 error={validate && FormValidation.telefono != ''}
                                                 helperText={FormValidation.telefono}
-                                            />
+                                            /> */}
+                                                <MuiPhoneInput
+                                                    defaultCountry={'pe'}
+                                                    id={"Telefono" + props.modalId}
+                                                    label="Telefono"
+                                                    style={{ margin: 5 }}
+                                                    fullWidth
+                                                    value={Form.telefono}
+                                                    onChange={(event) => { handleForm(event, 'telefono') }}
+                                                    error={validate && FormValidation.telefono != ''}
+                                                    helperText={FormValidation.telefono}
+                                                />
                                         </Grid>
                                         <Grid item sm={4} xs={12}>
                                             <TextField

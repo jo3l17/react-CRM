@@ -137,7 +137,6 @@ function Card(props) {
               <div className={classes.porcentajeWrapper}>
                 {tiempoSinContacto()}
                 <div className={classes.porcentajeCierre}>{props.card.content.porcentajeCierre}</div>
-                {console.log(parseInt(props.card.content.porcentajeCierre))}
                 <CircularProgress variant="static" value={props.card.content.porcentajeCierre ? parseInt(props.card.content.porcentajeCierre) : 0} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
               </div>
             </div>

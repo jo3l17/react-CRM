@@ -16,6 +16,7 @@ import { formatDate } from '../utilities/formaters';
 import { lengthValidation, minMaxValidation, emailValidation } from '../utilities/validator'
 import { BackUrl } from '../utilities/const';
 import { userLogged } from '../services/UserService';
+import MuiPhoneInput from 'material-ui-phone-number';
 
 const DialogTitle = withStyles(useStyles)(props => {
     const { children, classes, onClose, ...other } = props;
@@ -331,7 +332,7 @@ function EditCard(props) {
                             </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
+                            {/* <TextField
                                 id={"telefono1" + props.modalId}
                                 label="Telefono Primario"
                                 style={{ margin: 5 }}
@@ -342,10 +343,21 @@ function EditCard(props) {
                                 margin="normal"
                                 error={validate && FormValidation.telefono[0] != ''}
                                 helperText={FormValidation.telefono[0]}
+                            /> */}
+                            <MuiPhoneInput
+                                defaultCountry={'pe'}
+                                id={"Telefono1" + props.modalId}
+                                label="Telefono Primario"
+                                style={{ margin: 5 }}
+                                value={Form.telefono[0]}
+                                fullWidth
+                                error={validate && FormValidation.telefono[0] != ''}
+                                onChange={(number, countryInfo) => { handleForm(number, 'telefono', 0) }}
+                                helperText={FormValidation.telefono[0]}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
+                            {/* <TextField
                                 id={"telefono2" + props.modalId}
                                 label="Telefono Secundario"
                                 style={{ margin: 5 }}
@@ -355,6 +367,17 @@ function EditCard(props) {
                                 fullWidth
                                 margin="normal"
                                 error={validate && FormValidation.telefono[1] != ''}
+                                helperText={FormValidation.telefono[1]}
+                            /> */}
+                            <MuiPhoneInput
+                                defaultCountry={'pe'}
+                                id={"Telefono2" + props.modalId}
+                                label="Telefono Secundario"
+                                style={{ margin: 5 }}
+                                value={Form.telefono[1]}
+                                fullWidth
+                                error={validate && FormValidation.telefono[0] != ''}
+                                onChange={(number, countryInfo) => { handleForm(number, 'telefono', 1) }}
                                 helperText={FormValidation.telefono[1]}
                             />
                         </Grid>
