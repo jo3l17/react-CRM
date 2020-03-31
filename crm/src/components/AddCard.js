@@ -319,6 +319,7 @@ function AddCard(props) {
                                                     style={{ margin: 5 }}
                                                     fullWidth
                                                     value={Form.telefono}
+                                                    localization={{'Germany': 'Deutschland', 'Spain': 'España'}}
                                                     onChange={(event) => { handleForm(event, 'telefono') }}
                                                     error={validate && FormValidation.telefono != ''}
                                                     helperText={FormValidation.telefono}

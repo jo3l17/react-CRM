@@ -11,6 +11,20 @@ export const islogged = (newRoute = '') => {
         return false
     }
 }
+export const logOut = (newRoute = '') => {
+    if (localStorage.getItem('token')) {
+        localStorage.removeItem('token');
+        if (newRoute && newRoute != '') {
+            Router.push(newRoute)
+        } else {
+            Router.push('/login')
+        }
+        return true
+    } else {
+        Router.push('/login')
+        return false
+    }
+}
 export const userLogged = () => {
     if (expirationDate()) {
         return localStorage.getItem('token')

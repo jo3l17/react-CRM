@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { SwipeableDrawer, Badge, AppBar, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography, CssBaseline, useTheme } from '@material-ui/core';
+import { SwipeableDrawer, Badge, AppBar, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography, CssBaseline, useTheme, Menu, MenuItem } from '@material-ui/core';
 import useStyles from '../styles/Header';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
@@ -20,6 +20,7 @@ import PublicIcon from '@material-ui/icons/Public';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import CorreoInteraccionGlobal from './CorreoInteraccionGlobal';
 import WhatsappInteraccionGlobal from './WhatsappInteraccionGlobal';
+import { logOut } from '../services/UserService';
 
 function Header(props) {
   const toggleHandleDrawer = () => {
@@ -42,6 +43,14 @@ function Header(props) {
   const handleOpenWhatsappInteraccion = () => {
     setOpenDialogWhatsappInteraccion(true)
   }
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const preventDefault = event => event.preventDefault();
   const { container } = props;
   const classes = useStyles();
@@ -166,7 +175,7 @@ function Header(props) {
   );
   return (
     <div>
-      <WhatsappInteraccionGlobal id={'WhatsappGlobal'} open={openDialogWhatsappInteraccion} handleClose={handleCloseInteraccion}/>
+      <WhatsappInteraccionGlobal id={'WhatsappGlobal'} open={openDialogWhatsappInteraccion} handleClose={handleCloseInteraccion} />
       <CorreoInteraccionGlobal id={'CorreoGlobal'} open={openDialogCorreoInteraccion} handleClose={handleCloseInteraccion} />
       <CssBaseline />
       <AppBar
@@ -225,13 +234,30 @@ function Header(props) {
               color="inherit"
               edge="end"
               aria-label="user"
+              onClick={handleClick}
             >
-              <Link href="/usuario">
-                <a className={classes.link}>
-                  <AccountCircleIcon />
-                </a>
-              </Link>
+              {/* <Link href="/usuario"> */}
+              {/* <a className={classes.link}> */}
+              <AccountCircleIcon />
+              {/* </a> */}
+              {/* </Link> */}
             </IconButton>
+            <Menu
+              getContentAnchorEl={null}
+              id="user-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={()=>{logOut()}}>Logout</MenuItem>
+            </Menu>
           </Hidden>
           <Hidden smUp implementation="css">
             <IconButton
