@@ -20,7 +20,7 @@ export default function MetasCreate(props) {
     const submit = event => {
         setValidate(true)
         event.preventDefault();
-        const token = userLogged()
+        const token = userLogged();
         axios.post(BackUrl + 'estadisticas/agregar/metas', { ...form, token }).then(res => {
             console.log(res)
             if (res.data.message == 'OK') {

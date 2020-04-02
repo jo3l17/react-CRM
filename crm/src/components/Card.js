@@ -13,6 +13,11 @@ import DeleteCloseCard from './DeleteCloseCard';
 import CorreoInteraccion from './CorreoInteraccion';
 import { useConfirmation } from '../services/ConfimationService';
 import WhatsappInteraccion from './WhatsappInteraccion';
+import { colorPrioridad, colorPorcentaje } from '../utilities/Color';
+import CorreoConnectar from './CorreoConnectar';
+import axios from 'axios';
+import { BackUrl } from '../utilities/const';
+import { userLogged } from '../services/UserService';
 
 function Card(props) {
   const confirm = useConfirmation()
@@ -24,6 +29,7 @@ function Card(props) {
   const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
   const [openDialogCorreoInteraccion, setOpenDialogCorreoInteraccion] = React.useState(false)
   const [openDialogWhatsappInteraccion, setOpenDialogWhatsappInteraccion] = React.useState(false)
+  const [openDialogConnect, setOpenDialogConnect] = React.useState(false);
   const handleClickOpen = () => {
     setOpenDialog(true);
   };
@@ -53,7 +59,17 @@ function Card(props) {
         }).then(() => {
         })
       } else {
-        setOpenDialogCorreoInteraccion(true)
+        let token = userLogged()
+        axios.post(BackUrl + 'usuarios/verificar_credenciales', { token }).then(res => {
+          console.log(res)
+          if (res.data.message == 'OK' && res.data.content == false) {
+            setOpenDialogConnect(true)
+          } else {
+            setOpenDialogCorreoInteraccion(true)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
       }
     } else if (value == 'whatsapp') {
       if (telefono.length == 0) {
@@ -72,6 +88,9 @@ function Card(props) {
   const handleCloseCorreoInteraccion = result => {
     setOpenDialogWhatsappInteraccion(false)
     setOpenDialogCorreoInteraccion(false)
+  }
+  const handleCloseConnect = result => {
+    setOpenDialogConnect(false)
   }
   function tiempoSinContacto() {
     if (props.card.content.tiempoSinContactoNumber != null) {
@@ -101,6 +120,7 @@ function Card(props) {
           <EditCard open={openDialog} handleClose={handleClose} data={props.card} modalId={props.card.id} />
           <CorreoInteraccion id={props.card.content.id} open={openDialogCorreoInteraccion} handleClose={handleCloseCorreoInteraccion} correo={correo} />
           <WhatsappInteraccion id={props.card.content.id} open={openDialogWhatsappInteraccion} handleClose={handleCloseCorreoInteraccion} telefono={telefono} />
+          <CorreoConnectar id={props.card.content.id} open={openDialogConnect} handleClose={handleCloseConnect} modalId={'conectarEmail'} />
           <DeleteCloseCard open={openDialogDelete} handleClose={handleCloseDelete} data={props.card} modalId={props.card.id} />
           <div className={classes.container}>
             <List className={classes.leftList}>
@@ -127,7 +147,7 @@ function Card(props) {
                   </a>
                 </Link>
                 <div>
-                  <div className={classes.prioridad} style={{ backgroundColor: props.card.content.prioridadColor, color: props.card.content.prioridadColorText }}>
+                  <div className={classes.prioridad} style={{ backgroundColor: colorPrioridad(parseInt(props.card.content.prioridad)), color: props.card.content.prioridadColorText }}>
                     <div>
                       {props.card.content.prioridad}
                     </div>
@@ -137,7 +157,7 @@ function Card(props) {
               <div className={classes.porcentajeWrapper}>
                 {tiempoSinContacto()}
                 <div className={classes.porcentajeCierre}>{props.card.content.porcentajeCierre}</div>
-                <CircularProgress variant="static" value={props.card.content.porcentajeCierre ? parseInt(props.card.content.porcentajeCierre) : 0} style={{ color: props.card.content.porcentajeColor }} className={classes.porcentaje} size={24} thickness={8} />
+                <CircularProgress variant="static" value={props.card.content.porcentajeCierre ? parseInt(props.card.content.porcentajeCierre) : 0} style={{ color: colorPorcentaje(parseInt(props.card.content.porcentajeCierre)) }} className={classes.porcentaje} size={24} thickness={8} />
               </div>
             </div>
           </div>

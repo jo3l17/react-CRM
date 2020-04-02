@@ -26,6 +26,7 @@ import { grey, green } from '@material-ui/core/colors';
 const useStyles = theme => ({
     Board: {
         border: '1px solid grey',
+        borderRadius: '0 0 5px 5px',
         width: 250,
         display: 'flex',
         flexDirection: 'column',
